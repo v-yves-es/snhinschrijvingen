@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="nl" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Studierichting kiezen - Inschrijvingen SNH</title>
+</head>
+<body>
+    <section>
+        <div th:replace="~{fragments/wizard :: wizard}"></div>
+
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Kies je studierichting</h1>
+                
+                <form class="form" th:action="@{/inschrijving/study-program(id=${registrationId})}" method="post" id="studyProgramForm">
+                    <input type="hidden" name="id" th:value="${registrationId}">
+                    <input type="hidden" name="studyProgramId" id="selectedProgramId">
+                    
+                    <!-- Year Selection -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Selecteer je jaar</h2>
+                        
+                        <div class="position-relative mb-4">
+                            <label for="studyYear" class="form-label">
+                                In welk jaar wil je je inschrijven?
+                            </label>
+                            <select id="studyYear" class="form-control form-select" required>
+                                <option value="">Kies een jaar...</option>
+                                <option th:each="year : ${availableYears}" 
+                                        th:value="${year}" 
+                                        th:text="${year} + 'ste jaar'">1ste jaar</option>
+                            </select>
+                            <div class="invalid-feedback">Gelieve een jaar te selecteren</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Study Programs Container (populated via JavaScript) -->
+                    <div id="studyProgramsContainer" style="display: none;">
+                        <div class="form-section">
+                            <h2 class="form-section-title">Kies je richting</h2>
+                            <div id="programsList"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <a th:href="@{/inschrijving/student-info(id=${registrationId})}" class="btn btn--secondary">
+                            <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                                <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Vorige
+                        </a>
+                        <button type="submit" class="btn btn--primary" id="submitBtn" disabled>
+                            Volgende
+                            <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                const yearSelect = document.getElementById('studyYear');
+                const programsContainer = document.getElementById('studyProgramsContainer');
+                const programsList = document.getElementById('programsList');
+                const submitBtn = document.getElementById('submitBtn');
+                const selectedProgramInput = document.getElementById('selectedProgramId');
+                
+                yearSelect.addEventListener('change', function() {
+                    const year = this.value;
+                    
+                    if (!year) {
+                        programsContainer.style.display = 'none';
+                        submitBtn.disabled = true;
+                        return;
+                    }
+                    
+                    // Fetch study programs for selected year
+                    fetch(`/inschrijving/study-program/programs?year=${year}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            renderPrograms(data);
+                            programsContainer.style.display = 'block';
+                            submitBtn.disabled = true;
+                            selectedProgramInput.value = '';
+                        })
+                        .catch(error => {
+                            console.error('Error loading study programs:', error);
+                            alert('Er is een fout opgetreden bij het laden van de richtingen.');
+                        });
+                });
+                
+                function renderPrograms(data) {
+                    programsList.innerHTML = '';
+                    
+                    if (data.hasGrouping) {
+                        renderGroupedPrograms(data);
+                    } else {
+                        renderSimplePrograms(data);
+                    }
+                    
+                    // Add event listeners to radio buttons
+                    const radioButtons = programsList.querySelectorAll('input[type="radio"]');
+                    radioButtons.forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            selectedProgramInput.value = this.value;
+                            submitBtn.disabled = false;
+                        });
+                    });
+                }
+                
+                function renderSimplePrograms(data) {
+                    const html = data.programs.map(program => `
+                        <div class="form-check mb-2">
+                            <input type="radio" 
+                                   class="form-check-input" 
+                                   name="program" 
+                                   id="program_${program.id}" 
+                                   value="${program.id}">
+                            <label class="form-check-label" for="program_${program.id}">
+                                ${program.name}
+                            </label>
+                        </div>
+                    `).join('');
+                    
+                    programsList.innerHTML = html;
+                }
+                
+                function renderGroupedPrograms(data) {
+                    let html = '';
+                    
+                    for (const [domain, orientations] of Object.entries(data.groupedPrograms)) {
+                        const domainColor = data.domainColors[domain] || '#333';
+                        
+                        html += `
+                            <div class="study-domain-group mb-4">
+                                <h3 class="study-domain-title" style="color: ${domainColor}; border-left: 4px solid ${domainColor}; padding-left: 1rem;">
+                                    ${domain}
+                                </h3>
+                        `;
+                        
+                        for (const [orientation, programs] of Object.entries(orientations)) {
+                            html += `
+                                <div class="study-orientation-group mb-3" style="margin-left: 1.5rem;">
+                                    <h4 class="study-orientation-title" style="font-weight: 600; font-size: 1rem; margin-bottom: 0.75rem;">
+                                        ${orientation}
+                                    </h4>
+                                    <div class="study-programs" style="margin-left: 1rem;">
+                            `;
+                            
+                            programs.forEach(program => {
+                                html += `
+                                    <div class="form-check mb-2">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               name="program" 
+                                               id="program_${program.id}" 
+                                               value="${program.id}">
+                                        <label class="form-check-label" for="program_${program.id}">
+                                            ${program.name}
+                                        </label>
+                                    </div>
+                                `;
+                            });
+                            
+                            html += `
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        html += `</div>`;
+                    }
+                    
+                    programsList.innerHTML = html;
+                }
+            });
+        </script>
+    </section>
+</body>
+</html>

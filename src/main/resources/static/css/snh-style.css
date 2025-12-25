@@ -980,3 +980,54 @@ select.form-control {
 select.form-control:focus {
     border-color: #80bdff;
 }
+
+/* Study Program Selection Styles */
+.study-domain-group {
+    margin-bottom: 2rem;
+}
+
+.study-domain-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+}
+
+.study-orientation-group {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.study-orientation-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    color: #333;
+}
+
+.study-programs {
+    margin-left: 1rem;
+}
+
+.study-programs .form-check {
+    margin-bottom: 0.75rem;
+}
+
+.study-programs .form-check-input {
+    margin-top: 0.25rem;
+}
+
+.study-programs .form-check-label {
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding-left: 0.5rem;
+}
+
+.study-programs .form-check-input:checked + .form-check-label {
+    font-weight: 600;
+}
+
+.form-select {
+    display: block;
+    width: 100%;
+}

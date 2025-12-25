@@ -98,15 +98,7 @@ public class StudentInfoController {
                 studentForm.getNaamLeerling()
         );
 
-        // TODO: Navigate to next step in wizard
-        // For now, redirect back to overview
-        Optional<Registration> regOpt = registrationService.findById(id);
-        if (regOpt.isPresent()) {
-            String email = regOpt.get().getEmail();
-            return "redirect:/inschrijving/verify/" + id + "/" + 
-                   registrationService.hashEmail(email);
-        }
-
-        return "redirect:/inschrijving/start";
+        // Navigate to study program selection (next step in wizard)
+        return "redirect:/inschrijving/study-program?id=" + id;
     }
 }
