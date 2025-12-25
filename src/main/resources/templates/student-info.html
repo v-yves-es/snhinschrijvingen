@@ -18,109 +18,92 @@
                     <input type="hidden" name="id" th:value="${registrationId}">
                     
                     <!-- Leerling Section -->
-                    <fieldset class="form-section">
-                        <div class="card-body">
-                            <legend class="form-legend">Leerling</legend>
+                    <div class="form-section">
+                        <h2 class="form-section-title">Leerling</h2>
 
-                            <div class="form-row">
-                                <div class="form-group">
+                        <!-- Row 1: Voornaam en Familienaam -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
                                     <label for="voornaamLeerling" class="form-label">
-                                        Voornaam van de leerling
-                                        <span class="badge badge--required">VERPLICHT</span>
+                                        Voornaam
                                     </label>
                                     <input type="text" 
                                            id="voornaamLeerling" 
                                            th:field="*{voornaamLeerling}" 
-                                           class="form-input" 
+                                           class="form-control" 
                                            required
                                            data-min-length="2">
                                     <div class="invalid-feedback"></div>
                                 </div>
-                                <div class="form-group">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
                                     <label for="naamLeerling" class="form-label">
-                                        Familienaam van de leerling
-                                        <span class="badge badge--required">VERPLICHT</span>
+                                        Familienaam
                                     </label>
                                     <input type="text" 
                                            id="naamLeerling" 
                                            th:field="*{naamLeerling}" 
-                                           class="form-input" 
+                                           class="form-control" 
                                            required
                                            data-min-length="2">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="form-row">
-                                <div class="form-group form-group--large">
-                                    <label for="adres" class="form-label">
-                                        Domicilieadres: straat + nummer
-                                        <span class="badge badge--required">VERPLICHT</span>
-                                    </label>
+                        <!-- Row 2: Rijksregisternummer (full width) -->
+                        <div class="position-relative mb-3">
+                            <label for="rijksregisternummer" class="form-label">Rijksregisternummer</label>
+                            <input type="text" 
+                                   id="rijksregisternummer" 
+                                   th:field="*{rijksregisternummer}" 
+                                   class="form-control" 
+                                   placeholder="YYMMDD-XXX.XX"
+                                   required
+                                   data-validate="rijksregisternummer"
+                                   maxlength="15">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <!-- Row 3: Geboortedatum en Geboorteplaats -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label for="geboortedatum" class="form-label">Geboortedatum</label>
                                     <input type="text" 
-                                           id="adres" 
-                                           th:field="*{adres}" 
-                                           class="form-input" 
-                                           required
-                                           data-min-length="5">
+                                           id="geboortedatum" 
+                                           th:field="*{geboortedatum}" 
+                                           class="form-control"
+                                           data-toggle="datepicker"
+                                           placeholder="dd/mm/yyyy"
+                                           required>
                                     <div class="invalid-feedback"></div>
                                 </div>
-                                <div class="form-group form-group--small">
-                                    <label for="postnummer" class="form-label">
-                                        Postnummer
-                                        <span class="badge badge--required">VERPLICHT</span>
-                                    </label>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label for="geboorteplaats" class="form-label">Geboorteplaats</label>
                                     <input type="text" 
-                                           id="postnummer" 
-                                           th:field="*{postnummer}" 
-                                           class="form-input" 
-                                           required
-                                           data-validate="postalCode"
-                                           maxlength="4"
-                                           placeholder="1000">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                                <div class="form-group form-group--small">
-                                    <label for="gemeente" class="form-label">
-                                        Gemeente / Stad
-                                        <span class="badge badge--required">VERPLICHT</span>
-                                    </label>
-                                    <input type="text" 
-                                           id="gemeente" 
-                                           th:field="*{gemeente}" 
-                                           class="form-input" 
+                                           id="geboorteplaats" 
+                                           th:field="*{geboorteplaats}" 
+                                           class="form-control"
                                            required
                                            data-min-length="2">
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="gsm" class="form-label">
-                                        Gsm-nummer van de leerling
-                                        <span class="badge badge--required">VERPLICHT</span>
-                                    </label>
-                                    <input type="tel" 
-                                           id="gsm" 
-                                           th:field="*{gsm}" 
-                                           class="form-input" 
-                                           placeholder="+32000000000" 
-                                           required
-                                           data-validate="phone">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                                <div class="form-group">
-                                    &nbsp;
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">Geslacht van de leerling:</label>
+                        <!-- Row 4: Geslacht en Nationaliteit -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label class="form-label">Geslacht</label>
                                     <div class="form-radio-group">
                                         <label class="form-radio">
-                                            <input type="radio" th:field="*{geslacht}" value="M">
+                                            <input type="radio" th:field="*{geslacht}" value="M" required>
                                             <span>Man</span>
                                         </label>
                                         <label class="form-radio">
@@ -137,59 +120,239 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="rijksregisternummer" class="form-label">
-                                        Rijksregisternummer van de leerling <small>(YYMMDD-XXX-XX)</small>
-                                        <span class="badge badge--required">VERPLICHT</span>
-                                    </label>
-                                    <input type="text" 
-                                           id="rijksregisternummer" 
-                                           th:field="*{rijksregisternummer}" 
-                                           class="form-input" 
-                                           placeholder="YYMMDD-XXX-XX" 
-                                           required
-                                           data-validate="rijksregisternummer"
-                                           maxlength="15">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label for="nationaliteit" class="form-label">Nationaliteit</label>
+                                    <select id="nationaliteit" 
+                                            th:field="*{nationaliteit}" 
+                                            class="form-control"
+                                            required>
+                                        <option value="">-- Selecteer een nationaliteit --</option>
+                                        <option th:each="nat : ${nationaliteiten}" 
+                                                th:value="${nat.code}" 
+                                                th:text="${nat.nameNl}">Nationaliteit</option>
+                                    </select>
                                     <div class="invalid-feedback"></div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="geboortedatum" class="form-label">Geboortedatum van de leerling</label>
-                                    <input type="date" 
-                                           id="geboortedatum" 
-                                           th:field="*{geboortedatum}" 
-                                           class="form-input">
-                                </div>
-                                <div class="form-group">
-                                    <label for="geboorteplaats" class="form-label">Geboorteplaats leerling</label>
+                    <!-- Domicilieadres Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Domicilieadres</h2>
+
+                        <!-- Row 1: Straat en nummer (full width) -->
+                        <div class="position-relative mb-3">
+                            <label for="adres" class="form-label">
+                                Straat en nummer
+                            </label>
+                            <input type="text" 
+                                   id="adres" 
+                                   th:field="*{adres}" 
+                                   class="form-control" 
+                                   required
+                                   data-min-length="5"
+                                   placeholder="Straatnaam 123">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <!-- Row 2: Postcode en Gemeente -->
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="position-relative mb-3">
+                                    <label for="postnummer" class="form-label">
+                                        Postcode
+                                    </label>
                                     <input type="text" 
-                                           id="geboorteplaats" 
-                                           th:field="*{geboorteplaats}" 
-                                           class="form-input">
+                                           id="postnummer" 
+                                           th:field="*{postnummer}" 
+                                           class="form-control" 
+                                           required
+                                           data-validate="postalCode"
+                                           maxlength="4"
+                                           placeholder="8500">
+                                    <div class="invalid-feedback"></div>
                                 </div>
                             </div>
-
-                            <div class="form-row">
-                                <div class="form-group form-group--full">
-                                    <label class="form-label">Nationaliteit leerling</label>
-                                    <div class="form-radio-list">
-                                        <label class="form-radio" th:each="nat : ${nationaliteiten}">
-                                            <input type="radio" 
-                                                   th:field="*{nationaliteit}" 
-                                                   th:value="${nat.code}">
-                                            <span th:text="${nat.nameNl}">Nationaliteit</span>
-                                        </label>
-                                    </div>
+                            <div class="col-md-9">
+                                <div class="position-relative mb-3">
+                                    <label for="gemeente" class="form-label">
+                                        Gemeente / Stad
+                                    </label>
+                                    <input type="text" 
+                                           id="gemeente" 
+                                           th:field="*{gemeente}" 
+                                           class="form-control" 
+                                           required
+                                           data-min-length="2"
+                                           placeholder="Kortrijk">
+                                    <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
-                    </fieldset>
+                    </div>
+
+                    <!-- Vorige School Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Vorige school</h2>
+
+                        <!-- Row 1: Naam school en Jaar school -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label class="form-label">Naam en adres vorige school</label>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolAdres}" 
+                                               value="1" 
+                                               id="school1">
+                                        <label class="form-check-label" for="school1">
+                                            Atheneum Kortrijk
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolAdres}" 
+                                               value="11" 
+                                               id="school2">
+                                        <label class="form-check-label" for="school2">
+                                            Prizma Middenschool Lendelede
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolAdres}" 
+                                               value="12" 
+                                               id="school3">
+                                        <label class="form-check-label" for="school3">
+                                            Sint-Aloysiuscollege Menen
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolAdres}" 
+                                               value="13" 
+                                               id="school4">
+                                        <label class="form-check-label" for="school4">
+                                            Sint-Pauluscollege Wevelgem
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolAdres}" 
+                                               value="15" 
+                                               id="school5">
+                                        <label class="form-check-label" for="school5">
+                                            Spes Nostra Kuurne
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolAdres}" 
+                                               value="0" 
+                                               id="schoolAnders">
+                                        <label class="form-check-label" for="schoolAnders">
+                                            Anders:
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           th:field="*{vorigeSchoolAdresAnders}" 
+                                           class="form-control mt-2" 
+                                           placeholder="Naam en adres van andere school">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label class="form-label">Jaar in de vorige school</label>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolJaar}" 
+                                               value="5" 
+                                               id="jaar1">
+                                        <label class="form-check-label" for="jaar1">
+                                            3de jaar secundair onderwijs
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolJaar}" 
+                                               value="6" 
+                                               id="jaar2">
+                                        <label class="form-check-label" for="jaar2">
+                                            4de jaar secundair onderwijs
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolJaar}" 
+                                               value="0" 
+                                               id="jaarAnders">
+                                        <label class="form-check-label" for="jaarAnders">
+                                            Anders:
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           th:field="*{vorigeSchoolJaarAnders}" 
+                                           class="form-control mt-2" 
+                                           placeholder="Ander jaar">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Gevolgde richting -->
+                        <div class="position-relative mb-3">
+                            <label for="richtingVorigeSchool" class="form-label">Gevolgde richting in de vorige school</label>
+                            <input type="text" 
+                                   id="richtingVorigeSchool" 
+                                   th:field="*{richtingVorigeSchool}" 
+                                   class="form-control" 
+                                   placeholder="Bijvoorbeeld: Wetenschappen, Moderne talen, ..."
+                                   required
+                                   data-min-length="2">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <!-- Row 3: Toestemming gegevens uitwisselen -->
+                        <div class="position-relative mb-3">
+                            <label class="form-label">Geven de ouders de toestemming om gegevens uit te wisselen met de vorige school?</label>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" 
+                                       class="form-check-input" 
+                                       th:field="*{toestemmingVorigeSchool}" 
+                                       value="J" 
+                                       id="toestemmingJa"
+                                       required>
+                                <label class="form-check-label" for="toestemmingJa">
+                                    Ja
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" 
+                                       class="form-check-input" 
+                                       th:field="*{toestemmingVorigeSchool}" 
+                                       value="N" 
+                                       id="toestemmingNee">
+                                <label class="form-check-label" for="toestemmingNee">
+                                    Nee
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Form Actions -->
-                    <!-- Navigation buttons -->
-                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/start}, 'Vorige', 'Volgende', true)}"></div>
+                    <!-- Navigation buttons (no back button for first step) -->
+                    <div th:replace="~{fragments/navigation :: navigation(null, null, 'Volgende', false)}"></div>
                 </form>
             </div>
         </div>

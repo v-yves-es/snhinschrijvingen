@@ -1,0 +1,56 @@
+/**
+ * Flatpickr custom styles - matching application theme
+ */
+
+/* Flatpickr calendar styling */
+.flatpickr-calendar {
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+/* Selected date */
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected.startRange,
+.flatpickr-day.selected.endRange,
+.flatpickr-day.startRange.endRange {
+    background-color: #c92617 !important;
+    border-color: #c92617 !important;
+    color: white !important;
+}
+
+/* Hover state */
+.flatpickr-day:hover {
+    background-color: rgba(201, 38, 23, 0.1);
+    border-color: rgba(201, 38, 23, 0.1);
+}
+
+/* Today */
+.flatpickr-day.today {
+    border-color: #c92617;
+}
+
+.flatpickr-day.today:hover,
+.flatpickr-day.today:focus {
+    background-color: rgba(201, 38, 23, 0.1);
+    border-color: #c92617;
+}
+
+/* Month navigation arrows */
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+    fill: #c92617;
+}
+
+/* Current month text */
+.flatpickr-current-month .flatpickr-monthDropdown-months:hover {
+    background-color: rgba(201, 38, 23, 0.1);
+}
+
+/* Weekday labels */
+.flatpickr-weekday {
+    color: #666;
+    font-weight: 600;
+}
+

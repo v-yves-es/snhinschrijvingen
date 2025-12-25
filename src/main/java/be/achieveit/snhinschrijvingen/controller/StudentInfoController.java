@@ -56,8 +56,8 @@ public class StudentInfoController {
 
         Registration registration = registrationOpt.get();
 
-        // Wizard steps (1 completed, 2 active)
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(2, List.of(1)));
+        // Wizard steps (1 active, none completed yet)
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(1, List.of()));
 
         // Add registration to model
         model.addAttribute("registration", registration);
