@@ -2,40 +2,100 @@ package be.achieveit.snhinschrijvingen.controller;
 
 import be.achieveit.snhinschrijvingen.dto.StudentForm;
 import be.achieveit.snhinschrijvingen.model.Nationaliteit;
+import be.achieveit.snhinschrijvingen.model.Registration;
+import be.achieveit.snhinschrijvingen.service.RegistrationService;
 import be.achieveit.snhinschrijvingen.service.WizardService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/inschrijving")
 public class StudentInfoController {
 
-    private final WizardService wizardService;
+    private static final Logger logger = LoggerFactory.getLogger(StudentInfoController.class);
 
-    public StudentInfoController(final WizardService wizardService) {
+    private final WizardService wizardService;
+    private final RegistrationService registrationService;
+
+    public StudentInfoController(
+            final WizardService wizardService,
+            final RegistrationService registrationService) {
         this.wizardService = wizardService;
+        this.registrationService = registrationService;
     }
 
     @GetMapping("/student-info")
-    public String showStudentInfo(Model model) {
-        model.addAttribute("studentForm", new StudentForm());
+    public String showStudentInfo(@RequestParam(required = false) UUID id, Model model) {
+        // Registration ID should be provided
+        if (id == null) {
+            logger.warn("No registration ID provided for student-info");
+            return "redirect:/inschrijving/start";
+        }
+
+        Optional<Registration> registrationOpt = registrationService.findById(id);
+        if (registrationOpt.isEmpty()) {
+            logger.warn("Registration not found: {}", id);
+            return "redirect:/inschrijving/start";
+        }
+
+        Registration registration = registrationOpt.get();
+
+        // Wizard steps (1-3 completed, 4 active)
         model.addAttribute("wizardSteps", wizardService.getWizardSteps(4, List.of(1, 2, 3)));
+
+        // Add registration to model
+        model.addAttribute("registration", registration);
+        model.addAttribute("registrationId", id);
+
+        // Form data
+        StudentForm studentForm = new StudentForm();
+        // Pre-fill if data exists
+        if (registration.getStudentFirstname() != null) {
+            studentForm.setVoornaamLeerling(registration.getStudentFirstname());
+        }
+        if (registration.getStudentLastname() != null) {
+            studentForm.setNaamLeerling(registration.getStudentLastname());
+        }
+
+        model.addAttribute("studentForm", studentForm);
         model.addAttribute("nationaliteiten", getNationaliteiten());
+
         return "student-info";
     }
 
     @PostMapping("/student-info")
-    public String processStudentInfo(@ModelAttribute StudentForm studentForm, Model model) {
-        // Process and save student info
-        // Redirect to next step
-        return "redirect:/inschrijving/huisarts";
+    public String processStudentInfo(
+            @RequestParam UUID id,
+            @ModelAttribute StudentForm studentForm,
+            Model model) {
+
+        logger.info("Processing student info for registration: {}", id);
+
+        // Update registration with student info
+        registrationService.updateStudentInfo(
+                id,
+                studentForm.getVoornaamLeerling(),
+                studentForm.getNaamLeerling()
+        );
+
+        // TODO: Navigate to next step in wizard
+        // For now, redirect back to overview
+        Optional<Registration> regOpt = registrationService.findById(id);
+        if (regOpt.isPresent()) {
+            String email = regOpt.get().getEmail();
+            return "redirect:/inschrijving/verify/" + id + "/" + 
+                   registrationService.hashEmail(email);
+        }
+
+        return "redirect:/inschrijving/start";
     }
 
     private List<Nationaliteit> getNationaliteiten() {

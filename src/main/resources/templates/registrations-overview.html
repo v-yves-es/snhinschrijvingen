@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="nl" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Mijn Inschrijvingen - Inschrijvingen SNH</title>
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Mijn Inschrijvingen</h1>
+                
+                <!-- Email Info Alert -->
+                <div class="alert alert-info fade show" role="alert">
+                    <strong>✉️ Emailadres:</strong> <span th:text="${email}">email@voorbeeld.be</span>
+                </div>
+
+                <!-- Pending Registration Alert (if exists) -->
+                <div th:if="${pendingRegistration != null}" class="alert alert-warning fade show" role="alert">
+                    <strong>⚠️ Lopende inschrijving</strong><br>
+                    U heeft een inschrijving die nog niet voltooid is voor 
+                    <strong th:text="${pendingRegistration.studentFirstname} + ' ' + ${pendingRegistration.studentLastname}"></strong>.
+                    Klik op "Inschrijving afwerken" om verder te gaan.
+                </div>
+
+                <!-- Registrations Table -->
+                <div style="margin: 2rem 0;">
+                    <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">
+                        Bestaande Inschrijvingen
+                    </h2>
+
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f9f9f9; border-bottom: 2px solid #ddd;">
+                                <th style="padding: 1rem; text-align: left;">Leerling</th>
+                                <th style="padding: 1rem; text-align: left;">Schooljaar</th>
+                                <th style="padding: 1rem; text-align: left;">Datum</th>
+                                <th style="padding: 1rem; text-align: left;">Status</th>
+                                <th style="padding: 1rem; text-align: left;">Actie</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="reg : ${registrations}" 
+                                style="border-bottom: 1px solid #ddd;"
+                                th:classappend="${reg.status.name() == 'PENDING'} ? 'pending-row' : ''">
+                                <td style="padding: 1rem;">
+                                    <strong th:if="${reg.studentFirstname != null and reg.studentLastname != null}"
+                                            th:text="${reg.studentFirstname} + ' ' + ${reg.studentLastname}">
+                                        Naam Leerling
+                                    </strong>
+                                    <span th:if="${reg.studentFirstname == null or reg.studentLastname == null}"
+                                          style="color: #6c757d; font-style: italic;">
+                                        Nog in te vullen
+                                    </span>
+                                </td>
+                                <td style="padding: 1rem;" th:text="${reg.schoolYear}">2025-2026</td>
+                                <td style="padding: 1rem;">
+                                    <span th:text="${#temporals.format(reg.createdAt, 'dd/MM/yyyy HH:mm')}">25/12/2025 14:30</span>
+                                </td>
+                                <td style="padding: 1rem;">
+                                    <span th:if="${reg.status.name() == 'COMPLETED'}" 
+                                          class="badge" 
+                                          style="background-color: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 0.25rem;">
+                                        ✅ Voltooid
+                                    </span>
+                                    <span th:if="${reg.status.name() == 'PENDING'}" 
+                                          class="badge" 
+                                          style="background-color: #ffc107; color: #000; padding: 0.25rem 0.75rem; border-radius: 0.25rem;">
+                                        ⏳ Lopend
+                                    </span>
+                                </td>
+                                <td style="padding: 1rem;">
+                                    <a th:if="${reg.status.name() == 'PENDING'}"
+                                       th:href="@{/inschrijving/continue/{id}(id=${reg.id})}" 
+                                       class="btn btn--outline"
+                                       style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                        📝 Inschrijving afwerken
+                                    </a>
+                                    <span th:if="${reg.status.name() == 'COMPLETED'}"
+                                          style="color: #28a745; font-weight: 600;">
+                                        Voltooid
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- New Registration Button -->
+                <div class="form-actions" style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #ddd;">
+                    <form th:action="@{/inschrijving/start}" method="post" style="display: inline;">
+                        <input type="hidden" name="emailadres" th:value="${email}">
+                        <button type="submit" class="btn btn--primary">
+                            ➕ Nieuwe leerling inschrijven
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
+<style>
+    .pending-row {
+        background-color: #fff3cd;
+    }
+    
+    table {
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    table tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>

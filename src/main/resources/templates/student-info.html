@@ -12,7 +12,10 @@
         <div class="container">
             <div class="form-card">
                 <h1 class="form-title">Algemene info</h1>
-                <form class="form" th:action="@{/inschrijving/student-info}" method="post" th:object="${studentForm}" data-validate="true">
+                <form class="form" th:action="@{/inschrijving/student-info(id=${registrationId})}" method="post" th:object="${studentForm}" data-validate="true">
+                    
+                    <!-- Hidden registration ID -->
+                    <input type="hidden" name="id" th:value="${registrationId}">
                     
                     <!-- Leerling Section -->
                     <fieldset class="form-section">
