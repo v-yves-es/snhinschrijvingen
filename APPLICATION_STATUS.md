@@ -98,7 +98,8 @@ be.achieveit.snhinschrijvingen/
 ├── controller/
 │   ├── EmailVerificationController.java
 │   ├── RegistrationController.java
-│   └── StudentInfoController.java
+│   ├── StudentInfoController.java
+│   └── CustomErrorController.java
 ├── dto/
 │   ├── EmailForm.java
 │   └── StudentForm.java
@@ -107,13 +108,20 @@ be.achieveit.snhinschrijvingen/
 │   ├── RegistrationStatus.java
 │   ├── EmailStatus.java
 │   ├── Nationaliteit.java
+│   ├── SchoolYear.java
 │   └── WizardStep.java
 ├── repository/
-│   └── RegistrationRepository.java
-└── service/
-    ├── RegistrationService.java
-    ├── EmailVerificationService.java
-    └── WizardService.java
+│   ├── RegistrationRepository.java
+│   ├── SchoolYearRepository.java
+│   └── NationalityRepository.java
+├── service/
+│   ├── RegistrationService.java
+│   ├── EmailVerificationService.java
+│   ├── SchoolYearService.java
+│   ├── NationalityService.java
+│   └── WizardService.java
+└── config/
+    └── DataInitializer.java
 ```
 
 ---
@@ -137,6 +145,27 @@ be.achieveit.snhinschrijvingen/
 | `updated_at` | LocalDateTime | | Laatste wijziging |
 | `student_firstname` | String | | Voornaam leerling |
 | `student_lastname` | String | | Achternaam leerling |
+
+### Entity: SchoolYear
+
+**Tabel:** `school_years`
+
+| Veld | Type | Constraints | Beschrijving |
+|------|------|------------|--------------|
+| `id` | String | PRIMARY KEY | Schooljaar ID (bijv. "2025-2026") |
+| `description` | String | NOT NULL | Beschrijving schooljaar |
+| `start_date` | LocalDate | NOT NULL | Startdatum (01/09) |
+| `end_date` | LocalDate | NOT NULL | Einddatum (31/08) |
+
+### Entity: Nationality
+
+**Tabel:** `nationalities`
+
+| Veld | Type | Constraints | Beschrijving |
+|------|------|------------|--------------|
+| `code` | String | PRIMARY KEY | ISO country code |
+| `name_nl` | String | NOT NULL | Nederlandse naam |
+| `name_fr` | String | NOT NULL | Franse naam |
 
 ### Enums
 
@@ -238,7 +267,7 @@ boolean existsByEmailHash(String emailHash);
 - Naam leerling (verplicht)
 - Geboortedatum
 - Geboorteplaats
-- Nationaliteit (dropdown)
+- Nationaliteit (dropdown, dynamisch geladen uit database)
 - Rijksregisternummer
 - Geslacht (radio buttons)
 
@@ -261,6 +290,33 @@ currentMonth >= 9 ? currentYear + "-" + (currentYear + 1)
 // December 2025 → "2025-2026"
 // September 2026 → "2026-2027"
 ```
+
+**SchoolYearService:**
+- Beheert schooljaren in database
+- `getCurrentRegistrationSchoolYear()` - automatisch berekening
+- `getSchoolYearDescription(id)` - beschrijving ophalen
+- Gebruikt in header voor dynamische titel
+
+### ✅ Nationaliteiten Beheer
+
+**Functionaliteit:**
+- Database tabel met nationaliteiten (code, name_nl, name_fr)
+- NationalityService voor data management
+- Automatische initialisatie bij opstarten (DataInitializer)
+- Gebruikt in student-info dropdown
+
+**Geïnitialiseerde Nationaliteiten:**
+- België, Nederland, Frankrijk, Duitsland, Groot-Brittannië, Spanje, Italië, Polen, Roemenië, Turkije, Marokko, Andere
+
+### ✅ Error Pages
+
+**Custom Error Handling:**
+- Generic error page (`error.html`)
+- 404 Not Found page (`error/404.html`)
+- 500 Internal Server Error page (`error/500.html`)
+- CustomErrorController voor routing
+- Consistent thema met applicatie design
+- User-friendly foutmeldingen in Nederlands
 
 ---
 

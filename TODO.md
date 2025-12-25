@@ -664,20 +664,22 @@ public class InvalidEmailHashException extends RuntimeException {
 ### Error Pages
 
 **Prioriteit:** 🟡 Gemiddeld  
-**Status:** ❌ Not Started
+**Status:** ✅ Completed
 
-**Te implementeren:**
-- [ ] 404 error page
-- [ ] 500 error page
-- [ ] 403 error page
-- [ ] Custom error styling
+**Geïmplementeerd:**
+- [x] 404 error page
+- [x] 500 error page
+- [x] Generic error page
+- [x] Custom error styling (consistent met applicatie thema)
+- [x] CustomErrorController voor error handling
 
 **Templates:**
 ```
-src/main/resources/templates/error/
-├── 404.html
-├── 500.html
-└── 403.html
+src/main/resources/templates/
+├── error.html (generic error)
+└── error/
+    ├── 404.html
+    └── 500.html
 ```
 
 ---

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="nl" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Pagina niet gevonden - Inschrijvingen SNH</title>
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Pagina niet gevonden</h1>
+                
+                <!-- 404 Alert -->
+                <div class="alert alert-warning fade show" role="alert">
+                    <div>
+                        <strong>Foutcode: 404</strong><br>
+                        De pagina die u zoekt bestaat niet of is verplaatst.
+                    </div>
+                </div>
+
+                <div class="alert alert-info fade show" role="alert" style="margin-top: 1.5rem;">
+                    <div>
+                        <strong>Wat kunt u doen?</strong>
+                        <ul style="margin: 0.5rem 0 0 1.5rem;">
+                            <li>Controleer of de URL correct is</li>
+                            <li>Ga terug naar de startpagina om opnieuw te beginnen</li>
+                            <li>Indien u via een link hier terecht bent gekomen, contacteer de schooladministratie</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 2rem;">
+                    <a th:href="@{/inschrijving/start}" class="btn btn--primary">
+                        Terug naar startpagina
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

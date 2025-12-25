@@ -1,9 +1,12 @@
 package be.achieveit.snhinschrijvingen.controller;
 
 import be.achieveit.snhinschrijvingen.dto.StudentForm;
-import be.achieveit.snhinschrijvingen.model.Nationaliteit;
+import be.achieveit.snhinschrijvingen.model.Nationality;
 import be.achieveit.snhinschrijvingen.model.Registration;
+import be.achieveit.snhinschrijvingen.model.SchoolYear;
+import be.achieveit.snhinschrijvingen.service.NationalityService;
 import be.achieveit.snhinschrijvingen.service.RegistrationService;
+import be.achieveit.snhinschrijvingen.service.SchoolYearService;
 import be.achieveit.snhinschrijvingen.service.WizardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,12 +26,18 @@ public class StudentInfoController {
 
     private final WizardService wizardService;
     private final RegistrationService registrationService;
+    private final NationalityService nationalityService;
+    private final SchoolYearService schoolYearService;
 
     public StudentInfoController(
             final WizardService wizardService,
-            final RegistrationService registrationService) {
+            final RegistrationService registrationService,
+            final NationalityService nationalityService,
+            final SchoolYearService schoolYearService) {
         this.wizardService = wizardService;
         this.registrationService = registrationService;
+        this.nationalityService = nationalityService;
+        this.schoolYearService = schoolYearService;
     }
 
     @GetMapping("/student-info")
@@ -48,12 +56,16 @@ public class StudentInfoController {
 
         Registration registration = registrationOpt.get();
 
-        // Wizard steps (1-3 completed, 4 active)
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(4, List.of(1, 2, 3)));
+        // Wizard steps (1 completed, 2 active)
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(2, List.of(1)));
 
         // Add registration to model
         model.addAttribute("registration", registration);
         model.addAttribute("registrationId", id);
+
+        // Add school year for header
+        SchoolYear registrationSchoolYear = schoolYearService.getRegistrationSchoolYear();
+        model.addAttribute("schoolYearDescription", registrationSchoolYear.getDescription());
 
         // Form data
         StudentForm studentForm = new StudentForm();
@@ -66,7 +78,7 @@ public class StudentInfoController {
         }
 
         model.addAttribute("studentForm", studentForm);
-        model.addAttribute("nationaliteiten", getNationaliteiten());
+        model.addAttribute("nationaliteiten", nationalityService.getAllNationalities());
 
         return "student-info";
     }
@@ -96,17 +108,5 @@ public class StudentInfoController {
         }
 
         return "redirect:/inschrijving/start";
-    }
-
-    private List<Nationaliteit> getNationaliteiten() {
-        List<Nationaliteit> nationaliteiten = new ArrayList<>();
-        nationaliteiten.add(new Nationaliteit("1", "Belg"));
-        nationaliteiten.add(new Nationaliteit("4", "Congolees"));
-        nationaliteiten.add(new Nationaliteit("7", "Frans"));
-        nationaliteiten.add(new Nationaliteit("16", "Marokkaans"));
-        nationaliteiten.add(new Nationaliteit("8", "Nederlands"));
-        nationaliteiten.add(new Nationaliteit("13", "Spaans"));
-        nationaliteiten.add(new Nationaliteit("0", "Anders"));
-        return nationaliteiten;
     }
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="nl" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Fout - Inschrijvingen SNH</title>
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Er is een fout opgetreden</h1>
+                
+                <!-- Error Alert -->
+                <div class="alert alert-danger fade show" role="alert">
+                    <div>
+                        <strong>Foutcode: </strong><span th:text="${status} ?: '500'">500</span><br>
+                        <strong>Boodschap: </strong><span th:text="${error} ?: 'Er is een onverwachte fout opgetreden'">Er is een onverwachte fout opgetreden</span>
+                    </div>
+                </div>
+
+                <div class="alert alert-info fade show" role="alert" style="margin-top: 1.5rem;">
+                    <div>
+                        <strong>Wat kunt u doen?</strong>
+                        <ul style="margin: 0.5rem 0 0 1.5rem;">
+                            <li>Probeer het opnieuw door op onderstaande knop te klikken</li>
+                            <li>Indien het probleem aanhoudt, contacteer de schooladministratie</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 2rem;">
+                    <a th:href="@{/inschrijving/start}" class="btn btn--primary">
+                        Terug naar startpagina
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

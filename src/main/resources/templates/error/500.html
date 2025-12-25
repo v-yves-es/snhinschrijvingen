@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="nl" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Serverfout - Inschrijvingen SNH</title>
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Interne serverfout</h1>
+                
+                <!-- 500 Alert -->
+                <div class="alert alert-danger fade show" role="alert">
+                    <div>
+                        <strong>Foutcode: 500</strong><br>
+                        Er is een interne fout opgetreden op de server. Onze excuses voor het ongemak.
+                    </div>
+                </div>
+
+                <div class="alert alert-info fade show" role="alert" style="margin-top: 1.5rem;">
+                    <div>
+                        <strong>Wat kunt u doen?</strong>
+                        <ul style="margin: 0.5rem 0 0 1.5rem;">
+                            <li>Probeer het over enkele ogenblikken opnieuw</li>
+                            <li>Indien het probleem aanhoudt, contacteer de schooladministratie</li>
+                            <li>Vermeld bij contact de datum en het tijdstip van deze fout</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 2rem;">
+                    <a th:href="@{/inschrijving/start}" class="btn btn--primary">
+                        Terug naar startpagina
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

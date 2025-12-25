@@ -3,6 +3,7 @@ package be.achieveit.snhinschrijvingen.service;
 import be.achieveit.snhinschrijvingen.model.EmailStatus;
 import be.achieveit.snhinschrijvingen.model.Registration;
 import be.achieveit.snhinschrijvingen.model.RegistrationStatus;
+import be.achieveit.snhinschrijvingen.model.SchoolYear;
 import be.achieveit.snhinschrijvingen.repository.RegistrationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,9 +23,13 @@ public class RegistrationService {
     private static final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 
     private final RegistrationRepository registrationRepository;
+    private final SchoolYearService schoolYearService;
 
-    public RegistrationService(final RegistrationRepository registrationRepository) {
+    public RegistrationService(
+            final RegistrationRepository registrationRepository,
+            final SchoolYearService schoolYearService) {
         this.registrationRepository = registrationRepository;
+        this.schoolYearService = schoolYearService;
     }
 
     @Transactional
@@ -33,13 +37,18 @@ public class RegistrationService {
         Registration registration = new Registration();
         registration.setEmail(email.toLowerCase().trim());
         registration.setEmailHash(hashEmail(email));
-        registration.setSchoolYear(getCurrentSchoolYear());
+        
+        // Get registration school year (next year after current)
+        SchoolYear registrationSchoolYear = schoolYearService.getRegistrationSchoolYear();
+        registration.setSchoolYear(registrationSchoolYear.getId());
+        
         registration.setStatus(RegistrationStatus.PENDING);
         registration.setEmailStatus(EmailStatus.UNVERIFIED);
         registration.setCurrentStep("EMAIL_VERIFICATION");
 
         Registration saved = registrationRepository.save(registration);
-        logger.info("Created new registration with ID: {} for email: {}", saved.getId(), email);
+        logger.info("Created new registration with ID: {} for email: {} for school year: {}", 
+                saved.getId(), email, registrationSchoolYear.getId());
 
         return saved;
     }
@@ -111,21 +120,6 @@ public class RegistrationService {
         } catch (NoSuchAlgorithmException e) {
             logger.error("Error hashing email", e);
             throw new RuntimeException("Error hashing email", e);
-        }
-    }
-
-    /**
-     * Get current school year in format "2025-2026"
-     */
-    private String getCurrentSchoolYear() {
-        int currentYear = Year.now().getValue();
-        int currentMonth = java.time.LocalDate.now().getMonthValue();
-
-        // School year typically starts in September
-        if (currentMonth >= 9) {
-            return currentYear + "-" + (currentYear + 1);
-        } else {
-            return (currentYear - 1) + "-" + currentYear;
         }
     }
 }

@@ -121,11 +121,11 @@
                                     <div class="form-radio-group">
                                         <label class="form-radio">
                                             <input type="radio" th:field="*{geslacht}" value="M">
-                                            <span>Jongen</span>
+                                            <span>Man</span>
                                         </label>
                                         <label class="form-radio">
                                             <input type="radio" th:field="*{geslacht}" value="V">
-                                            <span>Meisje</span>
+                                            <span>Vrouw</span>
                                         </label>
                                         <label class="form-radio">
                                             <input type="radio" th:field="*{geslacht}" value="A">
@@ -178,8 +178,8 @@
                                         <label class="form-radio" th:each="nat : ${nationaliteiten}">
                                             <input type="radio" 
                                                    th:field="*{nationaliteit}" 
-                                                   th:value="${nat.value}">
-                                            <span th:text="${nat.label}">Nationaliteit</span>
+                                                   th:value="${nat.code}">
+                                            <span th:text="${nat.nameNl}">Nationaliteit</span>
                                         </label>
                                     </div>
                                 </div>
