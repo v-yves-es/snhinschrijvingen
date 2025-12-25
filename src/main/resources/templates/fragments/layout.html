@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org" th:fragment="layout (title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Inschrijvingen - SNH</title>
+    <link rel="stylesheet" th:href="@{/css/snh-style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.typekit.net/stt7kiu.css">
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+    
+    <main class="main">
+        <div th:replace="${content}">
+            <p>Content placeholder</p>
+        </div>
+    </main>
+    
+    <script th:src="@{/js/form-validation.js}"></script>
+    <script th:src="@{/js/alerts.js}"></script>
+</body>
+</html>

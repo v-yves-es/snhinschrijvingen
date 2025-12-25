@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="nl" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Verifiëer emailadres - Inschrijvingen SNH</title>
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Verifiëer emailadres</h1>
+                
+                <!-- Info Alert -->
+                <div class="alert alert-info fade show" role="alert">
+                    <div>Om te kunnen starten met het inschrijfproces moet uw emailadres geverifieerd worden.</div><br>
+
+                    <strong>Belangrijk:</strong>
+                    Geef het <strong>emailadres van de ouder of voogd</strong> op, niet dit van de leerling die u wenst in te schrijven.<br><br>
+                    Na het opgeven van het emailadres zal een <strong>verificatie-email</strong> verstuurd worden met een persoonlijke link, waarna het inschrijvingsproces kan aangevat worden.
+                </div>
+                
+                <form class="form" th:action="@{/inschrijving/start}" method="post" th:object="${emailForm}" data-validate="true">
+                    <div class="form-group">
+                        <label for="emailadres" class="form-label">Emailadres ouder/voogd</label>
+                        <input 
+                            type="email" 
+                            id="emailadres" 
+                            name="emailadres" 
+                            class="form-input"
+                            th:field="*{emailadres}"
+                            placeholder="naam@voorbeeld.be"
+                            required
+                            data-validate="email"
+                        >
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn--primary">Verifiëren</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

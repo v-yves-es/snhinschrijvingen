@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div class="wizard" th:fragment="wizard">
+        <ul class="wizard__steps">
+            <li th:each="step : ${wizardSteps}" th:class="${step.cssClass}">
+                <a th:href="${step.url}" class="wizard__link">
+                    <span class="wizard__number" th:text="${step.number}">1</span>
+                    <span class="wizard__label" th:text="${step.label}">Step</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!--/* 
+        Navigation buttons fragment
+        Parameters:
+        - backUrl: URL voor de vorige/terug button
+        - backLabel: Label voor de terug button (default: "Vorige")
+        - nextLabel: Label voor de volgende button (default: "Volgende")
+        - showBack: Boolean om terug button te tonen (default: true)
+    */-->
+    <div class="form-actions" th:fragment="navigation(backUrl, backLabel, nextLabel, showBack)">
+        <div class="btn-group">
+            <!-- Back button (if showBack is true) -->
+            <a th:if="${showBack != null ? showBack : true}" 
+               th:href="${backUrl}" 
+               class="btn btn--outline">
+                <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                    <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span th:text="${backLabel != null ? backLabel : 'Vorige'}">Vorige</span>
+            </a>
+            
+            <!-- Next/Submit button -->
+            <button type="submit" class="btn btn--primary">
+                <span th:text="${nextLabel != null ? nextLabel : 'Volgende'}">Volgende</span>
+                <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    
+    <!--/* 
+        Simple back button (for non-form pages)
+    */-->
+    <div class="form-actions" th:fragment="backButton(backUrl, backLabel)">
+        <form th:action="${backUrl}" method="get" style="display: inline;">
+            <button type="submit" class="btn btn--secondary">
+                <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                    <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span th:text="${backLabel != null ? backLabel : 'Terug'}">Terug</span>
+            </button>
+        </form>
+    </div>
+</body>
+</html>

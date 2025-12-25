@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation Demo - SNH</title>
+    <link rel="stylesheet" href="/css/snh-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .demo-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .demo-info {
+            background-color: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin-bottom: 30px;
+        }
+        .demo-info h2 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .demo-info ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .demo-info li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-info">
+            <h2>📋 Form Validation Demo</h2>
+            <p><strong>Hoe het werkt:</strong></p>
+            <ul>
+                <li>🔵 <strong>Blauw</strong>: Actief veld (focus)</li>
+                <li>🟢 <strong>Groen</strong>: Veld is geldig</li>
+                <li>🔴 <strong>Rood</strong>: Veld is ongeldig (met foutmelding)</li>
+                <li>⚡ <strong>Real-time</strong>: Validatie na het verlaten van het veld</li>
+                <li>🛡️ <strong>Submit blokkering</strong>: Formulier kan niet verzonden worden met fouten</li>
+            </ul>
+        </div>
+
+        <div class="form-card">
+            <h1 class="form-title">Test Formulier</h1>
+            <form class="form" method="post" action="#" data-validate="true">
+                
+                <fieldset class="form-section">
+                    <div class="card-body">
+                        <legend class="form-legend">Basis Validatie</legend>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="voornaam" class="form-label">
+                                    Voornaam <span class="badge badge--required">VERPLICHT</span>
+                                </label>
+                                <input type="text" 
+                                       id="voornaam" 
+                                       name="voornaam" 
+                                       class="form-input" 
+                                       required
+                                       data-min-length="2"
+                                       placeholder="Minimaal 2 karakters">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="achternaam" class="form-label">
+                                    Achternaam <span class="badge badge--required">VERPLICHT</span>
+                                </label>
+                                <input type="text" 
+                                       id="achternaam" 
+                                       name="achternaam" 
+                                       class="form-input" 
+                                       required
+                                       data-min-length="2"
+                                       placeholder="Minimaal 2 karakters">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email" class="form-label">
+                                    Email <span class="badge badge--required">VERPLICHT</span>
+                                </label>
+                                <input type="email" 
+                                       id="email" 
+                                       name="email" 
+                                       class="form-input" 
+                                       required
+                                       data-validate="email"
+                                       placeholder="naam@voorbeeld.be">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="telefoon" class="form-label">
+                                    Telefoon <span class="badge badge--required">VERPLICHT</span>
+                                </label>
+                                <input type="tel" 
+                                       id="telefoon" 
+                                       name="telefoon" 
+                                       class="form-input" 
+                                       required
+                                       data-validate="phone"
+                                       placeholder="+32476123456 of 0476123456">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <div class="card-body">
+                        <legend class="form-legend">Geavanceerde Validatie</legend>
+
+                        <div class="form-row">
+                            <div class="form-group form-group--large">
+                                <label for="adres" class="form-label">
+                                    Adres <span class="badge badge--required">VERPLICHT</span>
+                                </label>
+                                <input type="text" 
+                                       id="adres" 
+                                       name="adres" 
+                                       class="form-input" 
+                                       required
+                                       data-min-length="5"
+                                       placeholder="Straat nummer">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group form-group--small">
+                                <label for="postcode" class="form-label">
+                                    Postcode <span class="badge badge--required">VERPLICHT</span>
+                                </label>
+                                <input type="text" 
+                                       id="postcode" 
+                                       name="postcode" 
+                                       class="form-input" 
+                                       required
+                                       data-validate="postalCode"
+                                       maxlength="4"
+                                       placeholder="1000">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group form-group--small">
+                                <label for="gemeente" class="form-label">
+                                    Gemeente <span class="badge badge--required">VERPLICHT</span>
+                                </label>
+                                <input type="text" 
+                                       id="gemeente" 
+                                       name="gemeente" 
+                                       class="form-input" 
+                                       required
+                                       placeholder="Brussel">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="rijksregister" class="form-label">
+                                    Rijksregisternummer <span class="badge badge--required">VERPLICHT</span>
+                                </label>
+                                <input type="text" 
+                                       id="rijksregister" 
+                                       name="rijksregister" 
+                                       class="form-input" 
+                                       required
+                                       data-validate="rijksregisternummer"
+                                       placeholder="YYMMDD-XXX-XX"
+                                       maxlength="15">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="optioneel" class="form-label">
+                                    Optioneel veld (niet verplicht)
+                                </label>
+                                <input type="text" 
+                                       id="optioneel" 
+                                       name="optioneel" 
+                                       class="form-input" 
+                                       placeholder="Dit veld is optioneel">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <div class="card-body">
+                        <legend class="form-legend">Test Voorbeelden</legend>
+                        
+                        <div class="form-row">
+                            <div class="form-group form-group--full">
+                                <p style="background-color: #fff3cd; padding: 15px; border-radius: 4px; border-left: 4px solid #ffc107;">
+                                    <strong>💡 Test de validatie:</strong><br>
+                                    • <strong>Email:</strong> Probeer "test" (ongeldig) vs "test@email.be" (geldig)<br>
+                                    • <strong>Telefoon:</strong> Probeer "123" (ongeldig) vs "+32476123456" (geldig)<br>
+                                    • <strong>Postcode:</strong> Probeer "12" (ongeldig) vs "8500" (geldig)<br>
+                                    • <strong>Rijksregister:</strong> Gebruik formaat "YYMMDD-XXX-XX" bijv. "000101-123-45"<br>
+                                    • <strong>Minimale lengte:</strong> Naam velden vereisen minimaal 2 karakters
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary">
+                        Test Verzenden
+                        <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/form-validation.js"></script>
+</body>
+</html>

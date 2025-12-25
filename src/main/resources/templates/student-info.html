@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="nl" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Algemene Info - Inschrijvingen SNH</title>
+</head>
+<body>
+    <section>
+        <div th:replace="~{fragments/wizard :: wizard}"></div>
+
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Algemene info</h1>
+                <form class="form" th:action="@{/inschrijving/student-info}" method="post" th:object="${studentForm}" data-validate="true">
+                    
+                    <!-- Leerling Section -->
+                    <fieldset class="form-section">
+                        <div class="card-body">
+                            <legend class="form-legend">Leerling</legend>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="voornaamLeerling" class="form-label">
+                                        Voornaam van de leerling
+                                        <span class="badge badge--required">VERPLICHT</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="voornaamLeerling" 
+                                           th:field="*{voornaamLeerling}" 
+                                           class="form-input" 
+                                           required
+                                           data-min-length="2">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="naamLeerling" class="form-label">
+                                        Familienaam van de leerling
+                                        <span class="badge badge--required">VERPLICHT</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="naamLeerling" 
+                                           th:field="*{naamLeerling}" 
+                                           class="form-input" 
+                                           required
+                                           data-min-length="2">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group form-group--large">
+                                    <label for="adres" class="form-label">
+                                        Domicilieadres: straat + nummer
+                                        <span class="badge badge--required">VERPLICHT</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="adres" 
+                                           th:field="*{adres}" 
+                                           class="form-input" 
+                                           required
+                                           data-min-length="5">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="form-group form-group--small">
+                                    <label for="postnummer" class="form-label">
+                                        Postnummer
+                                        <span class="badge badge--required">VERPLICHT</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="postnummer" 
+                                           th:field="*{postnummer}" 
+                                           class="form-input" 
+                                           required
+                                           data-validate="postalCode"
+                                           maxlength="4"
+                                           placeholder="1000">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="form-group form-group--small">
+                                    <label for="gemeente" class="form-label">
+                                        Gemeente / Stad
+                                        <span class="badge badge--required">VERPLICHT</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="gemeente" 
+                                           th:field="*{gemeente}" 
+                                           class="form-input" 
+                                           required
+                                           data-min-length="2">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="gsm" class="form-label">
+                                        Gsm-nummer van de leerling
+                                        <span class="badge badge--required">VERPLICHT</span>
+                                    </label>
+                                    <input type="tel" 
+                                           id="gsm" 
+                                           th:field="*{gsm}" 
+                                           class="form-input" 
+                                           placeholder="+32000000000" 
+                                           required
+                                           data-validate="phone">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="form-group">
+                                    &nbsp;
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Geslacht van de leerling:</label>
+                                    <div class="form-radio-group">
+                                        <label class="form-radio">
+                                            <input type="radio" th:field="*{geslacht}" value="M">
+                                            <span>Jongen</span>
+                                        </label>
+                                        <label class="form-radio">
+                                            <input type="radio" th:field="*{geslacht}" value="V">
+                                            <span>Meisje</span>
+                                        </label>
+                                        <label class="form-radio">
+                                            <input type="radio" th:field="*{geslacht}" value="A">
+                                            <span>Andere</span>
+                                        </label>
+                                        <label class="form-radio">
+                                            <input type="radio" th:field="*{geslacht}" value="X">
+                                            <span>Dat zeg ik liever niet</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rijksregisternummer" class="form-label">
+                                        Rijksregisternummer van de leerling <small>(YYMMDD-XXX-XX)</small>
+                                        <span class="badge badge--required">VERPLICHT</span>
+                                    </label>
+                                    <input type="text" 
+                                           id="rijksregisternummer" 
+                                           th:field="*{rijksregisternummer}" 
+                                           class="form-input" 
+                                           placeholder="YYMMDD-XXX-XX" 
+                                           required
+                                           data-validate="rijksregisternummer"
+                                           maxlength="15">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="geboortedatum" class="form-label">Geboortedatum van de leerling</label>
+                                    <input type="date" 
+                                           id="geboortedatum" 
+                                           th:field="*{geboortedatum}" 
+                                           class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="geboorteplaats" class="form-label">Geboorteplaats leerling</label>
+                                    <input type="text" 
+                                           id="geboorteplaats" 
+                                           th:field="*{geboorteplaats}" 
+                                           class="form-input">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group form-group--full">
+                                    <label class="form-label">Nationaliteit leerling</label>
+                                    <div class="form-radio-list">
+                                        <label class="form-radio" th:each="nat : ${nationaliteiten}">
+                                            <input type="radio" 
+                                                   th:field="*{nationaliteit}" 
+                                                   th:value="${nat.value}">
+                                            <span th:text="${nat.label}">Nationaliteit</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Form Actions -->
+                    <!-- Navigation buttons -->
+                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/start}, 'Vorige', 'Volgende', true)}"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

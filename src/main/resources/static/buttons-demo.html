@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Demo - SNH</title>
+    <link rel="stylesheet" href="/css/snh-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .demo-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .demo-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .demo-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        .button-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 style="margin-bottom: 2rem; color: var(--belfius-red);">🔘 Button Componenten Demo</h1>
+        
+        <!-- Button Types -->
+        <div class="demo-section">
+            <h2 class="demo-title">Button Types</h2>
+            
+            <div class="button-row">
+                <button class="btn btn--primary">
+                    Primary Button
+                    <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                
+                <button class="btn btn--secondary">
+                    <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                        <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Secondary Button
+                </button>
+                
+                <button class="btn btn--outline">
+                    <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                        <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Outline Button
+                </button>
+            </div>
+
+            <div class="code-block">
+<pre><!-- Primary (voor belangrijke acties) -->
+&lt;button class="btn btn--primary"&gt;Volgende&lt;/button&gt;
+
+<!-- Secondary (voor terug/annuleren) -->
+&lt;button class="btn btn--secondary"&gt;Terug&lt;/button&gt;
+
+<!-- Outline (voor minder prominente terug acties) -->
+&lt;button class="btn btn--outline"&gt;Vorige&lt;/button&gt;</pre>
+            </div>
+        </div>
+
+        <!-- Button Group Navigation -->
+        <div class="demo-section">
+            <h2 class="demo-title">Navigation Pattern (Wizard)</h2>
+            
+            <div class="form-actions">
+                <div class="btn-group">
+                    <button class="btn btn--outline">
+                        <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                            <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Vorige
+                    </button>
+                    <button class="btn btn--primary">
+                        Volgende
+                        <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="code-block">
+<pre>&lt;div class="form-actions"&gt;
+    &lt;div class="btn-group"&gt;
+        &lt;!-- Terug button (outline) --&gt;
+        &lt;a href="/previous" class="btn btn--outline"&gt;
+            &lt;svg class="btn__icon"&gt;...&lt;/svg&gt;
+            Vorige
+        &lt;/a&gt;
+        
+        &lt;!-- Volgende button (primary) --&gt;
+        &lt;button type="submit" class="btn btn--primary"&gt;
+            Volgende
+            &lt;svg class="btn__icon"&gt;...&lt;/svg&gt;
+        &lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+            </div>
+        </div>
+
+        <!-- Use Cases -->
+        <div class="demo-section">
+            <h2 class="demo-title">Use Cases</h2>
+            
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #fff; border-bottom: 2px solid #ddd;">
+                        <th style="padding: 1rem; text-align: left;">Actie</th>
+                        <th style="padding: 1rem; text-align: left;">Button Type</th>
+                        <th style="padding: 1rem; text-align: left;">Voorbeeld</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 1rem;">Form verzenden</td>
+                        <td style="padding: 1rem;">Primary</td>
+                        <td style="padding: 1rem;">
+                            <button class="btn btn--primary" style="transform: scale(0.9);">Verzenden</button>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 1rem;">Volgende stap (wizard)</td>
+                        <td style="padding: 1rem;">Primary</td>
+                        <td style="padding: 1rem;">
+                            <button class="btn btn--primary" style="transform: scale(0.9);">Volgende</button>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 1rem;">Vorige stap (wizard)</td>
+                        <td style="padding: 1rem;">Outline</td>
+                        <td style="padding: 1rem;">
+                            <button class="btn btn--outline" style="transform: scale(0.9);">Vorige</button>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 1rem;">Terug naar vorige pagina</td>
+                        <td style="padding: 1rem;">Secondary</td>
+                        <td style="padding: 1rem;">
+                            <button class="btn btn--secondary" style="transform: scale(0.9);">Terug</button>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 1rem;">Annuleren</td>
+                        <td style="padding: 1rem;">Secondary/Outline</td>
+                        <td style="padding: 1rem;">
+                            <button class="btn btn--outline" style="transform: scale(0.9);">Annuleren</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Thymeleaf Fragment -->
+        <div class="demo-section">
+            <h2 class="demo-title">Thymeleaf Fragment (navigation.html)</h2>
+            
+            <p><strong>Voor wizard pagina's met form:</strong></p>
+            <div class="code-block">
+<pre>&lt;!-- In form --&gt;
+&lt;form method="post"&gt;
+    &lt;!-- form fields --&gt;
+    
+    &lt;!-- Navigation fragment --&gt;
+    &lt;div th:replace="~{fragments/navigation :: 
+         navigation(@{/previous-url}, 'Vorige', 'Volgende', true)}"&gt;&lt;/div&gt;
+&lt;/form&gt;</pre>
+            </div>
+
+            <p style="margin-top: 2rem;"><strong>Voor info pagina's zonder form:</strong></p>
+            <div class="code-block">
+<pre>&lt;!-- Simple back button --&gt;
+&lt;div th:replace="~{fragments/navigation :: 
+     backButton(@{/back-url}, 'Terug naar vorige')}"&gt;&lt;/div&gt;</pre>
+            </div>
+        </div>
+
+        <!-- Real Examples -->
+        <div class="demo-section">
+            <h2 class="demo-title">Voorbeelden uit de Applicatie</h2>
+            
+            <h3 style="margin-bottom: 1rem;">1. Email Verificatie (geen wizard)</h3>
+            <div class="form-actions">
+                <button class="btn btn--primary">Verifiëren</button>
+            </div>
+            
+            <h3 style="margin: 2rem 0 1rem;">2. Email Verzonden (info pagina)</h3>
+            <div class="form-actions">
+                <button class="btn btn--secondary">
+                    <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                        <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Terug naar emailadres wijzigen
+                </button>
+            </div>
+            
+            <h3 style="margin: 2rem 0 1rem;">3. Student Info (wizard stap 4)</h3>
+            <div class="form-actions">
+                <div class="btn-group">
+                    <button class="btn btn--outline">
+                        <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
+                            <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Vorige
+                    </button>
+                    <button class="btn btn--primary">
+                        Volgende
+                        <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: #f9f9f9; border-radius: 8px;">
+            <h3>Test in de applicatie</h3>
+            <a href="/inschrijving/start" style="color: var(--belfius-red); font-weight: 600;">→ Email Verificatie</a> |
+            <a href="/inschrijving/student-info" style="color: var(--belfius-red); font-weight: 600;">→ Student Info (met navigatie)</a>
+        </div>
+    </div>
+</body>
+</html>

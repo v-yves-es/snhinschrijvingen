@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="nl" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Email Verzonden - Inschrijvingen SNH</title>
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="form-card">
+
+                <h1 class="form-title">Verificatie Email Verzonden</h1>
+                
+                <!-- Success Alert -->
+                <div class="alert alert-success fade show" role="alert">
+                    <strong>✅ Email succesvol verzonden!</strong><br>
+                    We hebben een verificatie-email gestuurd naar: <strong th:text="${email}">email@voorbeeld.be</strong>
+                </div>
+                
+                <!-- Info Alert -->
+                <div class="alert alert-info fade show" role="alert">
+                    <div class="alert-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <div class="alert-icon-content">
+                            <strong>Volgende stappen:</strong>
+                            <ol style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                                <li>Open uw mailbox</li>
+                                <li>Zoek naar een email van <strong>SNH Inschrijvingen</strong></li>
+                                <li>Controleer ook uw <strong>spam/ongewenste e-mail</strong> map</li>
+                                <li>Klik op de <strong>verificatielink</strong> in de email</li>
+                                <li>U wordt automatisch doorgestuurd naar de volgende stap</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Warning Alert -->
+                <div class="alert alert-warning fade show" role="alert">
+                    <strong>⚠️ Email niet ontvangen?</strong><br>
+                    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                        <li>Wacht enkele minuten en controleer opnieuw</li>
+                        <li>Controleer uw spam/junk mail folder</li>
+                        <li>Controleer of het emailadres correct is: <strong th:text="${email}">email@voorbeeld.be</strong></li>
+                        <li>Neem contact op met de school als het probleem aanhoudt</li>
+                    </ul>
+                </div>
+
+                <!-- Back button -->
+                <div th:replace="~{fragments/navigation :: backButton(@{/inschrijving/start}, 'Terug naar emailadres wijzigen')}"></div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

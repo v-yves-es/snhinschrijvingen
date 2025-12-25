@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alert Demo - SNH</title>
+    <link rel="stylesheet" href="/css/snh-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .demo-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .demo-section {
+            margin-bottom: 3rem;
+        }
+        .demo-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 style="margin-bottom: 2rem; color: var(--belfius-red);">📢 Alert Componenten Demo</h1>
+        
+        <!-- Basic Alerts -->
+        <div class="demo-section">
+            <h2 class="demo-title">Basis Alerts</h2>
+            
+            <div class="alert alert-primary fade show" role="alert">
+                <strong>Primary</strong> - Dit is een primaire alert voor algemene informatie.
+            </div>
+            
+            <div class="alert alert-secondary fade show" role="alert">
+                <strong>Secondary</strong> - Dit is een secundaire alert voor minder belangrijke info.
+            </div>
+            
+            <div class="alert alert-success fade show" role="alert">
+                <strong>✅ Success</strong> - Actie succesvol uitgevoerd!
+            </div>
+            
+            <div class="alert alert-danger fade show" role="alert">
+                <strong>❌ Danger</strong> - Er is een fout opgetreden.
+            </div>
+            
+            <div class="alert alert-warning fade show" role="alert">
+                <strong>⚠️ Warning</strong> - Let op, dit vereist uw aandacht.
+            </div>
+            
+            <div class="alert alert-info fade show" role="alert">
+                <strong>ℹ️ Info</strong> - Handige informatie voor u.
+            </div>
+        </div>
+
+        <!-- Alerts with Links -->
+        <div class="demo-section">
+            <h2 class="demo-title">Alerts met Links</h2>
+            
+            <div class="alert alert-success fade show" role="alert">
+                Email succesvol verzonden! <a href="#" class="alert-link">Klik hier</a> om uw mailbox te openen.
+            </div>
+            
+            <div class="alert alert-warning fade show" role="alert">
+                Let op: uw sessie verloopt binnenkort. <a href="#" class="alert-link">Klik hier</a> om te verlengen.
+            </div>
+            
+            <div class="alert alert-info fade show" role="alert">
+                Meer informatie nodig? Bekijk onze <a href="#" class="alert-link">FAQ pagina</a>.
+            </div>
+        </div>
+
+        <!-- Dismissible Alerts -->
+        <div class="demo-section">
+            <h2 class="demo-title">Sluitbare Alerts</h2>
+            
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>✅ Gelukt!</strong> Uw wijzigingen zijn opgeslagen.
+                <button type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>⚠️ Let op!</strong> Vergeet niet uw werk op te slaan.
+                <button type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <strong>ℹ️ Tip:</strong> U kunt deze melding sluiten door op de X te klikken.
+                <button type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Alert with Icon -->
+        <div class="demo-section">
+            <h2 class="demo-title">Alerts met Iconen</h2>
+            
+            <div class="alert alert-info fade show" role="alert">
+                <div class="alert-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <div class="alert-icon-content">
+                        <strong>Belangrijk bericht</strong><br>
+                        Dit is een alert met een icoon aan de linkerkant. Ideaal voor belangrijke mededelingen.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning fade show" role="alert">
+                <div class="alert-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <div class="alert-icon-content">
+                        <strong>Waarschuwing</strong><br>
+                        Uw sessie verloopt over 5 minuten. Sla uw werk op.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complex Alert -->
+        <div class="demo-section">
+            <h2 class="demo-title">Uitgebreide Alert (zoals gebruikt in de applicatie)</h2>
+            
+            <div class="alert alert-info fade show" role="alert">
+                <strong>ℹ️ Belangrijk:</strong><br>
+                Geef het <strong>emailadres van de ouder of voogd</strong> op, niet dit van de leerling die u wenst in te schrijven.<br><br>
+                Na het opgeven van het emailadres zal een <strong>verificatie-email</strong> verstuurd worden. 
+                <strong>Controleer uw mailbox</strong> (inclusief spam/ongewenste e-mail map).
+            </div>
+            
+            <div class="alert alert-success fade show" role="alert">
+                <strong>✅ Email succesvol verzonden!</strong><br>
+                We hebben een verificatie-email gestuurd naar: <strong>voorbeeld@email.be</strong>
+            </div>
+            
+            <div class="alert alert-warning fade show" role="alert">
+                <strong>⚠️ Email niet ontvangen?</strong><br>
+                <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                    <li>Wacht enkele minuten en controleer opnieuw</li>
+                    <li>Controleer uw spam/junk mail folder</li>
+                    <li>Controleer of het emailadres correct is</li>
+                    <li>Neem contact op met de school als het probleem aanhoudt</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Usage Example -->
+        <div class="demo-section">
+            <h2 class="demo-title">Gebruik in Templates</h2>
+            <pre style="background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto;"><code>&lt;!-- Basis alert --&gt;
+&lt;div class="alert alert-info fade show" role="alert"&gt;
+    Dit is een info bericht.
+&lt;/div&gt;
+
+&lt;!-- Sluitbare alert --&gt;
+&lt;div class="alert alert-success alert-dismissible fade show" role="alert"&gt;
+    Succesvol opgeslagen!
+    &lt;button type="button" class="close" aria-label="Close"&gt;
+        &lt;span aria-hidden="true"&gt;&times;&lt;/span&gt;
+    &lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Alert met icoon --&gt;
+&lt;div class="alert alert-warning fade show" role="alert"&gt;
+    &lt;div class="alert-icon"&gt;
+        &lt;svg width="24" height="24"&gt;...&lt;/svg&gt;
+        &lt;div class="alert-icon-content"&gt;
+            Uw bericht hier
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: #f9f9f9; border-radius: 8px;">
+            <h3>Terug naar applicatie</h3>
+            <a href="/inschrijving/start" style="color: var(--belfius-red); font-weight: 600;">→ Email Verificatie</a> |
+            <a href="/validation-demo.html" style="color: var(--belfius-red); font-weight: 600;">→ Form Validatie Demo</a>
+        </div>
+    </div>
+
+    <script src="/js/alerts.js"></script>
+</body>
+</html>
