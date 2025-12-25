@@ -10,7 +10,7 @@
         - showBack: Boolean om terug button te tonen (default: true)
     */-->
     <div class="form-actions" th:fragment="navigation(backUrl, backLabel, nextLabel, showBack)">
-        <div class="btn-group">
+        <div class="btn-group" th:classappend="${showBack == null || showBack == true} ? '' : 'btn-group--single'">
             <!-- Back button (if showBack is true) -->
             <a th:if="${showBack != null ? showBack : true}" 
                th:href="${backUrl}" 

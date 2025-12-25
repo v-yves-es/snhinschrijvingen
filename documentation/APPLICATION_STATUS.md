@@ -4,6 +4,7 @@
 **Laatst bijgewerkt:** 25 december 2025  
 **Spring Boot:** 3.5.9  
 **Java:** 25  
+**Status:** Fase 2 in ontwikkeling  
 
 ---
 
@@ -167,6 +168,52 @@ be.achieveit.snhinschrijvingen/
 | `name_nl` | String | NOT NULL | Nederlandse naam |
 | `name_fr` | String | NOT NULL | Franse naam |
 
+### Entity: StudyDomain
+
+**Tabel:** `study_domains`
+
+| Veld | Type | Constraints | Beschrijving |
+|------|------|------------|--------------|
+| `id` | Long | PRIMARY KEY | Uniek domein ID |
+| `name` | String | NOT NULL | Naam van het domein |
+| `color` | String | | Hexadecimale kleur code |
+| `display_order` | Integer | | Volgorde in UI |
+
+**Voorbeelden:**
+- Economie en organisatie (#E85C28)
+- Maatschappij en welzijn (#6AAB41)
+- STEM (#0088FF)
+- Taal en cultuur (#E63888)
+
+### Entity: StudyOrientation
+
+**Tabel:** `study_orientations`
+
+| Veld | Type | Constraints | Beschrijving |
+|------|------|------------|--------------|
+| `id` | Long | PRIMARY KEY | Uniek oriëntatie ID |
+| `name` | String | NOT NULL | Naam van de oriëntatie |
+| `display_order` | Integer | | Volgorde in UI |
+
+**Voorbeelden:**
+- Doorstroom
+- Doorstroom/arbeidsmarkt
+- Arbeidsmarkt
+
+### Entity: StudyProgram
+
+**Tabel:** `study_programs`
+
+| Veld | Type | Constraints | Beschrijving |
+|------|------|------------|--------------|
+| `code` | String | PRIMARY KEY | Unieke code (bijv. "1A-LAT") |
+| `name` | String | NOT NULL | Naam van de richting |
+| `study_year` | Integer | NOT NULL | Jaar (1-6) |
+| `domain_id` | Long | FOREIGN KEY | Link naar study_domains (NULL voor jaar 1-2) |
+| `orientation_id` | Long | FOREIGN KEY | Link naar study_orientations (NULL voor jaar 1-2) |
+| `display_order` | Integer | | Volgorde in UI |
+| `is_active` | Boolean | DEFAULT true | Actief in huidig schooljaar |
+
 ### Enums
 
 **RegistrationStatus:**
@@ -248,11 +295,13 @@ boolean existsByEmailHash(String emailHash);
 ### ✅ Wizard Structuur
 
 **Huidige Stappen:**
-1. Email Verificatie (pre-wizard)
-2. Email Sent Info (pre-wizard)
-3. *(Placeholder)*
-4. Student Info (GEÏMPLEMENTEERD)
-5-10. *(Nog te implementeren)*
+1. Algemeen - Student Info (GEÏMPLEMENTEERD)
+2. Richting - Studiekeuze (GEÏMPLEMENTEERD)
+3-10. *(Nog te implementeren)*
+
+**Pre-Wizard Stappen:**
+- Email Verificatie (voltooid)
+- Email Sent Info (voltooid)
 
 **Wizard Features:**
 - Visuele stappenbalk bovenaan
@@ -260,16 +309,23 @@ boolean existsByEmailHash(String emailHash);
 - Voltooide stappen met vinkje
 - Responsief design
 
-### ✅ Student Info Formulier
+### ✅ Student Info Formulier (Wizard Stap 1: Algemeen)
 
 **Velden:**
-- Voornaam leerling (verplicht)
-- Naam leerling (verplicht)
-- Geboortedatum
-- Geboorteplaats
-- Nationaliteit (dropdown, dynamisch geladen uit database)
-- Rijksregisternummer
-- Geslacht (radio buttons)
+- **Leerling sectie:**
+  - Voornaam en familienaam (50/50 layout)
+  - Rijksregisternummer (100%)
+  - Geboortedatum en geboorteplaats (50/50)
+  - Geslacht (M/V radio buttons) en nationaliteit (50/50)
+- **Domicilieadres sectie:**
+  - Straat en nummer (100%)
+  - Postcode (25%) en gemeente/stad (75%)
+  - GSM nummer (100%)
+- **Vorige school sectie:**
+  - Naam en adres vorige school (radio buttons met "Anders" optie)
+  - Jaar in vorige school (radio buttons met "Anders" optie)
+  - Gevolgde richting (text input)
+  - Toestemming gegevensuitwisseling (Ja/Nee radio buttons)
 
 **Integratie:**
 - Gekoppeld aan Registration via UUID
@@ -307,6 +363,44 @@ currentMonth >= 9 ? currentYear + "-" + (currentYear + 1)
 
 **Geïnitialiseerde Nationaliteiten:**
 - België, Nederland, Frankrijk, Duitsland, Groot-Brittannië, Spanje, Italië, Polen, Roemenië, Turkije, Marokko, Andere
+
+### ✅ Study Programs Beheer
+
+**Functionaliteit:**
+- Database tabellen voor studierichtingen management
+- Hiërarchische structuur: Jaar → Domein → Oriëntatie → Programma
+- Data voor alle jaren (1-6) geladen bij startup
+- Kleurcodering per domein
+- Dynamische filtering op basis van gekozen jaar
+
+**Database Structuur:**
+- **StudyDomain:** Hoofdrichtingen (Economie, Maatschappij, STEM, Taal)
+- **StudyOrientation:** Types (Doorstroom, Doorstroom/arbeidsmarkt, Arbeidsmarkt)
+- **StudyProgram:** Specifieke richtingen per jaar
+
+**Services:**
+- StudyProgramService: Programma's ophalen per jaar
+- StudyDomainService: Domeinen beheren
+- StudyOrientationService: Oriëntaties beheren
+
+### ✅ Study Program Selection (Wizard Stap 2: Richting)
+
+**Functionaliteit:**
+- Dropdown voor jaarselectie (1ste-6de)
+- Dynamische weergave van richtingen op basis van jaar
+- Voor jaar 1-2: Eenvoudige radiobutton lijst
+- Voor jaar 3-6: Gegroepeerd per domein en oriëntatie
+  - Domeinnaam in kleur
+  - Oriëntatie in vet
+  - Richtingen als radiobuttons
+- Responsive layout met Bootstrap grid
+- AJAX laden van richtingen (future enhancement mogelijk)
+
+**Kleuren per domein:**
+- Economie en organisatie: #E85C28 (oranje)
+- Maatschappij en welzijn: #6AAB41 (groen)
+- STEM: #0088FF (blauw)
+- Taal en cultuur: #E63888 (roze)
 
 ### ✅ Error Pages
 
@@ -610,6 +704,8 @@ public class WizardStep {
 |--------|----------|-----------|--------------|
 | GET | `/inschrijving/student-info?id={id}` | StudentInfoController | Student info formulier |
 | POST | `/inschrijving/student-info` | StudentInfoController | Student info opslaan |
+| GET | `/inschrijving/richting?id={id}` | StudyProgramController | Studie richting selectie |
+| POST | `/inschrijving/richting` | StudyProgramController | Studierichting opslaan |
 
 ### Request/Response Examples
 
@@ -675,12 +771,20 @@ Response:
 ### Wizard Stappen (In Development)
 
 ```
-Stap 4: Student Info (✅ GEÏMPLEMENTEERD)
-    ├─ Voornaam, naam, geboortedatum
-    ├─ Nationaliteit, rijksregisternummer
-    └─ Navigatie: Vorige (→ start) | Volgende
+Stap 1: Algemeen - Student Info (✅ GEÏMPLEMENTEERD)
+    ├─ Leerling gegevens (naam, geboortedatum, nationaliteit, etc.)
+    ├─ Domicilieadres
+    ├─ Vorige school informatie
+    └─ Navigatie: Volgende (geen Vorige op eerste stap)
 
-Stap 5-10: (🚧 TODO)
+Stap 2: Richting - Study Program Selection (✅ GEÏMPLEMENTEERD)
+    ├─ Jaarselectie (dropdown 1-6)
+    ├─ Dynamische richtingen weergave
+    │   ├─ Jaar 1-2: Platte lijst met radiobuttons
+    │   └─ Jaar 3-6: Gegroepeerd per domein/oriëntatie
+    └─ Navigatie: Vorige (→ student-info) | Volgende
+
+Stap 3-10: (🚧 TODO)
     └─ Zie TODO.md voor details
 ```
 
@@ -1157,21 +1261,25 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 ### ✅ Completed
 - Email verificatie systeem
 - Multi-registratie ondersteuning
-- Database model (Registration entity)
-- Services (Registration, EmailVerification, Wizard)
+- Database model (Registration, SchoolYear, Nationality, StudyProgram entities)
+- Services (Registration, EmailVerification, Wizard, SchoolYear, Nationality, StudyProgram)
 - Repositories (Spring Data JPA)
-- Student Info formulier (wizard stap 4)
-- Wizard structuur en navigatie
+- Student Info formulier (wizard stap 1: Algemeen)
+- Study Program Selection (wizard stap 2: Richting)
+- Wizard structuur en navigatie (2 stappen actief)
 - Alert systeem (8 types)
 - Form validatie (client-side)
 - Navigatie fragment (herbruikbaar)
 - Button system (primary, secondary, outline)
 - Thymeleaf fragments (layout, wizard, navigation)
-- CSS framework (custom branding)
+- CSS framework (custom branding met domeinkleuren)
 - Demo pagina's (alerts, buttons, validation)
+- Flatpickr datepicker integratie (Nederlands, maandag start)
+- Study programs database met 100+ richtingen
 
 ### 🚧 In Progress
-- N/A (Fase 1 voltooid)
+- Wizard stap 3 (volgende stap in planning)
+- Database refinement (study program selection persistence)
 
 ### 📋 To Do
 - Zie `TODO.md` voor volledige lijst

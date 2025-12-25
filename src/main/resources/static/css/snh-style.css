@@ -870,6 +870,10 @@ a.btn:hover {
     justify-content: center;
 }
 
+.btn-group--single {
+    justify-content: flex-end;
+}
+
 
 /* Bootstrap Grid & Form Control Compatibility */
 .row {

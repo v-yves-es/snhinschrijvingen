@@ -22,7 +22,8 @@
 ## Prioriteiten Overzicht
 
 ### 🔴 Hoge Prioriteit (Must Have)
-- [ ] Wizard stappen 5-10 implementeren
+- [ ] Wizard stappen 3-8 implementeren
+- [ ] Study program selectie persisteren in database
 - [ ] Email integratie (echte verzending)
 - [ ] Server-side validatie
 - [ ] Error handling & logging
@@ -46,92 +47,71 @@
 
 ## Fase 2: Wizard Voltooiing
 
-### Stap 5: Adresgegevens Leerling
+### ✅ Stap 1: Algemeen (Student Info) - VOLTOOID
+
+**Status:** ✅ Completed
+
+**Geïmplementeerd:**
+- [x] StudentForm DTO aangemaakt
+- [x] Controller endpoint: `/inschrijving/student-info`
+- [x] Template: `student-info.html`
+- [x] Form sectie: Leerling (voornaam, naam, rijksregisternummer, geboortedatum, geboorteplaats, geslacht, nationaliteit)
+- [x] Form sectie: Domicilieadres (straat, nummer, postcode, gemeente, GSM)
+- [x] Form sectie: Vorige school (naam/adres, jaar, richting, toestemming gegevensuitwisseling)
+- [x] Registration entity uitgebreid met alle velden
+- [x] Service methods: `updateStudentInfo()`
+- [x] Client-side validatie
+- [x] Flatpickr datepicker integratie (Nederlands)
+- [x] Wizard update: stap 1 actief
+- [x] Pre-fill bij herladen
+- [x] Responsive layout (Bootstrap grid)
+
+---
+
+### ✅ Stap 2: Richting (Study Program Selection) - VOLTOOID
+
+**Status:** ✅ Completed
+
+**Geïmplementeerd:**
+- [x] StudyProgramForm DTO aangemaakt
+- [x] Controller endpoint: `/inschrijving/richting`
+- [x] Template: `richting.html`
+- [x] Database entities: StudyDomain, StudyOrientation, StudyProgram
+- [x] Services: StudyProgramService, StudyDomainService, StudyOrientationService
+- [x] Jaar dropdown (1-6)
+- [x] Dynamische richtingen weergave per jaar
+- [x] Jaar 1-2: Platte lijst met radiobuttons
+- [x] Jaar 3-6: Gegroepeerd per domein/oriëntatie met kleurcodering
+- [x] Data initialisatie (100+ studierichtingen)
+- [x] Wizard navigatie (vorige/volgende)
+- [x] Client-side validatie
+
+**Database vulling:**
+- [x] Study domains met kleuren (Economie, Maatschappij, STEM, Taal)
+- [x] Study orientations (Doorstroom, Doorstroom/arbeidsmarkt, Arbeidsmarkt)
+- [x] Study programs voor jaar 1-6 (volledige lijst)
+
+---
+
+### Stap 3: Nog te bepalen
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
 
-**Te implementeren:**
-- [ ] StudentAddressForm DTO aanmaken
-- [ ] Controller endpoint: `/inschrijving/adres-leerling`
-- [ ] Template: `adres-leerling.html`
-- [ ] Velden:
-  - Straat + huisnummer
-  - Postcode
-  - Gemeente
-  - Land (dropdown, default: België)
-- [ ] Registration entity uitbreiden met adresvelden
-- [ ] Service method: `updateStudentAddress()`
-- [ ] Validatie:
-  - Verplichte velden
-  - Postcode format (België: 4 cijfers)
-  - Straat niet enkel cijfers
-- [ ] Wizard update: stap 5 actief, stap 4 completed
-
-**Afhankelijkheden:**
-- Student Info (stap 4) moet voltooid zijn
-
-**Acceptatiecriteria:**
-- Adres wordt opgeslagen in database
-- Navigatie werkt (vorige/volgende)
-- Validatie werkt (client + server)
-- Pre-fill bij herladen
+**Volgende stappen in planning**
 
 ---
 
-### Stap 6: Contactgegevens Ouders
+### Stap 4: Contactgegevens Ouders (Uit originele planning - kan herordenen)
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
 
-**Te implementeren:**
-- [ ] ParentContactForm DTO aanmaken
-- [ ] Controller endpoint: `/inschrijving/ouders`
-- [ ] Template: `ouders.html`
-- [ ] Velden:
-  - **Moeder/Voogd 1:**
-    - Voornaam, naam
-    - GSM nummer
-    - Email (pre-filled met verificatie email)
-    - Adres (zelfde als leerling checkbox)
-  - **Vader/Voogd 2:**
-    - Voornaam, naam
-    - GSM nummer
-    - Email
-    - Adres (zelfde als leerling checkbox)
-- [ ] Parent entity aanmaken (relatie met Registration)
-- [ ] Service methods voor parent management
-- [ ] Validatie:
-  - Minstens 1 ouder verplicht
-  - Telefoon format (BE/NL)
-  - Email format
-- [ ] Adres inherit logic (checkbox)
-
-**Database Changes:**
-```sql
-CREATE TABLE parents (
-    id UUID PRIMARY KEY,
-    registration_id UUID NOT NULL,
-    parent_type VARCHAR(50), -- MOTHER, FATHER, GUARDIAN1, GUARDIAN2
-    firstname VARCHAR(255),
-    lastname VARCHAR(255),
-    mobile VARCHAR(50),
-    email VARCHAR(255),
-    street VARCHAR(255),
-    house_number VARCHAR(50),
-    postal_code VARCHAR(10),
-    city VARCHAR(255),
-    country VARCHAR(100),
-    FOREIGN KEY (registration_id) REFERENCES registrations(id)
-);
-```
-
-**Afhankelijkheden:**
-- Adres leerling (stap 5) moet voltooid zijn
+**Opmerking:** Adresgegevens zijn nu verplaatst naar stap 1 (Algemeen/Student Info)
 
 ---
 
-### Stap 7: Huisarts
+### Stap 5: Huisarts (Uit originele planning - kan herordenen)
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
@@ -168,11 +148,11 @@ CREATE TABLE doctors (
 ```
 
 **Afhankelijkheden:**
-- Ouders (stap 6) moet voltooid zijn
+- Ouders (stap 4) moet voltooid zijn (of herbepalen volgorde)
 
 ---
 
-### Stap 8: Medische Informatie
+### Stap 6: Medische Informatie (Uit originele planning - kan herordenen)
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
@@ -226,7 +206,7 @@ document.querySelectorAll('input[type="radio"]').forEach(radio => {
 
 ---
 
-### Stap 9: School Info & Voorkeuren
+### Stap 7: School Info & Voorkeuren (Uit originele planning - kan herordenen)
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
@@ -265,7 +245,7 @@ CREATE TABLE school_preferences (
 
 ---
 
-### Stap 10: Overzicht & Bevestiging
+### Stap 8: Overzicht & Bevestiging (Uit originele planning)
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
@@ -274,12 +254,9 @@ CREATE TABLE school_preferences (
 - [ ] Controller endpoint: `/inschrijving/overzicht`
 - [ ] Template: `overzicht.html`
 - [ ] Overzicht tonen van ALLE ingevoerde gegevens:
-  - Student info (stap 4)
-  - Adres (stap 5)
-  - Ouders (stap 6)
-  - Huisarts (stap 7)
-  - Medisch (stap 8)
-  - Voorkeuren (stap 9)
+  - Student info (stap 1: Algemeen)
+  - Study program (stap 2: Richting)
+  - ... (overige stappen)
 - [ ] "Bewerken" links bij elke sectie
 - [ ] Checkbox: "Ik bevestig dat de gegevens correct zijn"
 - [ ] Button: "Inschrijving voltooien"
@@ -1103,12 +1080,13 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
 **docker-compose.yml:**
+
 ```yaml
 version: '3.8'
 
 services:
   app:
-    build: .
+    build: ..
     ports:
       - "8080:8080"
     environment:
@@ -1116,7 +1094,7 @@ services:
       - DB_HOST=db
     depends_on:
       - db
-  
+
   db:
     image: postgres:15
     environment:
@@ -1306,7 +1284,7 @@ volumes:
 
 | Fase | Prioriteit | Geschatte Tijd | Status |
 |------|-----------|----------------|---------|
-| Wizard Stappen 5-10 | 🔴 Hoog | 3-4 weken | ❌ |
+| Wizard Stappen 3-8 | 🔴 Hoog | 3-4 weken | ❌ |
 | Email Integratie | 🔴 Hoog | 1 week | ❌ |
 | Validatie & Errors | 🔴 Hoog | 2 weken | ❌ |
 | Production DB | 🔴 Hoog | 1 week | ❌ |
@@ -1323,29 +1301,45 @@ volumes:
 
 ## Volgende Sprint Planning
 
-### Sprint 1 (Week 1-2): Wizard Voltooiing Deel 1
-- [ ] Stap 5: Adresgegevens
-- [ ] Stap 6: Ouders
+### Sprint 1 (Week 1-2): Database & Persistentie
+- [x] Stap 1: Student Info (Algemeen) - VOLTOOID
+- [x] Stap 2: Study Program Selection (Richting) - VOLTOOID
+- [ ] Study program selectie opslaan in Registration entity
+- [ ] Parent entities en relaties implementeren
 
-### Sprint 2 (Week 3-4): Wizard Voltooiing Deel 2
-- [ ] Stap 7: Huisarts
-- [ ] Stap 8: Medische info
+### Sprint 2 (Week 3-4): Wizard Voltooiing Deel 1
+- [ ] Stap 3: Te bepalen
+- [ ] Stap 4: Contactgegevens Ouders
 
-### Sprint 3 (Week 5-6): Wizard Voltooiing Deel 3
-- [ ] Stap 9: Voorkeuren
-- [ ] Stap 10: Overzicht & bevestiging
+### Sprint 3 (Week 5-6): Wizard Voltooiing Deel 2
+- [ ] Stap 5: Huisarts
+- [ ] Stap 6: Medische info
 
-### Sprint 4 (Week 7-8): Email & Validatie
+### Sprint 4 (Week 7-8): Wizard Voltooiing Deel 3  
+- [ ] Stap 7: Voorkeuren
+- [ ] Stap 8: Overzicht & bevestiging
+
+### Sprint 5 (Week 9-10): Email & Validatie
 - [ ] Email integratie
 - [ ] Server-side validatie
 - [ ] Error handling
 
-### Sprint 5 (Week 9-10): Testing & Security
+### Sprint 5 (Week 9-10): Email & Validatie
+- [ ] Email integratie
+- [ ] Server-side validatie
+- [ ] Error handling
+
+### Sprint 6 (Week 11-12): Testing & Security
 - [ ] Unit tests
 - [ ] Integration tests
 - [ ] Security implementatie
 
-### Sprint 6 (Week 11-12): Production Ready
+### Sprint 6 (Week 11-12): Testing & Security
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] Security implementatie
+
+### Sprint 7 (Week 13-14): Production Ready
 - [ ] Database setup
 - [ ] Deployment
 - [ ] Monitoring
