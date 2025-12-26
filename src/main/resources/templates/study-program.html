@@ -15,7 +15,8 @@
                 
                 <form class="form" th:action="@{/inschrijving/study-program(id=${registrationId})}" method="post" id="studyProgramForm">
                     <input type="hidden" name="id" th:value="${registrationId}">
-                    <input type="hidden" name="studyProgramId" id="selectedProgramId">
+                    <input type="hidden" name="studyProgramId" id="selectedProgramId" th:value="${selectedProgramId}">
+                    <input type="hidden" name="studyYear" id="selectedYearInput">
                     
                     <!-- Year Selection -->
                     <div class="form-section">
@@ -25,21 +26,48 @@
                             <label for="studyYear" class="form-label">
                                 In welk jaar wil je je inschrijven?
                             </label>
-                            <select id="studyYear" class="form-control form-select" required>
+                            <select id="studyYear" name="studyYearSelect" class="form-control form-select select2" data-placeholder="Kies een jaar..." required>
                                 <option value="">Kies een jaar...</option>
                                 <option th:each="year : ${availableYears}" 
                                         th:value="${year}" 
-                                        th:text="${year} + 'ste jaar'">1ste jaar</option>
+                                        th:selected="${selectedYear != null && selectedYear == year}"
+                                        th:text="${year == 1 ? '1ste jaar' : year + 'de jaar'}">1ste jaar</option>
                             </select>
                             <div class="invalid-feedback">Gelieve een jaar te selecteren</div>
+
+                            <!-- Info box for 2nd year (conditionally shown) -->
+                            <div id="secondYearInfo" class="alert alert-info fade show mt-2" role="alert" style="display: none;">
+                                <strong>ℹ️ Belangrijk voor het 2de jaar:</strong><br>
+                                Ook in het 2de jaar maken we de opsplitsing in plus- en accentklassen. De klassenraad formuleerde voor uw zoon/dochter hierover een advies met Pasen op het rapport. Voor de toewijzing aan een plus- of accentklas volgen we voor het 2de jaar steeds dat advies. Mocht u het niet eens zijn met dat advies, neem dan gerust contact op met de school: <a href="mailto:melissa.declercq@snh.be" class="alert-link">melissa.declercq@snh.be</a>.
+                            </div>
                         </div>
                     </div>
+                    
+
                     
                     <!-- Study Programs Container (populated via JavaScript) -->
                     <div id="studyProgramsContainer" style="display: none;">
                         <div class="form-section">
                             <h2 class="form-section-title">Kies je richting</h2>
                             <div id="programsList"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra Info Section -->
+                    <div id="extraInfoSection" style="display: none;">
+                        <div class="form-section">
+                            <h2 class="form-section-title">Optioneel: Extra info bij twijfel</h2>
+                            <div class="form-group">
+                                <label for="extraInfo" class="form-label">
+                                    Duid je voorkeursrichting aan, maar geef aan over welke andere keuzes je twijfelt.
+                                </label>
+                                <textarea id="extraInfo" 
+                                          name="extraInfo" 
+                                          class="form-control" 
+                                          rows="4"
+                                          th:text="${extraInfo}"
+                                          placeholder="Bijvoorbeeld: Ik twijfel tussen Economie en Organisatie en Maatschappij en Welzijn..."></textarea>
+                            </div>
                         </div>
                     </div>
                     
@@ -64,57 +92,126 @@
         
         <script th:inline="javascript">
             document.addEventListener('DOMContentLoaded', function() {
-                const yearSelect = document.getElementById('studyYear');
-                const programsContainer = document.getElementById('studyProgramsContainer');
-                const programsList = document.getElementById('programsList');
-                const submitBtn = document.getElementById('submitBtn');
-                const selectedProgramInput = document.getElementById('selectedProgramId');
-                
-                yearSelect.addEventListener('change', function() {
-                    const year = this.value;
-                    
-                    if (!year) {
-                        programsContainer.style.display = 'none';
-                        submitBtn.disabled = true;
-                        return;
-                    }
-                    
-                    // Fetch study programs for selected year
-                    fetch(`/inschrijving/study-program/programs?year=${year}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            renderPrograms(data);
-                            programsContainer.style.display = 'block';
-                            submitBtn.disabled = true;
-                            selectedProgramInput.value = '';
-                        })
-                        .catch(error => {
-                            console.error('Error loading study programs:', error);
-                            alert('Er is een fout opgetreden bij het laden van de richtingen.');
-                        });
-                });
-                
-                function renderPrograms(data) {
-                    programsList.innerHTML = '';
-                    
-                    if (data.hasGrouping) {
-                        renderGroupedPrograms(data);
-                    } else {
-                        renderSimplePrograms(data);
-                    }
-                    
-                    // Add event listeners to radio buttons
-                    const radioButtons = programsList.querySelectorAll('input[type="radio"]');
-                    radioButtons.forEach(radio => {
-                        radio.addEventListener('change', function() {
-                            selectedProgramInput.value = this.value;
-                            submitBtn.disabled = false;
-                        });
-                    });
+                // Wait for Select2 and jQuery to be loaded
+                if (typeof jQuery === 'undefined') {
+                    console.error('jQuery is not loaded!');
+                    return;
                 }
                 
-                function renderSimplePrograms(data) {
-                    const html = data.programs.map(program => `
+                jQuery(function($) {
+                    const yearSelect = $('#studyYear');
+                    const programsContainer = document.getElementById('studyProgramsContainer');
+                    const programsList = document.getElementById('programsList');
+                    const submitBtn = document.getElementById('submitBtn');
+                    const selectedProgramInput = document.getElementById('selectedProgramId');
+                    const selectedYearInput = document.getElementById('selectedYearInput');
+                    
+                    const extraInfoSection = document.getElementById('extraInfoSection');
+                    const secondYearInfo = document.getElementById('secondYearInfo');
+                    
+                    // Pre-selected values from server
+                    const preSelectedYear = /*[[${selectedYear}]]*/ null;
+                    const preSelectedProgramId = /*[[${selectedProgramId}]]*/ null;
+                    
+                    // Listen to Select2 change event
+                    yearSelect.on('select2:select', function(e) {
+                        const year = e.params.data.id;
+                        selectedYearInput.value = year;
+                        
+                        if (!year) {
+                            programsContainer.style.display = 'none';
+                            extraInfoSection.style.display = 'none';
+                            secondYearInfo.style.display = 'none';
+                            submitBtn.disabled = true;
+                            return;
+                        }
+                        
+                        // Show/hide 2nd year info box
+                        if (year === '2') {
+                            secondYearInfo.style.display = 'block';
+                        } else {
+                            secondYearInfo.style.display = 'none';
+                        }
+                        
+                        // Fetch study programs for selected year
+                        fetch(`/inschrijving/study-program/programs?year=${year}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                renderPrograms(data);
+                                programsContainer.style.display = 'block';
+                                extraInfoSection.style.display = 'block';
+                                
+                                // Re-select program if it was pre-selected
+                                if (preSelectedProgramId) {
+                                    const preSelectedRadio = document.getElementById('program_' + preSelectedProgramId);
+                                    if (preSelectedRadio) {
+                                        preSelectedRadio.checked = true;
+                                        selectedProgramInput.value = preSelectedProgramId;
+                                        submitBtn.disabled = false;
+                                    }
+                                } else {
+                                    submitBtn.disabled = true;
+                                    selectedProgramInput.value = '';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error loading study programs:', error);
+                                alert('Er is een fout opgetreden bij het laden van de richtingen.');
+                            });
+                    });
+                    
+                    // Trigger year selection on page load if pre-selected
+                    if (preSelectedYear) {
+                        yearSelect.val(preSelectedYear).trigger('change');
+                        selectedYearInput.value = preSelectedYear;
+                        
+                        // Manually trigger the data fetch
+                        const year = preSelectedYear;
+                        if (year === '2') {
+                            secondYearInfo.style.display = 'block';
+                        }
+                        
+                        fetch(`/inschrijving/study-program/programs?year=${year}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                renderPrograms(data);
+                                programsContainer.style.display = 'block';
+                                extraInfoSection.style.display = 'block';
+                                
+                                if (preSelectedProgramId) {
+                                    setTimeout(() => {
+                                        const preSelectedRadio = document.getElementById('program_' + preSelectedProgramId);
+                                        if (preSelectedRadio) {
+                                            preSelectedRadio.checked = true;
+                                            selectedProgramInput.value = preSelectedProgramId;
+                                            submitBtn.disabled = false;
+                                        }
+                                    }, 100);
+                                }
+                            });
+                    }
+                    
+                    function renderPrograms(data) {
+                        programsList.innerHTML = '';
+                        
+                        if (data.hasGrouping) {
+                            renderGroupedPrograms(data);
+                        } else {
+                            renderSimplePrograms(data);
+                        }
+                        
+                        // Add event listeners to radio buttons
+                        const radioButtons = programsList.querySelectorAll('input[type="radio"]');
+                        radioButtons.forEach(radio => {
+                            radio.addEventListener('change', function() {
+                                selectedProgramInput.value = this.value;
+                                submitBtn.disabled = false;
+                            });
+                        });
+                    }
+                    
+                    function renderSimplePrograms(data) {
+                        const html = data.programs.map(program => `
                         <div class="form-check mb-2">
                             <input type="radio" 
                                    class="form-check-input" 
@@ -128,9 +225,9 @@
                     `).join('');
                     
                     programsList.innerHTML = html;
-                }
-                
-                function renderGroupedPrograms(data) {
+                    }
+                    
+                    function renderGroupedPrograms(data) {
                     let html = '';
                     
                     for (const [domain, orientations] of Object.entries(data.groupedPrograms)) {
@@ -177,7 +274,8 @@
                     }
                     
                     programsList.innerHTML = html;
-                }
+                    }
+                });
             });
         </script>
     </section>

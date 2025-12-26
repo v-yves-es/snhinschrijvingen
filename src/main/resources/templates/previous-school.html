@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="nl" 
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Vorige School - Inschrijvingen SNH</title>
+</head>
+<body>
+    <section>
+        <div th:replace="~{fragments/wizard :: wizard}"></div>
+
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Vorige school</h1>
+                <form class="form" th:action="@{/inschrijving/previous-school(id=${registrationId})}" method="post" th:object="${previousSchoolForm}" data-validate="true">
+                    
+                    <!-- Hidden registration ID -->
+                    <input type="hidden" name="id" th:value="${registrationId}">
+                    
+                    <!-- Vorige School Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Gegevens vorige school</h2>
+
+                        <!-- Row 1: Naam school en Jaar school -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label for="vorigeSchoolAdres" class="form-label">Naam en adres vorige school</label>
+                                    <select id="vorigeSchoolAdres" 
+                                            th:field="*{vorigeSchoolAdres}" 
+                                            class="form-control select2"
+                                            data-placeholder="-- Selecteer een school --"
+                                            required>
+                                        <option value="">-- Selecteer een school --</option>
+                                        <optgroup label="Basisonderwijs">
+                                            <option value="101">BAMO Moorsele</option>
+                                            <option value="102">Basisschool Wevelgem</option>
+                                            <option value="103">Centrumschool Zwevegem</option>
+                                            <option value="104">Damiaanschool Kortrijk</option>
+                                            <option value="105">De Gulleboom Gullegem</option>
+                                            <option value="106">De Waterlelie Moorsele</option>
+                                            <option value="107">Dobbelsteen XL Heule</option>
+                                            <option value="108">Het Open Groene Marke</option>
+                                            <option value="109">Kinderland Don Bosco</option>
+                                            <option value="110">Sint-Amandscollege Zuid Kortrijk</option>
+                                            <option value="111">Sint-Pauluscollege Wevelgem</option>
+                                            <option value="112">VBS De Watermolen Heule</option>
+                                            <option value="113">VBS Sint-Eloois-Winkel</option>
+                                            <option value="114">VBS Sint-Katharina</option>
+                                            <option value="115">VBS Spes Nostra Heule</option>
+                                            <option value="116">VBS St. Vincentius Bissegem</option>
+                                            <option value="117">Wijnbergschool Wevelgem</option>
+                                        </optgroup>
+                                        <optgroup label="Secundair onderwijs">
+                                            <option value="1">Atheneum Kortrijk</option>
+                                            <option value="11">Prizma Middenschool Lendelede</option>
+                                            <option value="12">Sint-Aloysiuscollege Menen</option>
+                                            <option value="13">Sint-Pauluscollege Wevelgem</option>
+                                            <option value="15">Spes Nostra Kuurne</option>
+                                        </optgroup>
+                                        <optgroup label="Andere">
+                                            <option value="0">Anders (vul hieronder in)</option>
+                                        </optgroup>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="position-relative mb-3" id="andersSchoolContainer" style="display: none;">
+                                    <label for="vorigeSchoolAdresAnders" class="form-label">Naam en adres andere school</label>
+                                    <input type="text" 
+                                           id="vorigeSchoolAdresAnders"
+                                           th:field="*{vorigeSchoolAdresAnders}" 
+                                           class="form-control" 
+                                           placeholder="Naam en adres van andere school">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label class="form-label">Jaar in de vorige school</label>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolJaar}" 
+                                               value="5" 
+                                               id="jaar1">
+                                        <label class="form-check-label" for="jaar1">
+                                            3de jaar secundair onderwijs
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolJaar}" 
+                                               value="6" 
+                                               id="jaar2">
+                                        <label class="form-check-label" for="jaar2">
+                                            4de jaar secundair onderwijs
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" 
+                                               class="form-check-input" 
+                                               th:field="*{vorigeSchoolJaar}" 
+                                               value="0" 
+                                               id="jaarAnders">
+                                        <label class="form-check-label" for="jaarAnders">
+                                            Anders:
+                                        </label>
+                                    </div>
+                                    <input type="text" 
+                                           th:field="*{vorigeSchoolJaarAnders}" 
+                                           class="form-control mt-2" 
+                                           placeholder="Ander jaar">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Gevolgde richting -->
+                        <div class="position-relative mb-3">
+                            <label for="richtingVorigeSchool" class="form-label">Gevolgde richting in de vorige school</label>
+                            <input type="text" 
+                                   id="richtingVorigeSchool" 
+                                   th:field="*{richtingVorigeSchool}" 
+                                   class="form-control" 
+                                   placeholder="Bijvoorbeeld: Wetenschappen, Moderne talen, ..."
+                                   required
+                                   data-min-length="2">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <!-- Row 3: Toestemming gegevens uitwisselen -->
+                        <div class="position-relative mb-3">
+                            <label class="form-label">Geven de ouders de toestemming om gegevens uit te wisselen met de vorige school?</label>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" 
+                                       class="form-check-input" 
+                                       th:field="*{toestemmingVorigeSchool}" 
+                                       value="J" 
+                                       id="toestemmingJa"
+                                       required>
+                                <label class="form-check-label" for="toestemmingJa">
+                                    Ja
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" 
+                                       class="form-check-input" 
+                                       th:field="*{toestemmingVorigeSchool}" 
+                                       value="N" 
+                                       id="toestemmingNee">
+                                <label class="form-check-label" for="toestemmingNee">
+                                    Nee
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/study-program(id=${registrationId})}, 'Vorige', 'Volgende', true)}"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof jQuery !== 'undefined') {
+                jQuery(function($) {
+                    const schoolSelect = $('#vorigeSchoolAdres');
+                    const andersContainer = $('#andersSchoolContainer');
+                    const andersInput = $('#vorigeSchoolAdresAnders');
+                    
+                    // Show/hide "anders" input based on selection
+                    schoolSelect.on('change', function() {
+                        if ($(this).val() === '0') {
+                            andersContainer.slideDown();
+                            andersInput.prop('required', true);
+                        } else {
+                            andersContainer.slideUp();
+                            andersInput.prop('required', false);
+                            andersInput.val('');
+                        }
+                    });
+                    
+                    // Check on page load if "anders" was previously selected
+                    if (schoolSelect.val() === '0') {
+                        andersContainer.show();
+                        andersInput.prop('required', true);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -15,12 +15,13 @@ public class WizardService {
         this.wizardSteps = new ArrayList<>();
         wizardSteps.add(new WizardStep(1, "Algemeen", "/inschrijving/student-info"));
         wizardSteps.add(new WizardStep(2, "Richting", "/inschrijving/study-program"));
-        wizardSteps.add(new WizardStep(3, "Huisarts", "/inschrijving/huisarts"));
-        wizardSteps.add(new WizardStep(4, "Zorgvraag", "/inschrijving/zorgvraag"));
-        wizardSteps.add(new WizardStep(5, "Privacy", "/inschrijving/privacy"));
-        wizardSteps.add(new WizardStep(6, "Laptop", "/inschrijving/laptop"));
-        wizardSteps.add(new WizardStep(7, "Schoolrekening", "/inschrijving/schoolrekening"));
-        wizardSteps.add(new WizardStep(8, "Verzenden", "/inschrijving/verzenden"));
+        wizardSteps.add(new WizardStep(3, "Vorige school", "/inschrijving/previous-school"));
+        wizardSteps.add(new WizardStep(4, "Huisarts", "/inschrijving/huisarts"));
+        wizardSteps.add(new WizardStep(5, "Zorgvraag", "/inschrijving/zorgvraag"));
+        wizardSteps.add(new WizardStep(6, "Privacy", "/inschrijving/privacy"));
+        wizardSteps.add(new WizardStep(7, "Laptop", "/inschrijving/laptop"));
+        wizardSteps.add(new WizardStep(8, "Schoolrekening", "/inschrijving/schoolrekening"));
+        wizardSteps.add(new WizardStep(9, "Verzenden", "/inschrijving/verzenden"));
     }
 
     public List<WizardStep> getWizardSteps(int currentStep, List<Integer> completedSteps) {

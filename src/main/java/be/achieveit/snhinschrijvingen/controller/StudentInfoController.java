@@ -67,14 +67,35 @@ public class StudentInfoController {
         SchoolYear registrationSchoolYear = schoolYearService.getRegistrationSchoolYear();
         model.addAttribute("schoolYearDescription", registrationSchoolYear.getDescription());
 
-        // Form data
+        // Form data - pre-fill from database or use test data
         StudentForm studentForm = new StudentForm();
-        // Pre-fill if data exists
+        
         if (registration.getStudentFirstname() != null) {
+            // Load from database
             studentForm.setVoornaamLeerling(registration.getStudentFirstname());
-        }
-        if (registration.getStudentLastname() != null) {
             studentForm.setNaamLeerling(registration.getStudentLastname());
+            studentForm.setAdres(registration.getStudentAdres());
+            studentForm.setPostnummer(registration.getStudentPostnummer());
+            studentForm.setGemeente(registration.getStudentGemeente());
+            studentForm.setGsm(registration.getStudentGsm());
+            studentForm.setGeslacht(registration.getStudentGeslacht());
+            studentForm.setRijksregisternummer(registration.getStudentRijksregisternummer());
+            studentForm.setGeboortedatum(registration.getStudentGeboortedatum());
+            studentForm.setGeboorteplaats(registration.getStudentGeboorteplaats());
+            studentForm.setNationaliteit(registration.getStudentNationaliteit());
+        } else {
+            // TEMPORARY: Pre-fill with test data
+            studentForm.setVoornaamLeerling("Jan");
+            studentForm.setNaamLeerling("Janssens");
+            studentForm.setAdres("Teststraat 123");
+            studentForm.setPostnummer("8500");
+            studentForm.setGemeente("Kortrijk");
+            studentForm.setGsm("0476123456");
+            studentForm.setGeslacht("M");
+            studentForm.setRijksregisternummer("050101-123-45");
+            studentForm.setGeboortedatum(java.time.LocalDate.of(2005, 1, 1));
+            studentForm.setGeboorteplaats("Kortrijk");
+            studentForm.setNationaliteit("BE");
         }
 
         model.addAttribute("studentForm", studentForm);
@@ -91,12 +112,30 @@ public class StudentInfoController {
 
         logger.info("Processing student info for registration: {}", id);
 
-        // Update registration with student info
-        registrationService.updateStudentInfo(
-                id,
-                studentForm.getVoornaamLeerling(),
-                studentForm.getNaamLeerling()
-        );
+        Optional<Registration> registrationOpt = registrationService.findById(id);
+        if (registrationOpt.isEmpty()) {
+            logger.error("Registration not found: {}", id);
+            return "redirect:/inschrijving/start";
+        }
+
+        Registration registration = registrationOpt.get();
+
+        // Update registration with all student info
+        registration.setStudentFirstname(studentForm.getVoornaamLeerling());
+        registration.setStudentLastname(studentForm.getNaamLeerling());
+        registration.setStudentAdres(studentForm.getAdres());
+        registration.setStudentPostnummer(studentForm.getPostnummer());
+        registration.setStudentGemeente(studentForm.getGemeente());
+        registration.setStudentGsm(studentForm.getGsm());
+        registration.setStudentGeslacht(studentForm.getGeslacht());
+        registration.setStudentRijksregisternummer(studentForm.getRijksregisternummer());
+        registration.setStudentGeboortedatum(studentForm.getGeboortedatum());
+        registration.setStudentGeboorteplaats(studentForm.getGeboorteplaats());
+        registration.setStudentNationaliteit(studentForm.getNationaliteit());
+
+        registrationService.updateRegistration(registration);
+
+        logger.info("Student info saved for registration: {}", id);
 
         // Navigate to study program selection (next step in wizard)
         return "redirect:/inschrijving/study-program?id=" + id;

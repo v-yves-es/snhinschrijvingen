@@ -45,6 +45,62 @@ public class Registration {
     @Column(name = "student_lastname")
     private String studentLastname;
 
+    @Column(name = "student_adres")
+    private String studentAdres;
+
+    @Column(name = "student_postnummer")
+    private String studentPostnummer;
+
+    @Column(name = "student_gemeente")
+    private String studentGemeente;
+
+    @Column(name = "student_gsm")
+    private String studentGsm;
+
+    @Column(name = "student_geslacht")
+    private String studentGeslacht;
+
+    @Column(name = "student_rijksregisternummer")
+    private String studentRijksregisternummer;
+
+    @Column(name = "student_geboortedatum")
+    private java.time.LocalDate studentGeboortedatum;
+
+    @Column(name = "student_geboorteplaats")
+    private String studentGeboorteplaats;
+
+    @Column(name = "student_nationaliteit")
+    private String studentNationaliteit;
+
+    // Study program selection
+    @Column(name = "selected_study_year")
+    private Integer selectedStudyYear;
+
+    @Column(name = "selected_study_program_id")
+    private Long selectedStudyProgramId;
+
+    @Column(name = "study_program_extra_info")
+    private String studyProgramExtraInfo;
+
+    // Previous school information
+    @Column(name = "vorige_school_adres")
+    private String vorigeSchoolAdres;
+
+    @Column(name = "vorige_school_adres_anders")
+    private String vorigeSchoolAdresAnders;
+
+    @Column(name = "vorige_school_jaar")
+    private String vorigeSchoolJaar;
+
+    @Column(name = "vorige_school_jaar_anders")
+    private String vorigeSchoolJaarAnders;
+
+    @Column(name = "richting_vorige_school")
+    private String richtingVorigeSchool;
+
+    @Column(name = "toestemming_vorige_school")
+    private String toestemmingVorigeSchool;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -143,5 +199,149 @@ public class Registration {
 
     public void setStudentLastname(String studentLastname) {
         this.studentLastname = studentLastname;
+    }
+
+    public String getStudentAdres() {
+        return studentAdres;
+    }
+
+    public void setStudentAdres(String studentAdres) {
+        this.studentAdres = studentAdres;
+    }
+
+    public String getStudentPostnummer() {
+        return studentPostnummer;
+    }
+
+    public void setStudentPostnummer(String studentPostnummer) {
+        this.studentPostnummer = studentPostnummer;
+    }
+
+    public String getStudentGemeente() {
+        return studentGemeente;
+    }
+
+    public void setStudentGemeente(String studentGemeente) {
+        this.studentGemeente = studentGemeente;
+    }
+
+    public String getStudentGsm() {
+        return studentGsm;
+    }
+
+    public void setStudentGsm(String studentGsm) {
+        this.studentGsm = studentGsm;
+    }
+
+    public String getStudentGeslacht() {
+        return studentGeslacht;
+    }
+
+    public void setStudentGeslacht(String studentGeslacht) {
+        this.studentGeslacht = studentGeslacht;
+    }
+
+    public String getStudentRijksregisternummer() {
+        return studentRijksregisternummer;
+    }
+
+    public void setStudentRijksregisternummer(String studentRijksregisternummer) {
+        this.studentRijksregisternummer = studentRijksregisternummer;
+    }
+
+    public java.time.LocalDate getStudentGeboortedatum() {
+        return studentGeboortedatum;
+    }
+
+    public void setStudentGeboortedatum(java.time.LocalDate studentGeboortedatum) {
+        this.studentGeboortedatum = studentGeboortedatum;
+    }
+
+    public String getStudentGeboorteplaats() {
+        return studentGeboorteplaats;
+    }
+
+    public void setStudentGeboorteplaats(String studentGeboorteplaats) {
+        this.studentGeboorteplaats = studentGeboorteplaats;
+    }
+
+    public String getStudentNationaliteit() {
+        return studentNationaliteit;
+    }
+
+    public void setStudentNationaliteit(String studentNationaliteit) {
+        this.studentNationaliteit = studentNationaliteit;
+    }
+
+    public Integer getSelectedStudyYear() {
+        return selectedStudyYear;
+    }
+
+    public void setSelectedStudyYear(Integer selectedStudyYear) {
+        this.selectedStudyYear = selectedStudyYear;
+    }
+
+    public Long getSelectedStudyProgramId() {
+        return selectedStudyProgramId;
+    }
+
+    public void setSelectedStudyProgramId(Long selectedStudyProgramId) {
+        this.selectedStudyProgramId = selectedStudyProgramId;
+    }
+
+    public String getStudyProgramExtraInfo() {
+        return studyProgramExtraInfo;
+    }
+
+    public void setStudyProgramExtraInfo(String studyProgramExtraInfo) {
+        this.studyProgramExtraInfo = studyProgramExtraInfo;
+    }
+
+    public String getVorigeSchoolAdres() {
+        return vorigeSchoolAdres;
+    }
+
+    public void setVorigeSchoolAdres(String vorigeSchoolAdres) {
+        this.vorigeSchoolAdres = vorigeSchoolAdres;
+    }
+
+    public String getVorigeSchoolAdresAnders() {
+        return vorigeSchoolAdresAnders;
+    }
+
+    public void setVorigeSchoolAdresAnders(String vorigeSchoolAdresAnders) {
+        this.vorigeSchoolAdresAnders = vorigeSchoolAdresAnders;
+    }
+
+    public String getVorigeSchoolJaar() {
+        return vorigeSchoolJaar;
+    }
+
+    public void setVorigeSchoolJaar(String vorigeSchoolJaar) {
+        this.vorigeSchoolJaar = vorigeSchoolJaar;
+    }
+
+    public String getVorigeSchoolJaarAnders() {
+        return vorigeSchoolJaarAnders;
+    }
+
+    public void setVorigeSchoolJaarAnders(String vorigeSchoolJaarAnders) {
+        this.vorigeSchoolJaarAnders = vorigeSchoolJaarAnders;
+    }
+
+    public String getRichtingVorigeSchool() {
+        return richtingVorigeSchool;
+    }
+
+    public void setRichtingVorigeSchool(String richtingVorigeSchool) {
+        this.richtingVorigeSchool = richtingVorigeSchool;
+    }
+
+    public String getToestemmingVorigeSchool() {
+        return toestemmingVorigeSchool;
+    }
+
+    public void setToestemmingVorigeSchool(String toestemmingVorigeSchool) {
+        this.toestemmingVorigeSchool = toestemmingVorigeSchool;
     }
 }

@@ -37,15 +37,28 @@ public class StudyProgramController {
     
     @GetMapping("/study-program")
     public String showStudyProgramSelection(@RequestParam("id") UUID registrationId, Model model) {
-        Optional<Registration> registration = registrationService.findById(registrationId);
+        Optional<Registration> registrationOpt = registrationService.findById(registrationId);
         
-        if (registration.isEmpty()) {
+        if (registrationOpt.isEmpty()) {
             return "redirect:/inschrijving/start";
         }
         
+        Registration registration = registrationOpt.get();
+        
         model.addAttribute("registrationId", registrationId.toString());
         model.addAttribute("availableYears", studyProgramService.getAvailableYears());
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(2));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(2, List.of(1)));
+        
+        // Pre-fill selected year and program if exists
+        if (registration.getSelectedStudyYear() != null) {
+            model.addAttribute("selectedYear", registration.getSelectedStudyYear());
+        }
+        if (registration.getSelectedStudyProgramId() != null) {
+            model.addAttribute("selectedProgramId", registration.getSelectedStudyProgramId());
+        }
+        if (registration.getStudyProgramExtraInfo() != null) {
+            model.addAttribute("extraInfo", registration.getStudyProgramExtraInfo());
+        }
         
         return "study-program";
     }
@@ -107,18 +120,28 @@ public class StudyProgramController {
     
     @PostMapping("/study-program")
     public String saveStudyProgram(@RequestParam("id") UUID registrationId,
-                                  @RequestParam("studyProgramId") Long studyProgramId) {
+                                  @RequestParam("studyProgramId") Long studyProgramId,
+                                  @RequestParam(value = "extraInfo", required = false) String extraInfo,
+                                  @RequestParam(value = "studyYear", required = false) Integer studyYear) {
         Optional<Registration> registrationOpt = registrationService.findById(registrationId);
-        Optional<StudyProgram> programOpt = studyProgramService.getStudyProgramByCode(studyProgramId.toString());
         
         if (registrationOpt.isEmpty()) {
             return "redirect:/inschrijving/start";
         }
         
-        // Save study program to registration (you'll need to add this field to Registration entity)
-        // For now, just move to next step
+        Registration registration = registrationOpt.get();
         
-        return "redirect:/inschrijving/next-step?id=" + registrationId;
+        // Save study program selection to registration
+        registration.setSelectedStudyProgramId(studyProgramId);
+        registration.setSelectedStudyYear(studyYear);
+        registration.setStudyProgramExtraInfo(extraInfo);
+        
+        registrationService.updateRegistration(registration);
+        
+        logger.info("Study program saved for registration: {}, programId: {}, year: {}", 
+                    registrationId, studyProgramId, studyYear);
+        
+        return "redirect:/inschrijving/previous-school?id=" + registrationId;
     }
     
     private Map<String, Object> mapProgram(StudyProgram program) {
