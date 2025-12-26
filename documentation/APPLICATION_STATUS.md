@@ -421,7 +421,7 @@ currentMonth >= 9 ? currentYear + "-" + (currentYear + 1)
 **Locatie:** `src/main/resources/static/css/snh-style.css`
 
 **Features:**
-- ✅ Custom branding (Belfius Red: #c92617)
+- ✅ Custom branding (snh Red: #c92617)
 - ✅ Form styling met labels en inputs
 - ✅ Button variants (primary, secondary, outline)
 - ✅ Alert componenten (8 types)

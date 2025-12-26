@@ -272,7 +272,7 @@ To test manually:
 
 ## Colors Reference
 Based on school branding from official PDF (studieaanbod_2-3de_graad_webv2.pdf):
-- **Primary Red** (#c92617) - Belfius red (header)
+- **Primary Red** (#c92617) - snh red (header)
 - **EO Blue** (#00a3e0) - Economie en organisatie
 - **MW Pink** (#e6007e) - Maatschappij en welzijn
 - **STEM Green** (#00a651) - STEM

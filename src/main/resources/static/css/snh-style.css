@@ -5,7 +5,7 @@
 }
 
 :root {
-    --belfius-red: #c92617;
+    --snh-red: #c92617;
 }
 
 body {
@@ -16,7 +16,7 @@ body {
 
 /* Header */
 .header {
-    background: var(--belfius-red);
+    background: var(--snh-red);
     padding: 0px 20px;
     position: fixed;
     top: 0;
