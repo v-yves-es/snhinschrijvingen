@@ -794,66 +794,169 @@ Stap 3-10: (🚧 TODO)
 
 ## Validatie Systeem
 
-### Client-Side Validatie
+### Client-Side Validatie ✅
 
+**Status:** ✅ Volledig geïmplementeerd (28 december 2025)  
 **Locatie:** `src/main/resources/static/js/form-validation.js`
 
-**Features:**
-- Automatische activatie op forms met `data-validate="true"`
-- Real-time validatie bij blur event
-- Visuele states:
-  - **Focus:** Blauwe border (blijft onderaan andere states)
-  - **Valid:** Groene border met ✓ icon
-  - **Invalid:** Rode border met foutmelding
+**Core Features:**
+- ✅ Automatische activatie op alle forms met required fields
+- ✅ Real-time validatie (na eerste interactie)
+- ✅ Nederlandse foutmeldingen
+- ✅ Visuele feedback (rood/groen borders + foutmeldingen)
+- ✅ Auto-scroll naar eerste fout bij submit
+- ✅ Browser native validatie uitgeschakeld (novalidate)
 
-**Implementation:**
+**Ondersteunde Field Types:**
+- ✅ Text inputs (voornaam, naam, straat, etc.)
+- ✅ Email inputs (met format validatie)
+- ✅ Tel inputs (Belgisch telefoonformaat)
+- ✅ Select dropdowns (standaard HTML)
+- ✅ Select2 dropdowns (met custom events)
+- ✅ Radio buttons (inclusief dynamische)
+- ✅ Checkboxes
+- ✅ Textareas
+- ✅ Date inputs (Flatpickr)
+
+**Validatie Rules:**
 ```javascript
-document.addEventListener('DOMContentLoaded', function() {
-    const forms = document.querySelectorAll('form[data-validate="true"]');
-    
-    forms.forEach(form => {
-        const inputs = form.querySelectorAll('input, select, textarea');
-        
-        inputs.forEach(input => {
-            // Focus state
-            input.addEventListener('focus', () => {
-                input.classList.add('is-focused');
-            });
-            
-            // Validation on blur
-            input.addEventListener('blur', () => {
-                input.classList.remove('is-focused');
-                if (input.checkValidity()) {
-                    input.classList.remove('is-invalid');
-                    input.classList.add('is-valid');
-                } else {
-                    input.classList.remove('is-valid');
-                    input.classList.add('is-invalid');
-                }
-            });
-        });
-    });
-});
+validators = {
+    required: 'Dit veld is verplicht',
+    email: 'Voer een geldig e-mailadres in',
+    phone: 'Voer een geldig telefoonnummer in',
+    rijksregisternummer: 'Voer een geldig rijksregisternummer in (YYMMDD-XXX-XX)',
+    postalCode: 'Voer een geldige postcode in (4 cijfers)',
+    minLength: 'Te kort, minimaal {length} karakters',
+    maxLength: 'Te lang, maximaal {length} karakters'
+}
 ```
 
-**CSS States:**
+**Validatie Gedrag:**
+1. **Page Load:** Geen validatie (schoon scherm)
+2. **Eerste Blur:** Veld wordt "touched", validatie begint
+3. **Real-time:** Validatie tijdens typen (alleen als touched)
+4. **Correctie:** Foutmelding verdwijnt direct bij fix
+5. **Submit:** Alle velden valideren, toon alle fouten, scroll naar eerste
+
+**Visual States:**
+
 ```css
-/* Focus state - blue border */
+/* Normal state */
+.form-control {
+    border: 1px solid #ccc;
+}
+
+/* Focus state - blue */
 .form-control:focus {
-    border-color: #007bff;
+    border-color: #80bdff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-/* Valid state - green border */
+/* Valid state - green */
 .form-control.is-valid {
     border-color: #28a745;
 }
 
-/* Invalid state - red border */
+/* Invalid state - red */
 .form-control.is-invalid {
     border-color: #dc3545;
 }
+
+/* Error message */
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
 ```
+
+**Select2 Integratie:**
+
+Select2 dropdowns krijgen speciale behandeling via `select2-init.js`:
+
+```javascript
+// Automatisch event handlers na initialisatie
+$this.on('select2:select select2:unselect select2:clear change', function() {
+    this.dataset.touched = 'true';
+    if (typeof window.validateSelect2Field === 'function') {
+        window.validateSelect2Field(this);
+    }
+});
+```
+
+Features:
+- ✅ Validatie bij selectie/deselectie
+- ✅ Rode/groene border op Select2 container
+- ✅ Foutmelding verbergt direct bij correcte selectie
+- ✅ Werkt voor ALLE Select2 dropdowns automatisch
+
+**Radio Button Validatie:**
+
+Speciale handling voor radio button groepen:
+
+```javascript
+// Valideer hele groep, niet per button
+if (field.type === 'radio') {
+    const radioGroup = document.querySelectorAll(`input[name="${field.name}"]`);
+    const isChecked = Array.from(radioGroup).some(radio => radio.checked);
+    // Alle buttons in groep krijgen dezelfde state
+}
+```
+
+Features:
+- ✅ Validatie van hele groep (niet per individuele button)
+- ✅ Preventie van dubbele validatie bij submit
+- ✅ Rode/groene state op alle buttons in groep
+- ✅ Foutmelding onder groep (niet per button)
+- ✅ Support voor dynamisch gegenereerde buttons (study-program)
+
+**Submit Button Gedrag:**
+
+```javascript
+// Button blijft ALTIJD enabled
+// Bij submit: validatie toont alle fouten
+form.addEventListener('submit', function(event) {
+    let formIsValid = true;
+    fields.forEach(field => {
+        if (!validateField(field, true)) {
+            formIsValid = false;
+        }
+    });
+    
+    if (!formIsValid) {
+        event.preventDefault();
+        // Scroll naar eerste fout
+        const firstInvalid = form.querySelector('.is-invalid');
+        firstInvalid.scrollIntoView({ behavior: 'smooth' });
+    }
+});
+```
+
+**Implementatie per Pagina:**
+
+| Pagina | Status | Validatie Fields |
+|--------|--------|------------------|
+| email-verification.html | ✅ | Email (format) |
+| student-info.html | ✅ | Voornaam, naam, RRN, geboortedatum, adres, GSM, geslacht (radio), nationaliteit (Select2) |
+| previous-school.html | ✅ | Vorige school (Select2 + anders), schooljaar (Select2), richting, toestemming (radio) |
+| study-program.html | ✅ | Jaar (Select2), richting (radio dynamisch), extra info (optioneel) |
+
+**Configuratie:**
+
+Forms activeren validatie automatisch via:
+- `data-validate="true"` attribuut, OF
+- `class="needs-validation"`, OF
+- Aanwezigheid van `required` velden (auto-detect)
+
+```html
+<form data-validate="true" novalidate>
+    <!-- Browser validatie uitgeschakeld -->
+    <!-- Custom validatie actief -->
+</form>
+```
+
+---
 
 ### Server-Side Validatie
 
@@ -1281,8 +1384,27 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
   - Zoekfunctionaliteit
   - data-no-scroll attribuut voor kleine datasets
   - Arrow styling gefixed
+  - Blauwe focus border (#80bdff)
+  - Validatie integratie in select2-init.js
+- **Client-side validatie systeem (volledig):**
+  - Real-time validatie (form-validation.js)
+  - Nederlandse foutmeldingen
+  - Support voor alle field types:
+    - Text, email, tel inputs
+    - Select dropdowns
+    - Select2 dropdowns (met custom events)
+    - Radio buttons (inclusief dynamische)
+    - Checkboxes
+    - Textareas
+    - Date inputs (Flatpickr)
+  - Validatie rules: required, email, phone, rijksregisternummer, postcode, min/max length
+  - Visual feedback: rood/groen borders, foutmeldingen onder velden
+  - Auto-scroll naar eerste fout bij submit
+  - Browser native validatie uitgeschakeld (novalidate)
+  - Submit button altijd enabled (gebruiker kan fouten zien)
+  - Select2 validatie: events in select2-init.js, direct feedback bij selectie
+  - Radio button validatie: groepsvalidatie, preventie dubbele checks
 - Alert systeem (8 types)
-- Form validatie (client-side)
 - Navigatie fragment (herbruikbaar)
 - Button system (primary, secondary, outline)
 - Thymeleaf fragments (layout, wizard, navigation)

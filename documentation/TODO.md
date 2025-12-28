@@ -520,6 +520,86 @@ class EmailServiceTest {
 
 ## Fase 4: Validatie & Error Handling
 
+### ✅ Client-side Validatie - VOLTOOID
+
+**Prioriteit:** 🔴 Hoog  
+**Status:** ✅ Completed (28 december 2025)
+
+**Geïmplementeerd:**
+- [x] Real-time form validatie systeem (form-validation.js)
+- [x] Custom Nederlandse foutmeldingen
+- [x] Visual feedback (rood/groen borders + foutmeldingen)
+- [x] Validation rules per field type:
+  - [x] Email format validatie
+  - [x] Rijksregisternummer validatie (YYMMDD-XXX-XX)
+  - [x] Postcode validatie (4 cijfers)
+  - [x] Phone validatie (Belgisch formaat +32/0XXXXXXXXX)
+  - [x] MinLength/MaxLength validatie
+- [x] Support voor alle field types:
+  - [x] Text inputs
+  - [x] Email inputs
+  - [x] Tel inputs
+  - [x] Select dropdowns
+  - [x] Select2 dropdowns (met custom event handling)
+  - [x] Radio buttons (inclusief dynamisch gegenereerde)
+  - [x] Checkboxes
+  - [x] Textareas
+  - [x] Date inputs (Flatpickr)
+- [x] Browser native validatie uitgeschakeld (novalidate attribuut)
+- [x] Validatie triggering:
+  - [x] On blur (na eerste interactie met veld)
+  - [x] On input (real-time tijdens typen, alleen als touched)
+  - [x] On change (dropdowns en radio buttons)
+  - [x] On submit (alle velden, scroll naar eerste fout)
+  - [x] Select2 events: select, unselect, clear, change
+- [x] Visual feedback systeem:
+  - [x] Rode border (#dc3545) bij fout
+  - [x] Groene border (#28a745) bij correct
+  - [x] Blauwe focus border (#80bdff) bij focus
+  - [x] Foutmeldingen onder velden (invalid-feedback)
+  - [x] Auto-scroll naar eerste fout bij submit
+  - [x] Focus op fout veld (text) of open dropdown (Select2)
+- [x] Select2 specifieke implementatie:
+  - [x] Validatie na selectie/deselectie in select2-init.js
+  - [x] Rode/groene border op Select2 container
+  - [x] Foutmelding verbergt direct bij correcte selectie
+  - [x] Global function: window.validateSelect2Field()
+  - [x] Werkt voor ALLE Select2 dropdowns automatisch
+- [x] Radio button specifieke implementatie:
+  - [x] Validatie van hele groep (niet per individuele button)
+  - [x] Preventie van dubbele validatie bij submit (Set tracking)
+  - [x] Rode/groene state op alle buttons in groep
+  - [x] Foutmelding "Maak een keuze" onder groep
+  - [x] Support voor dynamisch gegenereerde buttons (name="program")
+  - [x] Special handling voor form-radio en form-check layouts
+- [x] Submit button gedrag:
+  - [x] Altijd enabled (gebruiker kan altijd submitten)
+  - [x] Submit toont alle validatiefouten tegelijk
+  - [x] Geen frustratie over "waarom werkt button niet"
+- [x] Styling en UX:
+  - [x] Focus states voor alle veldtypes
+  - [x] Consistent kleurgebruik (rood/groen/blauw)
+  - [x] Smooth transitions (0.2s ease)
+  - [x] Form-check-input validation styling
+  - [x] Button disabled state styling (grijs, opacity 0.6)
+
+**Validatie gedrag:**
+1. **Page load**: Geen validatie (schoon scherm)
+2. **Eerste interactie**: Veld wordt "touched"
+3. **Real-time**: Validatie bij typen (als touched)
+4. **Correctie**: Foutmelding verdwijnt direct bij fix
+5. **Submit**: Alle fouten tegelijk + scroll naar eerste
+
+**JavaScript bestanden:**
+- `/static/js/form-validation.js` - Validatie engine
+- `/static/js/select2-init.js` - Select2 validatie integratie
+
+**CSS bestanden:**
+- `/static/css/snh-style.css` - Validation state styling
+- `/static/css/select2-custom.css` - Select2 validation styling
+
+---
+
 ### Server-Side Validatie
 
 **Prioriteit:** 🔴 Hoog  
