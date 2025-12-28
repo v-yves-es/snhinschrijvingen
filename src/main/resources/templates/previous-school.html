@@ -12,7 +12,7 @@
         <div class="container">
             <div class="form-card">
                 <h1 class="form-title">Vorige school</h1>
-                <form class="form" th:action="@{/inschrijving/previous-school(id=${registrationId})}" method="post" th:object="${previousSchoolForm}" data-validate="true">
+                <form class="form" th:action="@{/inschrijving/previous-school(id=${registrationId})}" method="post" th:object="${previousSchoolForm}" data-validate="true" novalidate>
                     
                     <!-- Hidden registration ID -->
                     <input type="hidden" name="id" th:value="${registrationId}">
@@ -140,6 +140,7 @@
                                     Nee
                                 </label>
                             </div>
+                            <div class="invalid-feedback"></div>
                         </div>
                     </div>
 

@@ -20,7 +20,7 @@
                     Na het opgeven van het emailadres zal een <strong>verificatie-email</strong> verstuurd worden met een persoonlijke link, waarna het inschrijvingsproces kan aangevat worden.
                 </div>
                 
-                <form class="form" th:action="@{/inschrijving/start}" method="post" th:object="${emailForm}" data-validate="true">
+                <form class="form" th:action="@{/inschrijving/start}" method="post" th:object="${emailForm}" data-validate="true" novalidate>
                     <div class="form-group">
                         <label for="emailadres" class="form-label">Emailadres ouder/voogd</label>
                         <input 

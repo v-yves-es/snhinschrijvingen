@@ -12,7 +12,7 @@
         <div class="container">
             <div class="form-card">
                 <h1 class="form-title">Algemene info</h1>
-                <form class="form" th:action="@{/inschrijving/student-info(id=${registrationId})}" method="post" th:object="${studentForm}" data-validate="true">
+                <form class="form" th:action="@{/inschrijving/student-info(id=${registrationId})}" method="post" th:object="${studentForm}" data-validate="true" novalidate>
                     
                     <!-- Hidden registration ID -->
                     <input type="hidden" name="id" th:value="${registrationId}">
@@ -101,21 +101,22 @@
                             <div class="col-md-6">
                                 <div class="position-relative mb-3">
                                     <label class="form-label">Geslacht</label>
+                                    <div class="invalid-feedback"></div>
                                     <div class="form-radio-group">
                                         <label class="form-radio">
-                                            <input type="radio" th:field="*{geslacht}" value="M" required>
+                                            <input type="radio" th:field="*{geslacht}" value="M" class="form-check-input" required>
                                             <span>Man</span>
                                         </label>
                                         <label class="form-radio">
-                                            <input type="radio" th:field="*{geslacht}" value="V">
+                                            <input type="radio" th:field="*{geslacht}" value="V" class="form-check-input">
                                             <span>Vrouw</span>
                                         </label>
                                         <label class="form-radio">
-                                            <input type="radio" th:field="*{geslacht}" value="A">
+                                            <input type="radio" th:field="*{geslacht}" value="A" class="form-check-input">
                                             <span>Andere</span>
                                         </label>
                                         <label class="form-radio">
-                                            <input type="radio" th:field="*{geslacht}" value="X">
+                                            <input type="radio" th:field="*{geslacht}" value="X" class="form-check-input">
                                             <span>Dat zeg ik liever niet</span>
                                         </label>
                                     </div>

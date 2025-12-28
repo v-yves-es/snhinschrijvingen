@@ -40,6 +40,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 $this.select2(config);
+                
+                // Add validation trigger after Select2 initialization
+                $this.on('select2:select select2:unselect select2:clear change', function() {
+                    var field = this;
+                    field.dataset.touched = 'true';
+                    
+                    // Trigger validation if validation function exists
+                    if (typeof window.validateSelect2Field === 'function') {
+                        window.validateSelect2Field(field);
+                    }
+                });
             });
             
             // For nationality select with search

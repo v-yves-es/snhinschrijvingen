@@ -13,10 +13,10 @@
             <div class="form-card">
                 <h1 class="form-title">Kies je studierichting</h1>
                 
-                <form class="form" th:action="@{/inschrijving/study-program(id=${registrationId})}" method="post" id="studyProgramForm">
+                <form class="form" th:action="@{/inschrijving/study-program(id=${registrationId})}" method="post" id="studyProgramForm" data-validate="true" novalidate>
                     <input type="hidden" name="id" th:value="${registrationId}">
-                    <input type="hidden" name="studyProgramId" id="selectedProgramId" th:value="${selectedProgramId}">
-                    <input type="hidden" name="studyYear" id="selectedYearInput">
+                    <input type="hidden" name="studyProgramId" id="selectedProgramId" th:value="${selectedProgramId}" required data-program-required="true">
+                    <input type="hidden" name="studyYear" id="selectedYearInput" required>
                     
                     <!-- Year Selection -->
                     <div class="form-section">
@@ -49,7 +49,10 @@
                     <div id="studyProgramsContainer" style="display: none;">
                         <div class="form-section">
                             <h2 class="form-section-title">Kies je richting</h2>
-                            <div id="programsList"></div>
+                            <div class="position-relative">
+                                <div id="programsList"></div>
+                                <div class="invalid-feedback" id="programsListFeedback"></div>
+                            </div>
                         </div>
                     </div>
                     
@@ -79,7 +82,7 @@
                             </svg>
                             Vorige
                         </a>
-                        <button type="submit" class="btn btn--primary" id="submitBtn" disabled>
+                        <button type="submit" class="btn btn--primary" id="submitBtn">
                             Volgende
                             <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
                                 <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +105,6 @@
                     const yearSelect = $('#studyYear');
                     const programsContainer = document.getElementById('studyProgramsContainer');
                     const programsList = document.getElementById('programsList');
-                    const submitBtn = document.getElementById('submitBtn');
                     const selectedProgramInput = document.getElementById('selectedProgramId');
                     const selectedYearInput = document.getElementById('selectedYearInput');
                     
@@ -122,7 +124,6 @@
                             programsContainer.style.display = 'none';
                             extraInfoSection.style.display = 'none';
                             secondYearInfo.style.display = 'none';
-                            submitBtn.disabled = true;
                             return;
                         }
                         
@@ -147,10 +148,8 @@
                                     if (preSelectedRadio) {
                                         preSelectedRadio.checked = true;
                                         selectedProgramInput.value = preSelectedProgramId;
-                                        submitBtn.disabled = false;
                                     }
                                 } else {
-                                    submitBtn.disabled = true;
                                     selectedProgramInput.value = '';
                                 }
                             })
@@ -184,7 +183,6 @@
                                         if (preSelectedRadio) {
                                             preSelectedRadio.checked = true;
                                             selectedProgramInput.value = preSelectedProgramId;
-                                            submitBtn.disabled = false;
                                         }
                                     }, 100);
                                 }
@@ -205,19 +203,43 @@
                         radioButtons.forEach(radio => {
                             radio.addEventListener('change', function() {
                                 selectedProgramInput.value = this.value;
-                                submitBtn.disabled = false;
+                                selectedProgramInput.dataset.touched = 'true';
+                                
+                                // Mark all radio buttons in the group as touched
+                                const radioGroup = document.querySelectorAll('input[name="program"]');
+                                radioGroup.forEach(r => {
+                                    r.dataset.touched = 'true';
+                                });
+                                
+                                // Manually trigger validation for this radio button
+                                // Remove validation classes from all radios first
+                                radioGroup.forEach(r => {
+                                    r.classList.remove('is-valid', 'is-invalid');
+                                });
+                                
+                                // Add valid class to all radios since one is selected
+                                radioGroup.forEach(r => {
+                                    r.classList.add('is-valid');
+                                });
+                                
+                                // Hide any error message
+                                const feedbackElement = document.getElementById('programsListFeedback');
+                                if (feedbackElement) {
+                                    feedbackElement.style.display = 'none';
+                                }
                             });
                         });
                     }
                     
                     function renderSimplePrograms(data) {
-                        const html = data.programs.map(program => `
+                        const html = data.programs.map((program, index) => `
                         <div class="form-check mb-2">
                             <input type="radio" 
                                    class="form-check-input" 
                                    name="program" 
                                    id="program_${program.id}" 
-                                   value="${program.id}">
+                                   value="${program.id}"
+                                   ${index === 0 ? 'required' : ''}>
                             <label class="form-check-label" for="program_${program.id}">
                                 ${program.name}
                             </label>
@@ -229,6 +251,7 @@
                     
                     function renderGroupedPrograms(data) {
                     let html = '';
+                    let isFirstRadio = true;
                     
                     for (const [domain, orientations] of Object.entries(data.groupedPrograms)) {
                         const domainColor = data.domainColors[domain] || '#333';
@@ -256,12 +279,14 @@
                                                class="form-check-input" 
                                                name="program" 
                                                id="program_${program.id}" 
-                                               value="${program.id}">
+                                               value="${program.id}"
+                                               ${isFirstRadio ? 'required' : ''}>
                                         <label class="form-check-label" for="program_${program.id}">
                                             ${program.name}
                                         </label>
                                     </div>
                                 `;
+                                isFirstRadio = false;
                             });
                             
                             html += `
