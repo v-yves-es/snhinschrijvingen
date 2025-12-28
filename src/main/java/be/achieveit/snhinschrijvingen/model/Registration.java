@@ -1,6 +1,7 @@
 package be.achieveit.snhinschrijvingen.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -83,17 +84,14 @@ public class Registration {
     private String studyProgramExtraInfo;
 
     // Previous school information
-    @Column(name = "vorige_school_adres")
-    private String vorigeSchoolAdres;
+    @Column(name = "vorige_school")
+    private String vorigeSchool;
 
-    @Column(name = "vorige_school_adres_anders")
-    private String vorigeSchoolAdresAnders;
+    @Column(name = "vorige_school_anders")
+    private String vorigeSchoolAnders;
 
     @Column(name = "vorige_school_jaar")
     private String vorigeSchoolJaar;
-
-    @Column(name = "vorige_school_jaar_anders")
-    private String vorigeSchoolJaarAnders;
 
     @Column(name = "richting_vorige_school")
     private String richtingVorigeSchool;
@@ -297,20 +295,20 @@ public class Registration {
         this.studyProgramExtraInfo = studyProgramExtraInfo;
     }
 
-    public String getVorigeSchoolAdres() {
-        return vorigeSchoolAdres;
+    public String getVorigeSchool() {
+        return vorigeSchool;
     }
 
-    public void setVorigeSchoolAdres(String vorigeSchoolAdres) {
-        this.vorigeSchoolAdres = vorigeSchoolAdres;
+    public void setVorigeSchool(String vorigeSchool) {
+        this.vorigeSchool = vorigeSchool;
     }
 
-    public String getVorigeSchoolAdresAnders() {
-        return vorigeSchoolAdresAnders;
+    public String getVorigeSchoolAnders() {
+        return vorigeSchoolAnders;
     }
 
-    public void setVorigeSchoolAdresAnders(String vorigeSchoolAdresAnders) {
-        this.vorigeSchoolAdresAnders = vorigeSchoolAdresAnders;
+    public void setVorigeSchoolAnders(String vorigeSchoolAnders) {
+        this.vorigeSchoolAnders = vorigeSchoolAnders;
     }
 
     public String getVorigeSchoolJaar() {
@@ -319,14 +317,6 @@ public class Registration {
 
     public void setVorigeSchoolJaar(String vorigeSchoolJaar) {
         this.vorigeSchoolJaar = vorigeSchoolJaar;
-    }
-
-    public String getVorigeSchoolJaarAnders() {
-        return vorigeSchoolJaarAnders;
-    }
-
-    public void setVorigeSchoolJaarAnders(String vorigeSchoolJaarAnders) {
-        this.vorigeSchoolJaarAnders = vorigeSchoolJaarAnders;
     }
 
     public String getRichtingVorigeSchool() {

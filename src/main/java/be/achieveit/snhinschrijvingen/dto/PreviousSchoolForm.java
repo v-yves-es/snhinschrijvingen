@@ -1,30 +1,29 @@
 package be.achieveit.snhinschrijvingen.dto;
 
 public class PreviousSchoolForm {
-    private String vorigeSchoolAdres;
-    private String vorigeSchoolAdresAnders;
+    private String vorigeSchool;
+    private String vorigeSchoolAnders;
     private String vorigeSchoolJaar;
-    private String vorigeSchoolJaarAnders;
     private String richtingVorigeSchool;
     private String toestemmingVorigeSchool;
 
     public PreviousSchoolForm() {
     }
 
-    public String getVorigeSchoolAdres() {
-        return vorigeSchoolAdres;
+    public String getVorigeSchool() {
+        return vorigeSchool;
     }
 
-    public void setVorigeSchoolAdres(String vorigeSchoolAdres) {
-        this.vorigeSchoolAdres = vorigeSchoolAdres;
+    public void setVorigeSchool(String vorigeSchool) {
+        this.vorigeSchool = vorigeSchool;
     }
 
-    public String getVorigeSchoolAdresAnders() {
-        return vorigeSchoolAdresAnders;
+    public String getVorigeSchoolAnders() {
+        return vorigeSchoolAnders;
     }
 
-    public void setVorigeSchoolAdresAnders(String vorigeSchoolAdresAnders) {
-        this.vorigeSchoolAdresAnders = vorigeSchoolAdresAnders;
+    public void setVorigeSchoolAnders(String vorigeSchoolAnders) {
+        this.vorigeSchoolAnders = vorigeSchoolAnders;
     }
 
     public String getVorigeSchoolJaar() {
@@ -33,14 +32,6 @@ public class PreviousSchoolForm {
 
     public void setVorigeSchoolJaar(String vorigeSchoolJaar) {
         this.vorigeSchoolJaar = vorigeSchoolJaar;
-    }
-
-    public String getVorigeSchoolJaarAnders() {
-        return vorigeSchoolJaarAnders;
-    }
-
-    public void setVorigeSchoolJaarAnders(String vorigeSchoolJaarAnders) {
-        this.vorigeSchoolJaarAnders = vorigeSchoolJaarAnders;
     }
 
     public String getRichtingVorigeSchool() {

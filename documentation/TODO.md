@@ -1,7 +1,7 @@
 # SNH Inschrijvingen - TODO List
 
-**Laatst bijgewerkt:** 25 december 2025  
-**Status:** Fase 1 voltooid, Fase 2 in planning
+**Laatst bijgewerkt:** 26 december 2025  
+**Status:** Fase 2 gedeeltelijk voltooid, voorbereiding Fase 3
 
 ---
 
@@ -68,23 +68,59 @@
 
 ---
 
-### ✅ Stap 2: Richting (Study Program Selection) - VOLTOOID
+### ✅ Stap 2: Vorige School (Previous School) - VOLTOOID
+
+**Status:** ✅ Completed
+
+**Geïmplementeerd:**
+- [x] PreviousSchoolForm DTO aangemaakt
+- [x] Controller endpoint: `/inschrijving/previous-school`
+- [x] Template: `previous-school.html`
+- [x] Select2 dropdown met zoekfunctie
+- [x] Gegroepeerde schoollijst:
+  - Basisonderwijs (17 scholen)
+  - Secundair onderwijs (5 scholen)
+  - Andere (custom input)
+- [x] "Anders" functionaliteit met dynamisch tekstveld
+- [x] Jaar vorige school (radio buttons: 3de/4de jaar + anders)
+- [x] Gevolgde richting (text input)
+- [x] Toestemming gegevensuitwisseling (ja/nee)
+- [x] Wizard navigatie (vorige/volgende)
+- [x] Client-side validatie
+- [x] Pre-fill bij herladen
+
+**Select2 Integratie:**
+- [x] Select2 bibliotheek geïntegreerd (4.1.0-rc.0)
+- [x] Custom styling met SNH branding (#c92617)
+- [x] Optgroup styling voor categorieën
+- [x] Nederlandse vertalingen
+- [x] Zoekfunctionaliteit
+- [x] data-no-scroll attribuut voor kleine lijsten
+- [x] Arrow styling gefixed (geen box meer)
+- [x] Responsive design
+
+---
+
+### ✅ Stap 3: Studierichting (Study Program Selection) - VOLTOOID
 
 **Status:** ✅ Completed
 
 **Geïmplementeerd:**
 - [x] StudyProgramForm DTO aangemaakt
-- [x] Controller endpoint: `/inschrijving/richting`
-- [x] Template: `richting.html`
+- [x] Controller endpoint: `/inschrijving/study-program`
+- [x] Template: `study-program.html`
 - [x] Database entities: StudyDomain, StudyOrientation, StudyProgram
 - [x] Services: StudyProgramService, StudyDomainService, StudyOrientationService
-- [x] Jaar dropdown (1-6)
-- [x] Dynamische richtingen weergave per jaar
+- [x] Select2 jaar dropdown (1-6) met data-no-scroll
+- [x] Dynamische richtingen weergave per jaar (AJAX)
 - [x] Jaar 1-2: Platte lijst met radiobuttons
 - [x] Jaar 3-6: Gegroepeerd per domein/oriëntatie met kleurcodering
 - [x] Data initialisatie (100+ studierichtingen)
+- [x] Info box voor 2de jaar (plus/accent klassen)
+- [x] Extra info textarea bij twijfel (optioneel)
 - [x] Wizard navigatie (vorige/volgende)
 - [x] Client-side validatie
+- [x] Pre-fill bij herladen
 
 **Database vulling:**
 - [x] Study domains met kleuren (Economie, Maatschappij, STEM, Taal)
@@ -93,7 +129,7 @@
 
 ---
 
-### Stap 3: Nog te bepalen
+### Stap 4: Nog te bepalen
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
@@ -102,7 +138,7 @@
 
 ---
 
-### Stap 4: Contactgegevens Ouders (Uit originele planning - kan herordenen)
+### Stap 5: Contactgegevens Ouders (Uit originele planning - kan herordenen)
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
@@ -111,7 +147,7 @@
 
 ---
 
-### Stap 5: Huisarts (Uit originele planning - kan herordenen)
+### Stap 6: Huisarts (Uit originele planning - kan herordenen)
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
@@ -152,7 +188,7 @@ CREATE TABLE doctors (
 
 ---
 
-### Stap 6: Medische Informatie (Uit originele planning - kan herordenen)
+### Stap 7: Medische Informatie (Uit originele planning - kan herordenen)
 
 **Prioriteit:** 🔴 Hoog  
 **Status:** ❌ Not Started
@@ -1301,23 +1337,25 @@ volumes:
 
 ## Volgende Sprint Planning
 
-### Sprint 1 (Week 1-2): Database & Persistentie
+### Sprint 1 (Week 1-2): Database & Persistentie ✅ VOLTOOID
 - [x] Stap 1: Student Info (Algemeen) - VOLTOOID
-- [x] Stap 2: Study Program Selection (Richting) - VOLTOOID
+- [x] Stap 2: Vorige School - VOLTOOID
+- [x] Stap 3: Study Program Selection (Richting) - VOLTOOID
+- [x] Select2 integratie met custom styling
 - [ ] Study program selectie opslaan in Registration entity
 - [ ] Parent entities en relaties implementeren
 
 ### Sprint 2 (Week 3-4): Wizard Voltooiing Deel 1
-- [ ] Stap 3: Te bepalen
-- [ ] Stap 4: Contactgegevens Ouders
+- [ ] Stap 4: Te bepalen
+- [ ] Stap 5: Contactgegevens Ouders
 
 ### Sprint 3 (Week 5-6): Wizard Voltooiing Deel 2
-- [ ] Stap 5: Huisarts
-- [ ] Stap 6: Medische info
+- [ ] Stap 6: Huisarts
+- [ ] Stap 7: Medische info
 
 ### Sprint 4 (Week 7-8): Wizard Voltooiing Deel 3  
-- [ ] Stap 7: Voorkeuren
-- [ ] Stap 8: Overzicht & bevestiging
+- [ ] Stap 8: Voorkeuren
+- [ ] Stap 9: Overzicht & bevestiging
 
 ### Sprint 5 (Week 9-10): Email & Validatie
 - [ ] Email integratie

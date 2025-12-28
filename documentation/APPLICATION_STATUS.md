@@ -1,10 +1,10 @@
 # SNH Inschrijvingen - Applicatie Status
 
 **Versie:** 0.0.1-SNAPSHOT  
-**Laatst bijgewerkt:** 25 december 2025  
+**Laatst bijgewerkt:** 26 december 2025  
 **Spring Boot:** 3.5.9  
 **Java:** 25  
-**Status:** Fase 2 in ontwikkeling  
+**Status:** Fase 2 gedeeltelijk voltooid  
 
 ---
 
@@ -52,6 +52,8 @@ Online inschrijvingssysteem voor SPES Nostra Heule, waarmee ouders/voogden hun k
 - **Template Engine:** Thymeleaf
 - **CSS:** Custom (SNH branding)
 - **JavaScript:** Vanilla JS (form validation, alerts)
+- **Select2:** 4.1.0-rc.0 (advanced dropdowns)
+- **Flatpickr:** Datepicker library (Nederlands)
 - **Fonts:** Montserrat, Cervo (custom)
 - **Icons:** SVG inline
 
@@ -1226,7 +1228,10 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 | `http://localhost:8080/inschrijving/start` | Email verificatie start |
 | `http://localhost:8080/inschrijving/email-sent` | Email sent bevestiging |
 | `http://localhost:8080/inschrijving/verify/{id}/{hash}` | Email verificatie link |
+| `http://localhost:8080/inschrijving/overview` | Registrations overview |
 | `http://localhost:8080/inschrijving/student-info?id={id}` | Student info formulier |
+| `http://localhost:8080/inschrijving/previous-school?id={id}` | Vorige school formulier |
+| `http://localhost:8080/inschrijving/study-program?id={id}` | Studierichting kiezen |
 | `http://localhost:8080/alerts-demo.html` | Alert componenten demo |
 | `http://localhost:8080/buttons-demo.html` | Button types demo |
 | `http://localhost:8080/validation-demo.html` | Form validatie demo |
@@ -1252,7 +1257,7 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 
 **School:** SPES Nostra Heule  
 **Developer:** AchieveIT  
-**Last Updated:** 25 december 2025
+**Last Updated:** 26 december 2025
 
 ---
 
@@ -1264,9 +1269,18 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 - Database model (Registration, SchoolYear, Nationality, StudyProgram entities)
 - Services (Registration, EmailVerification, Wizard, SchoolYear, Nationality, StudyProgram)
 - Repositories (Spring Data JPA)
-- Student Info formulier (wizard stap 1: Algemeen)
-- Study Program Selection (wizard stap 2: Richting)
-- Wizard structuur en navigatie (2 stappen actief)
+- **Wizard Stap 1:** Student Info formulier (Algemeen)
+- **Wizard Stap 2:** Previous School (Vorige School) met Select2 dropdown
+- **Wizard Stap 3:** Study Program Selection (Richting) met dynamische filtering
+- Wizard structuur en navigatie (3 stappen actief)
+- **Select2 integratie:**
+  - Select2 4.1.0-rc.0 bibliotheek
+  - Custom styling met SNH branding (#c92617)
+  - Optgroup styling voor categorieën
+  - Nederlandse vertalingen
+  - Zoekfunctionaliteit
+  - data-no-scroll attribuut voor kleine datasets
+  - Arrow styling gefixed
 - Alert systeem (8 types)
 - Form validatie (client-side)
 - Navigatie fragment (herbruikbaar)
@@ -1278,13 +1292,14 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 - Study programs database met 100+ richtingen
 
 ### 🚧 In Progress
-- Wizard stap 3 (volgende stap in planning)
+- Wizard stap 4 (volgende stap in planning)
 - Database refinement (study program selection persistence)
+- Parent entities en relaties
 
 ### 📋 To Do
 - Zie `TODO.md` voor volledige lijst
 - Email integratie (echte verzending)
-- Wizard stappen 5-10
+- Wizard stappen 4-9
 - Server-side validatie
 - Error handling
 - Testing (unit, integration)

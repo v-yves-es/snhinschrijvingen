@@ -41,10 +41,9 @@ public class PreviousSchoolController {
         
         // Create form and populate with existing data if available
         PreviousSchoolForm form = new PreviousSchoolForm();
-        form.setVorigeSchoolAdres(registration.getVorigeSchoolAdres());
-        form.setVorigeSchoolAdresAnders(registration.getVorigeSchoolAdresAnders());
+        form.setVorigeSchool(registration.getVorigeSchool());
+        form.setVorigeSchoolAnders(registration.getVorigeSchoolAnders());
         form.setVorigeSchoolJaar(registration.getVorigeSchoolJaar());
-        form.setVorigeSchoolJaarAnders(registration.getVorigeSchoolJaarAnders());
         form.setRichtingVorigeSchool(registration.getRichtingVorigeSchool());
         form.setToestemmingVorigeSchool(registration.getToestemmingVorigeSchool());
         
@@ -70,10 +69,9 @@ public class PreviousSchoolController {
         Registration registration = registrationOpt.get();
         
         // Update registration with previous school data
-        registration.setVorigeSchoolAdres(form.getVorigeSchoolAdres());
-        registration.setVorigeSchoolAdresAnders(form.getVorigeSchoolAdresAnders());
+        registration.setVorigeSchool(form.getVorigeSchool());
+        registration.setVorigeSchoolAnders(form.getVorigeSchoolAnders());
         registration.setVorigeSchoolJaar(form.getVorigeSchoolJaar());
-        registration.setVorigeSchoolJaarAnders(form.getVorigeSchoolJaarAnders());
         registration.setRichtingVorigeSchool(form.getRichtingVorigeSchool());
         registration.setToestemmingVorigeSchool(form.getToestemmingVorigeSchool());
         

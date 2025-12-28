@@ -68,6 +68,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 allowClear: false,
                 dropdownCssClass: 'select2-dropdown-no-scroll'
             });
+            
+            // For previous school year select (small list, no search needed)
+            $('#vorigeSchoolJaar').select2({
+                theme: 'classic',
+                width: '100%',
+                placeholder: 'Selecteer een jaar...',
+                minimumResultsForSearch: -1, // Disable search for small lists
+                allowClear: false,
+                dropdownCssClass: 'select2-dropdown-no-scroll'
+            });
+            
+            // Custom logic for previous school "anders" functionality
+            const vorigeSchoolSelect = $('#vorigeSchool');
+            const andersSchoolContainer = $('#andersSchoolContainer');
+            const andersSchoolInput = $('#vorigeSchoolAnders');
+            
+            if (vorigeSchoolSelect.length && andersSchoolContainer.length) {
+                // Handle selection change
+                vorigeSchoolSelect.on('select2:select change', function(e) {
+                    const value = $(this).val();
+                    
+                    if (value === '0') {
+                        andersSchoolContainer.slideDown(300);
+                        andersSchoolInput.prop('required', true);
+                        setTimeout(function() {
+                            andersSchoolInput.focus();
+                        }, 350);
+                    } else {
+                        andersSchoolContainer.slideUp(300);
+                        andersSchoolInput.prop('required', false);
+                        andersSchoolInput.val('');
+                    }
+                });
+                
+                // Check initial state on page load
+                if (vorigeSchoolSelect.val() === '0') {
+                    andersSchoolContainer.show();
+                    andersSchoolInput.prop('required', true);
+                }
+            }
         });
     }
 });

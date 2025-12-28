@@ -25,9 +25,9 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="position-relative mb-3">
-                                    <label for="vorigeSchoolAdres" class="form-label">Naam en adres vorige school</label>
-                                    <select id="vorigeSchoolAdres" 
-                                            th:field="*{vorigeSchoolAdres}" 
+                                    <label for="vorigeSchool" class="form-label">Vorige school</label>
+                                    <select id="vorigeSchool" 
+                                            th:field="*{vorigeSchool}" 
                                             class="form-control select2"
                                             data-placeholder="-- Selecteer een school --"
                                             required>
@@ -59,57 +59,46 @@
                                             <option value="15">Spes Nostra Kuurne</option>
                                         </optgroup>
                                         <optgroup label="Andere">
-                                            <option value="0">Anders (vul hieronder in)</option>
+                                            <option value="0">➕ Andere school (niet in lijst)</option>
                                         </optgroup>
                                     </select>
                                     <div class="invalid-feedback"></div>
                                 </div>
                                 <div class="position-relative mb-3" id="andersSchoolContainer" style="display: none;">
-                                    <label for="vorigeSchoolAdresAnders" class="form-label">Naam en adres andere school</label>
+                                    <label for="vorigeSchoolAnders" class="form-label">Naam andere school</label>
                                     <input type="text" 
-                                           id="vorigeSchoolAdresAnders"
-                                           th:field="*{vorigeSchoolAdresAnders}" 
+                                           id="vorigeSchoolAnders"
+                                           th:field="*{vorigeSchoolAnders}" 
                                            class="form-control" 
-                                           placeholder="Naam en adres van andere school">
+                                           placeholder="Naam van de school"
+                                           data-min-length="3">
+                                    <small class="form-text text-muted">Vul de naam van de school in</small>
+                                    <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="position-relative mb-3">
-                                    <label class="form-label">Jaar in de vorige school</label>
-                                    <div class="form-check">
-                                        <input type="radio" 
-                                               class="form-check-input" 
-                                               th:field="*{vorigeSchoolJaar}" 
-                                               value="5" 
-                                               id="jaar1">
-                                        <label class="form-check-label" for="jaar1">
-                                            3de jaar secundair onderwijs
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="radio" 
-                                               class="form-check-input" 
-                                               th:field="*{vorigeSchoolJaar}" 
-                                               value="6" 
-                                               id="jaar2">
-                                        <label class="form-check-label" for="jaar2">
-                                            4de jaar secundair onderwijs
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="radio" 
-                                               class="form-check-input" 
-                                               th:field="*{vorigeSchoolJaar}" 
-                                               value="0" 
-                                               id="jaarAnders">
-                                        <label class="form-check-label" for="jaarAnders">
-                                            Anders:
-                                        </label>
-                                    </div>
-                                    <input type="text" 
-                                           th:field="*{vorigeSchoolJaarAnders}" 
-                                           class="form-control mt-2" 
-                                           placeholder="Ander jaar">
+                                    <label for="vorigeSchoolJaar" class="form-label">Jaar in de vorige school</label>
+                                    <select id="vorigeSchoolJaar" 
+                                            th:field="*{vorigeSchoolJaar}" 
+                                            class="form-control select2"
+                                            data-placeholder="-- Selecteer een jaar --"
+                                            required>
+                                        <option value="">-- Selecteer een jaar --</option>
+                                        <optgroup label="Basisonderwijs">
+                                            <option value="B5">5de leerjaar basisonderwijs</option>
+                                            <option value="B6">6de leerjaar basisonderwijs</option>
+                                        </optgroup>
+                                        <optgroup label="Secundair onderwijs">
+                                            <option value="S1">1ste jaar secundair onderwijs</option>
+                                            <option value="S2">2de jaar secundair onderwijs</option>
+                                            <option value="S3">3de jaar secundair onderwijs</option>
+                                            <option value="S4">4de jaar secundair onderwijs</option>
+                                            <option value="S5">5de jaar secundair onderwijs</option>
+                                            <option value="S6">6de jaar secundair onderwijs</option>
+                                        </optgroup>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +118,7 @@
 
                         <!-- Row 3: Toestemming gegevens uitwisselen -->
                         <div class="position-relative mb-3">
-                            <label class="form-label">Geven de ouders de toestemming om gegevens uit te wisselen met de vorige school?</label>
+                            <label class="form-label">Ouders geven toestemming om gegevens uit te wisselen met de vorige school?</label>
                             <div class="form-check form-check-inline">
                                 <input type="radio" 
                                        class="form-check-input" 
@@ -160,35 +149,5 @@
             </div>
         </div>
     </section>
-    
-    <script th:inline="javascript">
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof jQuery !== 'undefined') {
-                jQuery(function($) {
-                    const schoolSelect = $('#vorigeSchoolAdres');
-                    const andersContainer = $('#andersSchoolContainer');
-                    const andersInput = $('#vorigeSchoolAdresAnders');
-                    
-                    // Show/hide "anders" input based on selection
-                    schoolSelect.on('change', function() {
-                        if ($(this).val() === '0') {
-                            andersContainer.slideDown();
-                            andersInput.prop('required', true);
-                        } else {
-                            andersContainer.slideUp();
-                            andersInput.prop('required', false);
-                            andersInput.val('');
-                        }
-                    });
-                    
-                    // Check on page load if "anders" was previously selected
-                    if (schoolSelect.val() === '0') {
-                        andersContainer.show();
-                        andersInput.prop('required', true);
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>
