@@ -1,7 +1,7 @@
 # SNH Inschrijvingen - TODO List
 
-**Laatst bijgewerkt:** 26 december 2025  
-**Status:** Fase 2 gedeeltelijk voltooid, voorbereiding Fase 3
+**Laatst bijgewerkt:** 29 december 2025  
+**Status:** Fase 2 - Stap 4 (Relaties) voltooid, voorbereiding Fase 3
 
 ---
 
@@ -129,12 +129,55 @@
 
 ---
 
-### Stap 4: Nog te bepalen
+### ✅ Stap 4: Relaties (Relations) - VOLTOOID
 
-**Prioriteit:** 🔴 Hoog  
-**Status:** ❌ Not Started
+**Status:** ✅ Completed
 
-**Volgende stappen in planning**
+**Geïmplementeerd:**
+- [x] RelationForm DTO aangemaakt
+- [x] Controller endpoint: `/inschrijving/relations`
+- [x] Template: `relations.html`
+- [x] Select2 dropdown voor relatietype zonder zoekfunctie (data-no-scroll)
+- [x] Relatietypes: vader, moeder, plusvader, plusmoeder, voogd, grootvader, grootmoeder, pleegvader, pleegmoeder
+- [x] Formulier velden per relatie:
+  - Type relatie (select2 dropdown, verplicht)
+  - Naam en voornaam (text input, verplicht)
+  - Telefoonnummer (tel input, verplicht)
+  - Email (email input, verplicht)
+  - Volledig adres (herbruikbaar fragment)
+- [x] Mogelijkheid om 2 relaties toe te voegen
+- [x] "Tweede relatie toevoegen" functionaliteit met dynamisch form-section blok
+- [x] "Relatie verwijderen" functionaliteit voor tweede relatie
+- [x] Minimum 1 relatie verplicht voor doorgaan naar volgende stap
+- [x] Wizard navigatie (vorige/volgende)
+- [x] Client-side validatie op alle velden
+- [x] Pre-fill bij herladen
+- [x] Responsive layout (Bootstrap grid)
+
+**Herbruikbare Componenten:**
+- [x] Address fragment (`fragments/address-fields.html`)
+  - Unified single version (geen simple/detailed meer)
+  - Gebruikt door student-info EN relations
+  - Aparte velden: Straat (8 col) + Nummer (4 col)
+  - Postcode (4 col) + Gemeente (8 col)
+  - Land (standaard: België)
+  - Validatie: postcode (4 cijfers), alle velden verplicht
+- [x] Address model class (`model/Address.java`)
+  - POJO met fields: street, houseNumber, postalCode, city, country
+  - Gebruikt in StudentForm en RelationForm
+
+**JavaScript Validatie:**
+- [x] Dynamische validatie voor tweede relatie (form-validation.js)
+- [x] Event listeners voor toevoegen/verwijderen relatie
+- [x] Select2 validatie integratie
+- [x] Radio button validatie (indien nodig)
+
+**Database & Persistence:**
+- [x] Address class in model package
+- [x] StudentForm aangepast naar Address object (ipv aparte velden)
+- [x] Controller mapping voor address conversie (Registration ↔ StudentForm)
+- [ ] RelationForm persistence (nog te implementeren in database)
+- [ ] Registration entity uitbreiden met relaties
 
 ---
 
@@ -1423,11 +1466,13 @@ volumes:
 - [x] Stap 3: Study Program Selection (Richting) - VOLTOOID
 - [x] Select2 integratie met custom styling
 - [ ] Study program selectie opslaan in Registration entity
-- [ ] Parent entities en relaties implementeren
+- [x] Stap 4: Relaties (contactgegevens ouders/voogd) - VOLTOOID
+- [x] Herbruikbaar Address fragment aangemaakt
+- [x] Address model class aangemaakt
+- [ ] Relation entities implementeren (database persistence)
 
 ### Sprint 2 (Week 3-4): Wizard Voltooiing Deel 1
-- [ ] Stap 4: Te bepalen
-- [ ] Stap 5: Contactgegevens Ouders
+- [ ] Stap 5: Te bepalen (mogelijk huisarts of medische info)
 
 ### Sprint 3 (Week 5-6): Wizard Voltooiing Deel 2
 - [ ] Stap 6: Huisarts
