@@ -1,7 +1,6 @@
 package be.achieveit.snhinschrijvingen.controller;
 
 import be.achieveit.snhinschrijvingen.dto.StudentForm;
-import be.achieveit.snhinschrijvingen.model.Nationality;
 import be.achieveit.snhinschrijvingen.model.Registration;
 import be.achieveit.snhinschrijvingen.model.SchoolYear;
 import be.achieveit.snhinschrijvingen.service.NationalityService;
@@ -74,9 +73,19 @@ public class StudentInfoController {
             // Load from database
             studentForm.setVoornaamLeerling(registration.getStudentFirstname());
             studentForm.setNaamLeerling(registration.getStudentLastname());
-            studentForm.setAdres(registration.getStudentAdres());
-            studentForm.setPostnummer(registration.getStudentPostnummer());
-            studentForm.setGemeente(registration.getStudentGemeente());
+            
+            // Map old address format to Address object
+            if (registration.getStudentAdres() != null) {
+                studentForm.getAddress().setStreet(registration.getStudentAdres());
+            }
+            if (registration.getStudentPostnummer() != null) {
+                studentForm.getAddress().setPostalCode(registration.getStudentPostnummer());
+            }
+            if (registration.getStudentGemeente() != null) {
+                studentForm.getAddress().setCity(registration.getStudentGemeente());
+            }
+            studentForm.getAddress().setCountry("België");
+            
             studentForm.setGsm(registration.getStudentGsm());
             studentForm.setGeslacht(registration.getStudentGeslacht());
             studentForm.setRijksregisternummer(registration.getStudentRijksregisternummer());
@@ -87,9 +96,11 @@ public class StudentInfoController {
             // TEMPORARY: Pre-fill with test data
             studentForm.setVoornaamLeerling("Jan");
             studentForm.setNaamLeerling("Janssens");
-            studentForm.setAdres("Teststraat 123");
-            studentForm.setPostnummer("8500");
-            studentForm.setGemeente("Kortrijk");
+            studentForm.getAddress().setStreet("Teststraat");
+            studentForm.getAddress().setHouseNumber("123");
+            studentForm.getAddress().setPostalCode("8500");
+            studentForm.getAddress().setCity("Kortrijk");
+            studentForm.getAddress().setCountry("België");
             studentForm.setGsm("0476123456");
             studentForm.setGeslacht("M");
             studentForm.setRijksregisternummer("050101-123-45");
@@ -123,9 +134,18 @@ public class StudentInfoController {
         // Update registration with all student info
         registration.setStudentFirstname(studentForm.getVoornaamLeerling());
         registration.setStudentLastname(studentForm.getNaamLeerling());
-        registration.setStudentAdres(studentForm.getAdres());
-        registration.setStudentPostnummer(studentForm.getPostnummer());
-        registration.setStudentGemeente(studentForm.getGemeente());
+        
+        // Map Address object to old format (combine street + number)
+        if (studentForm.getAddress() != null) {
+            String streetAndNumber = studentForm.getAddress().getStreet();
+            if (studentForm.getAddress().getHouseNumber() != null && !studentForm.getAddress().getHouseNumber().isEmpty()) {
+                streetAndNumber += " " + studentForm.getAddress().getHouseNumber();
+            }
+            registration.setStudentAdres(streetAndNumber);
+            registration.setStudentPostnummer(studentForm.getAddress().getPostalCode());
+            registration.setStudentGemeente(studentForm.getAddress().getCity());
+        }
+        
         registration.setStudentGsm(studentForm.getGsm());
         registration.setStudentGeslacht(studentForm.getGeslacht());
         registration.setStudentRijksregisternummer(studentForm.getRijksregisternummer());

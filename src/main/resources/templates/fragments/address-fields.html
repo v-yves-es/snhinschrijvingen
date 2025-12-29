@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Address Fields Fragment</title>
+</head>
+<body>
+    <!-- Reusable address fields fragment -->
+    <th:block th:fragment="addressFields(prefix, address)">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="position-relative mb-3">
+                    <label th:for="${prefix + 'Street'}" class="form-label">Straat</label>
+                    <input type="text" 
+                           th:id="${prefix + 'Street'}"
+                           th:name="${prefix + '.street'}" 
+                           th:value="${address?.street}"
+                           class="form-control" 
+                           placeholder="Straatnaam"
+                           required>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="position-relative mb-3">
+                    <label th:for="${prefix + 'HouseNumber'}" class="form-label">Nummer</label>
+                    <input type="text" 
+                           th:id="${prefix + 'HouseNumber'}"
+                           th:name="${prefix + '.houseNumber'}" 
+                           th:value="${address?.houseNumber}"
+                           class="form-control" 
+                           placeholder="Nr."
+                           required>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="position-relative mb-3">
+                    <label th:for="${prefix + 'PostalCode'}" class="form-label">Postcode</label>
+                    <input type="text" 
+                           th:id="${prefix + 'PostalCode'}"
+                           th:name="${prefix + '.postalCode'}" 
+                           th:value="${address?.postalCode}"
+                           class="form-control" 
+                           placeholder="0000"
+                           data-validate="postalCode"
+                           maxlength="4"
+                           required>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="position-relative mb-3">
+                    <label th:for="${prefix + 'City'}" class="form-label">Gemeente</label>
+                    <input type="text" 
+                           th:id="${prefix + 'City'}"
+                           th:name="${prefix + '.city'}" 
+                           th:value="${address?.city}"
+                           class="form-control" 
+                           placeholder="Gemeente"
+                           required>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="position-relative mb-3">
+            <label th:for="${prefix + 'Country'}" class="form-label">Land</label>
+            <input type="text" 
+                   th:id="${prefix + 'Country'}"
+                   th:name="${prefix + '.country'}" 
+                   th:value="${address?.country ?: 'België'}"
+                   class="form-control" 
+                   placeholder="Land"
+                   required>
+            <div class="invalid-feedback"></div>
+        </div>
+    </th:block>
+</body>
+</html>

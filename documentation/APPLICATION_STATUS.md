@@ -1,10 +1,10 @@
 # SNH Inschrijvingen - Applicatie Status
 
 **Versie:** 0.0.1-SNAPSHOT  
-**Laatst bijgewerkt:** 26 december 2025  
+**Laatst bijgewerkt:** 29 december 2025  
 **Spring Boot:** 3.5.9  
 **Java:** 25  
-**Status:** Fase 2 gedeeltelijk voltooid  
+**Status:** Fase 2 - 4 wizard stappen voltooid  
 
 ---
 
@@ -105,14 +105,21 @@ be.achieveit.snhinschrijvingen/
 │   └── CustomErrorController.java
 ├── dto/
 │   ├── EmailForm.java
-│   └── StudentForm.java
+│   ├── StudentForm.java
+│   ├── PreviousSchoolForm.java
+│   ├── StudyProgramForm.java
+│   └── RelationForm.java
 ├── model/
 │   ├── Registration.java
 │   ├── RegistrationStatus.java
 │   ├── EmailStatus.java
 │   ├── Nationaliteit.java
 │   ├── SchoolYear.java
-│   └── WizardStep.java
+│   ├── WizardStep.java
+│   ├── Address.java
+│   ├── StudyDomain.java
+│   ├── StudyOrientation.java
+│   └── StudyProgram.java
 ├── repository/
 │   ├── RegistrationRepository.java
 │   ├── SchoolYearRepository.java
@@ -123,8 +130,10 @@ be.achieveit.snhinschrijvingen/
 │   ├── SchoolYearService.java
 │   ├── NationalityService.java
 │   └── WizardService.java
-└── config/
-    └── DataInitializer.java
+├── config/
+│   └── DataInitializer.java
+└── initializer/
+    └── StudyProgramInitializer.java
 ```
 
 ---
@@ -148,6 +157,83 @@ be.achieveit.snhinschrijvingen/
 | `updated_at` | LocalDateTime | | Laatste wijziging |
 | `student_firstname` | String | | Voornaam leerling |
 | `student_lastname` | String | | Achternaam leerling |
+| `student_adres` | String | | Domicilieadres (straat + nummer) |
+| `student_postnummer` | String | | Postcode |
+| `student_gemeente` | String | | Gemeente/stad |
+| `student_gsm` | String | | GSM nummer leerling |
+| `student_geslacht` | String | | Geslacht (M/V/X/O) |
+| `student_rijksregisternummer` | String | | Rijksregisternummer |
+| `student_geboortedatum` | LocalDate | | Geboortedatum |
+| `student_geboorteplaats` | String | | Geboorteplaats |
+| `student_nationaliteit` | String | | Nationaliteit (ISO code) |
+| `vorige_school_adres` | String | | Naam vorige school |
+| `vorige_school_jaar` | String | | Jaar in vorige school |
+| `richting_vorige_school` | String | | Gevolgde richting |
+| `toestemming_vorige_school` | String | | Toestemming gegevensuitwisseling |
+
+### Entity: Address
+
+**Package:** `model.Address`  
+**Type:** POJO (niet-persistent, gebruikt in forms)
+
+| Veld | Type | Beschrijving |
+|------|------|--------------|
+| `street` | String | Straatnaam |
+| `houseNumber` | String | Huisnummer (+bus optioneel) |
+| `postalCode` | String | Postcode (4 cijfers) |
+| `city` | String | Gemeente/stad |
+| `country` | String | Land (standaard: België) |
+
+**Gebruikt in:**
+- StudentForm (domicilieadres leerling)
+- RelationForm (adres relatie/ouder)
+
+### Entity: StudyDomain
+
+**Tabel:** `study_domains`
+
+| Veld | Type | Constraints | Beschrijving |
+|------|------|------------|--------------|
+| `id` | Long | PRIMARY KEY | Uniek domein-ID |
+| `name` | String | NOT NULL, UNIQUE | Domeinnaam (NL) |
+| `color` | String | NOT NULL | Hex kleurcode |
+
+**Domeinen:**
+- Economie (#FF6B35)
+- Maatschappij & Welzijn (#28A745)
+- STEM (#007BFF)
+- Talen (#FFC107)
+
+### Entity: StudyOrientation
+
+**Tabel:** `study_orientations`
+
+| Veld | Type | Constraints | Beschrijving |
+|------|------|------------|--------------|
+| `id` | Long | PRIMARY KEY | Uniek oriëntatie-ID |
+| `name` | String | NOT NULL, UNIQUE | Oriëntatienaam (NL) |
+
+**Oriëntaties:**
+- Doorstroom
+- Doorstroom/arbeidsmarkt
+- Arbeidsmarkt
+
+### Entity: StudyProgram
+
+**Tabel:** `study_programs`
+
+| Veld | Type | Constraints | Beschrijving |
+|------|------|------------|--------------|
+| `id` | Long | PRIMARY KEY | Uniek programma-ID |
+| `name` | String | NOT NULL | Naam studierichting |
+| `jaar` | Integer | NOT NULL | Leerjaar (1-6) |
+| `domain_id` | Long | FK | Studiedomein (nullable voor jaar 1-2) |
+| `orientation_id` | Long | FK | Studioriëntatie (nullable voor jaar 1-2) |
+
+**Data:**
+- 100+ studierichtingen voor jaar 1-6
+- Jaar 1-2: platte lijst
+- Jaar 3-6: gegroepeerd per domein/oriëntatie
 
 ### Entity: SchoolYear
 
@@ -1332,9 +1418,10 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 | `http://localhost:8080/inschrijving/email-sent` | Email sent bevestiging |
 | `http://localhost:8080/inschrijving/verify/{id}/{hash}` | Email verificatie link |
 | `http://localhost:8080/inschrijving/overview` | Registrations overview |
-| `http://localhost:8080/inschrijving/student-info?id={id}` | Student info formulier |
-| `http://localhost:8080/inschrijving/previous-school?id={id}` | Vorige school formulier |
-| `http://localhost:8080/inschrijving/study-program?id={id}` | Studierichting kiezen |
+| `http://localhost:8080/inschrijving/student-info?id={id}` | Wizard stap 1: Student info formulier |
+| `http://localhost:8080/inschrijving/previous-school?id={id}` | Wizard stap 2: Vorige school formulier |
+| `http://localhost:8080/inschrijving/study-program?id={id}` | Wizard stap 3: Studierichting kiezen |
+| `http://localhost:8080/inschrijving/relations?id={id}` | Wizard stap 4: Relaties/contactpersonen |
 | `http://localhost:8080/alerts-demo.html` | Alert componenten demo |
 | `http://localhost:8080/buttons-demo.html` | Button types demo |
 | `http://localhost:8080/validation-demo.html` | Form validatie demo |
@@ -1375,7 +1462,8 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 - **Wizard Stap 1:** Student Info formulier (Algemeen)
 - **Wizard Stap 2:** Previous School (Vorige School) met Select2 dropdown
 - **Wizard Stap 3:** Study Program Selection (Richting) met dynamische filtering
-- Wizard structuur en navigatie (3 stappen actief)
+- **Wizard Stap 4:** Relations (Relaties/Contactpersonen)
+- Wizard structuur en navigatie (4 stappen actief)
 - **Select2 integratie:**
   - Select2 4.1.0-rc.0 bibliotheek
   - Custom styling met SNH branding (#c92617)
@@ -1412,11 +1500,23 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 - Demo pagina's (alerts, buttons, validation)
 - Flatpickr datepicker integratie (Nederlands, maandag start)
 - Study programs database met 100+ richtingen
+- **Herbruikbare componenten:**
+  - Address fragment (`fragments/address-fields.html`)
+  - Unified single version (geen simple/detailed)
+  - Gebruikt door student-info EN relations
+  - Address model class (POJO)
+- **Relations formulier (Stap 4):**
+  - RelationForm DTO met Address objects
+  - Select2 dropdown voor relatietype (zonder zoekfunctie)
+  - 9 relatietypes: vader, moeder, plusvader, plusmoeder, voogd, grootvader, grootmoeder, pleegvader, pleegmoeder
+  - Minimaal 1, maximaal 2 relaties
+  - Dynamisch toevoegen/verwijderen tweede relatie
+  - Volledig gevalideerd (naam, voornaam, tel, email, adres)
 
 ### 🚧 In Progress
-- Wizard stap 4 (volgende stap in planning)
 - Database refinement (study program selection persistence)
-- Parent entities en relaties
+- Relation entities implementeren (database persistence)
+- Wizard stap 5 (volgende stap in planning)
 
 ### 📋 To Do
 - Zie `TODO.md` voor volledige lijst

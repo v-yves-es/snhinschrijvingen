@@ -1,13 +1,13 @@
 package be.achieveit.snhinschrijvingen.dto;
 
+import be.achieveit.snhinschrijvingen.model.Address;
+
 import java.time.LocalDate;
 
 public class StudentForm {
     private String voornaamLeerling;
     private String naamLeerling;
-    private String adres;
-    private String postnummer;
-    private String gemeente;
+    private Address address;
     private String gsm;
     private String geslacht;
     private String rijksregisternummer;
@@ -24,6 +24,7 @@ public class StudentForm {
     private String toestemmingVorigeSchool;
 
     public StudentForm() {
+        this.address = new Address();
     }
 
     public String getVoornaamLeerling() {
@@ -42,28 +43,12 @@ public class StudentForm {
         this.naamLeerling = naamLeerling;
     }
 
-    public String getAdres() {
-        return adres;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAdres(String adres) {
-        this.adres = adres;
-    }
-
-    public String getPostnummer() {
-        return postnummer;
-    }
-
-    public void setPostnummer(String postnummer) {
-        this.postnummer = postnummer;
-    }
-
-    public String getGemeente() {
-        return gemeente;
-    }
-
-    public void setGemeente(String gemeente) {
-        this.gemeente = gemeente;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public String getGsm() {

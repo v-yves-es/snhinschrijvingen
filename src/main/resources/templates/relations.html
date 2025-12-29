@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Relaties - SPES Nostra Heule</title>
+    <link rel="stylesheet" th:href="@{/css/snh-style.css}">
+    <link rel="stylesheet" th:href="@{/css/select2.min.css}">
+    <link rel="stylesheet" th:href="@{/css/select2-custom.css}">
+</head>
+<body>
+    <section class="wizard-container">
+            <div class="container">
+                <div class="form-card">
+                    <h1 class="form-title">Relaties</h1>
+                    
+                    <form class="form" 
+                          th:action="@{/inschrijving/relations(id=${registrationId})}" 
+                          method="post" 
+                          th:object="${relationsForm}" 
+                          data-validate="true" 
+                          novalidate>
+                        
+                        <!-- Hidden registration ID -->
+                        <input type="hidden" name="id" th:value="${registrationId}">
+                        
+                        <!-- Wizard Progress -->
+                        <div th:replace="~{fragments/wizard :: wizard}"></div>
+                        
+                        <!-- Relation 1 (Always visible) -->
+                        <div class="form-section">
+                            <h2 class="form-section-title">Relatie 1 (verplicht)</h2>
+                            
+                            <!-- Relation Type -->
+                            <div class="position-relative mb-3">
+                                <label for="relation1Type" class="form-label">Type relatie</label>
+                                <select id="relation1Type" 
+                                        th:field="*{relation1.relationType}" 
+                                        class="form-control select2"
+                                        data-placeholder="Selecteer een type relatie"
+                                        data-no-scroll="true"
+                                        required>
+                                    <option value="">-- Selecteer --</option>
+                                    <option value="13">Vader</option>
+                                    <option value="14">Moeder</option>
+                                    <option value="5">Plusvader</option>
+                                    <option value="6">Plusmoeder</option>
+                                    <option value="2">Voogd</option>
+                                    <option value="9">Grootvader</option>
+                                    <option value="10">Grootmoeder</option>
+                                    <option value="7">Pleegvader</option>
+                                    <option value="8">Pleegmoeder</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            
+                            <!-- Name fields -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="position-relative mb-3">
+                                        <label for="relation1FirstName" class="form-label">Voornaam</label>
+                                        <input type="text" 
+                                               id="relation1FirstName"
+                                               th:field="*{relation1.firstName}" 
+                                               class="form-control" 
+                                               placeholder="Voornaam"
+                                               required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative mb-3">
+                                        <label for="relation1LastName" class="form-label">Naam</label>
+                                        <input type="text" 
+                                               id="relation1LastName"
+                                               th:field="*{relation1.lastName}" 
+                                               class="form-control" 
+                                               placeholder="Naam"
+                                               required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact fields -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="position-relative mb-3">
+                                        <label for="relation1Phone" class="form-label">Telefoonnummer</label>
+                                        <input type="tel" 
+                                               id="relation1Phone"
+                                               th:field="*{relation1.phone}" 
+                                               class="form-control" 
+                                               placeholder="+32 4XX XX XX XX"
+                                               data-validate="phone"
+                                               required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative mb-3">
+                                        <label for="relation1Email" class="form-label">E-mailadres</label>
+                                        <input type="email" 
+                                               id="relation1Email"
+                                               th:field="*{relation1.email}" 
+                                               class="form-control" 
+                                               placeholder="naam@voorbeeld.be"
+                                               data-validate="email"
+                                               required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Address fields using fragment -->
+                            <h3 class="form-section-subtitle">Adres</h3>
+                            <div th:replace="~{fragments/address-fields :: addressFields('relation1.address', ${relationsForm.relation1.address})}"></div>
+                        </div>
+                        
+                        <!-- Add Second Relation Button -->
+                        <div class="form-section" id="addRelation2Section">
+                            <button type="button" class="btn btn--outline" id="addRelation2Btn">
+                                <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M8 1V15M1 8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                Tweede relatie toevoegen
+                            </button>
+                        </div>
+                        
+                        <!-- Relation 2 (Optional, shown after clicking add button) -->
+                        <div class="form-section" id="relation2Section" style="display: none;">
+                            <div class="form-section-header">
+                                <h2 class="form-section-title">Relatie 2 (optioneel)</h2>
+                                <button type="button" class="btn btn--outline btn--small" id="removeRelation2Btn">
+                                    <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M4 4L12 12M4 12L12 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                    Verwijderen
+                                </button>
+                            </div>
+                            
+                            <!-- Hidden field to track if relation 2 is shown -->
+                            <input type="hidden" th:field="*{showRelation2}" id="showRelation2Field">
+                            
+                            <!-- Relation Type -->
+                            <div class="position-relative mb-3">
+                                <label for="relation2Type" class="form-label">Type relatie</label>
+                                <select id="relation2Type" 
+                                        th:field="*{relation2.relationType}" 
+                                        class="form-control select2"
+                                        data-placeholder="Selecteer een type relatie"
+                                        data-no-scroll="true">
+                                    <option value="">-- Selecteer --</option>
+                                    <option value="13">Vader</option>
+                                    <option value="14">Moeder</option>
+                                    <option value="5">Plusvader</option>
+                                    <option value="6">Plusmoeder</option>
+                                    <option value="2">Voogd</option>
+                                    <option value="9">Grootvader</option>
+                                    <option value="10">Grootmoeder</option>
+                                    <option value="7">Pleegvader</option>
+                                    <option value="8">Pleegmoeder</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            
+                            <!-- Name fields -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="position-relative mb-3">
+                                        <label for="relation2FirstName" class="form-label">Voornaam</label>
+                                        <input type="text" 
+                                               id="relation2FirstName"
+                                               th:field="*{relation2.firstName}" 
+                                               class="form-control" 
+                                               placeholder="Voornaam">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative mb-3">
+                                        <label for="relation2LastName" class="form-label">Naam</label>
+                                        <input type="text" 
+                                               id="relation2LastName"
+                                               th:field="*{relation2.lastName}" 
+                                               class="form-control" 
+                                               placeholder="Naam">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact fields -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="position-relative mb-3">
+                                        <label for="relation2Phone" class="form-label">Telefoonnummer</label>
+                                        <input type="tel" 
+                                               id="relation2Phone"
+                                               th:field="*{relation2.phone}" 
+                                               class="form-control" 
+                                               placeholder="+32 4XX XX XX XX"
+                                               data-validate="phone">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative mb-3">
+                                        <label for="relation2Email" class="form-label">E-mailadres</label>
+                                        <input type="email" 
+                                               id="relation2Email"
+                                               th:field="*{relation2.email}" 
+                                               class="form-control" 
+                                               placeholder="naam@voorbeeld.be"
+                                               data-validate="email">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Address fields using fragment -->
+                            <h3 class="form-section-subtitle">Adres</h3>
+                            <div th:replace="~{fragments/address-fields :: addressFields('relation2.address', ${relationsForm.relation2.address})}"></div>
+                        </div>
+                        
+                        <!-- Form Actions -->
+                        <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/previous-school(id=${registrationId})}, 'Vorige', 'Volgende', true)}"></div>
+                    </form>
+                    
+                    <!-- Relations-specific JavaScript -->
+                    <script>
+                        console.log('=== RELATIONS SCRIPT LOADING ===');
+                        
+                        function initRelationsToggle() {
+                            console.log('Init relations toggle');
+                            
+                            const addBtn = document.getElementById('addRelation2Btn');
+                            const removeBtn = document.getElementById('removeRelation2Btn');
+                            const relation2Section = document.getElementById('relation2Section');
+                            const addSection = document.getElementById('addRelation2Section');
+                            const showRelation2Field = document.getElementById('showRelation2Field');
+                            
+                            console.log('addBtn:', addBtn ? 'FOUND' : 'NOT FOUND');
+                            console.log('relation2Section:', relation2Section ? 'FOUND' : 'NOT FOUND');
+                            
+                            if (!addBtn || !relation2Section || !addSection) {
+                                console.error('Required elements not found!');
+                                return;
+                            }
+                            
+                            addBtn.onclick = function(e) {
+                                console.log('=== ADD BUTTON CLICKED ===');
+                                e.preventDefault();
+                                
+                                relation2Section.style.display = 'block';
+                                addSection.style.display = 'none';
+                                if (showRelation2Field) showRelation2Field.value = 'true';
+                                
+                                // Make relation2 fields required when visible
+                                document.getElementById('relation2FirstName').required = true;
+                                document.getElementById('relation2LastName').required = true;
+                                document.getElementById('relation2Phone').required = true;
+                                document.getElementById('relation2Email').required = true;
+                                
+                                // Make relation2 address fields required
+                                relation2Section.querySelectorAll('input[name^="relation2.address"]').forEach(function(field) {
+                                    field.required = true;
+                                });
+                                
+                                // Initialize Select2 for relation2 after it becomes visible
+                                setTimeout(function() {
+                                    if (window.jQuery && window.jQuery.fn.select2) {
+                                        jQuery('#relation2Type').select2({
+                                            theme: 'classic',
+                                            width: '100%',
+                                            placeholder: 'Selecteer een type relatie',
+                                            minimumResultsForSearch: -1,
+                                            allowClear: false,
+                                            dropdownCssClass: 'select2-dropdown-no-scroll'
+                                        });
+                                    }
+                                }, 100);
+                            };
+                            
+                            if (removeBtn) {
+                                removeBtn.onclick = function(e) {
+                                    console.log('=== REMOVE BUTTON CLICKED ===');
+                                    e.preventDefault();
+                                    
+                                    // Clear fields
+                                    ['relation2Type', 'relation2FirstName', 'relation2LastName', 'relation2Phone', 'relation2Email'].forEach(function(id) {
+                                        const el = document.getElementById(id);
+                                        if (el) {
+                                            el.value = '';
+                                            el.required = false; // Remove required when hiding
+                                        }
+                                    });
+                                    
+                                    // Clear address fields and remove required
+                                    const addressFields = relation2Section.querySelectorAll('input[name^="relation2.address"]');
+                                    addressFields.forEach(function(field) { 
+                                        field.value = '';
+                                        field.required = false;
+                                    });
+                                    
+                                    // Remove validation states
+                                    relation2Section.querySelectorAll('.is-valid, .is-invalid').forEach(function(el) {
+                                        el.classList.remove('is-valid', 'is-invalid');
+                                    });
+                                    
+                                    // Hide section
+                                    relation2Section.style.display = 'none';
+                                    addSection.style.display = 'block';
+                                    if (showRelation2Field) showRelation2Field.value = 'false';
+                                    
+                                    // Destroy Select2
+                                    if (window.jQuery && window.jQuery.fn.select2) {
+                                        jQuery('#relation2Type').select2('destroy');
+                                    }
+                                };
+                            }
+                            
+                            console.log('=== RELATIONS SCRIPT LOADED ===');
+                        }
+                        
+                        // Initialize when page loads
+                        if (document.readyState === 'loading') {
+                            document.addEventListener('DOMContentLoaded', initRelationsToggle);
+                        } else {
+                            initRelationsToggle();
+                        }
+                    </script>
+                </div>
+            </div>
+        </section>
+</body>
+</html>

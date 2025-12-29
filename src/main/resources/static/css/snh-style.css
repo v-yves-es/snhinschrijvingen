@@ -365,6 +365,11 @@ body {
     height: 16px;
 }
 
+.btn--small {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
 /* Form Header with Badges */
 .form-header {
     display: flex;
@@ -453,6 +458,26 @@ body {
     padding: 0;
     border: none;
     background-color: transparent;
+}
+
+.form-section-subtitle {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    margin: 1.5rem 0 1rem 0;
+    padding: 0;
+}
+
+.form-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-section-header .form-section-title {
+    margin-bottom: 0;
 }
 
 .form-legend--sub {

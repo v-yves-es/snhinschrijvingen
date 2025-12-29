@@ -79,7 +79,7 @@ public class PreviousSchoolController {
         
         logger.info("Previous school info saved for registration: {}", registrationId);
         
-        // TODO: Redirect to next wizard step (step 4)
-        return "redirect:/inschrijving/student-info?id=" + registrationId;
+        // Redirect to next wizard step (Relations)
+        return "redirect:/inschrijving/relations?id=" + registrationId;
     }
 }

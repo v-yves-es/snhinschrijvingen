@@ -144,56 +144,7 @@
                     <!-- Domicilieadres Section -->
                     <div class="form-section">
                         <h2 class="form-section-title">Domicilieadres</h2>
-
-                        <!-- Row 1: Straat en nummer (full width) -->
-                        <div class="position-relative mb-3">
-                            <label for="adres" class="form-label">
-                                Straat en nummer
-                            </label>
-                            <input type="text" 
-                                   id="adres" 
-                                   th:field="*{adres}" 
-                                   class="form-control" 
-                                   required
-                                   data-min-length="5"
-                                   placeholder="Straatnaam 123">
-                            <div class="invalid-feedback"></div>
-                        </div>
-
-                        <!-- Row 2: Postcode en Gemeente -->
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="position-relative mb-3">
-                                    <label for="postnummer" class="form-label">
-                                        Postcode
-                                    </label>
-                                    <input type="text" 
-                                           id="postnummer" 
-                                           th:field="*{postnummer}" 
-                                           class="form-control" 
-                                           required
-                                           data-validate="postalCode"
-                                           maxlength="4"
-                                           placeholder="8500">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="position-relative mb-3">
-                                    <label for="gemeente" class="form-label">
-                                        Gemeente / Stad
-                                    </label>
-                                    <input type="text" 
-                                           id="gemeente" 
-                                           th:field="*{gemeente}" 
-                                           class="form-control" 
-                                           required
-                                           data-min-length="2"
-                                           placeholder="Kortrijk">
-                                    <div class="invalid-feedback"></div>
-                                </div>
-                            </div>
-                        </div>
+                        <div th:replace="~{fragments/address-fields :: addressFields('address', ${studentForm.address})}"></div>
                     </div>
 
                     <!-- Form Actions -->
