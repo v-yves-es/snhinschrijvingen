@@ -12,7 +12,7 @@
         <div class="container">
             <div class="form-card">
                 <h1 class="form-title">Algemene info</h1>
-                <form class="form" th:action="@{/inschrijving/student-info(id=${registrationId})}" method="post" th:object="${studentForm}" data-validate="true" novalidate>
+                <form class="form" th:action="@{/inschrijving/leerling-info/__${registrationId}__}" method="post" th:object="${studentForm}" data-validate="true" novalidate>
                     
                     <!-- Hidden registration ID -->
                     <input type="hidden" name="id" th:value="${registrationId}">

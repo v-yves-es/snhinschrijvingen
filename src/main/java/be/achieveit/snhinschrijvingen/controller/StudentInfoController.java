@@ -1,6 +1,7 @@
 package be.achieveit.snhinschrijvingen.controller;
 
 import be.achieveit.snhinschrijvingen.dto.StudentForm;
+import be.achieveit.snhinschrijvingen.model.Address;
 import be.achieveit.snhinschrijvingen.model.Registration;
 import be.achieveit.snhinschrijvingen.model.SchoolYear;
 import be.achieveit.snhinschrijvingen.service.NationalityService;
@@ -39,8 +40,8 @@ public class StudentInfoController {
         this.schoolYearService = schoolYearService;
     }
 
-    @GetMapping("/student-info")
-    public String showStudentInfo(@RequestParam(required = false) UUID id, Model model) {
+    @GetMapping("/leerling-info/{id}")
+    public String showStudentInfo(@PathVariable UUID id, Model model) {
         // Registration ID should be provided
         if (id == null) {
             logger.warn("No registration ID provided for student-info");
@@ -74,17 +75,16 @@ public class StudentInfoController {
             studentForm.setVoornaamLeerling(registration.getStudentFirstname());
             studentForm.setNaamLeerling(registration.getStudentLastname());
             
-            // Map old address format to Address object
-            if (registration.getStudentAdres() != null) {
-                studentForm.getAddress().setStreet(registration.getStudentAdres());
+            // Map address from Registration entity
+            if (registration.getStudentAddress() != null) {
+                Address dbAddress = registration.getStudentAddress();
+                studentForm.getAddress().setStreet(dbAddress.getStreet());
+                studentForm.getAddress().setHouseNumber(dbAddress.getHouseNumber());
+                studentForm.getAddress().setBox(dbAddress.getBox());
+                studentForm.getAddress().setPostalCode(dbAddress.getPostalCode());
+                studentForm.getAddress().setCity(dbAddress.getCity());
+                studentForm.getAddress().setCountry(dbAddress.getCountry());
             }
-            if (registration.getStudentPostnummer() != null) {
-                studentForm.getAddress().setPostalCode(registration.getStudentPostnummer());
-            }
-            if (registration.getStudentGemeente() != null) {
-                studentForm.getAddress().setCity(registration.getStudentGemeente());
-            }
-            studentForm.getAddress().setCountry("België");
             
             studentForm.setGsm(registration.getStudentGsm());
             studentForm.setGeslacht(registration.getStudentGeslacht());
@@ -115,9 +115,9 @@ public class StudentInfoController {
         return "student-info";
     }
 
-    @PostMapping("/student-info")
+    @PostMapping("/leerling-info/{id}")
     public String processStudentInfo(
-            @RequestParam UUID id,
+            @PathVariable UUID id,
             @ModelAttribute StudentForm studentForm,
             Model model) {
 
@@ -135,15 +135,16 @@ public class StudentInfoController {
         registration.setStudentFirstname(studentForm.getVoornaamLeerling());
         registration.setStudentLastname(studentForm.getNaamLeerling());
         
-        // Map Address object to old format (combine street + number)
+        // Map Address object directly
         if (studentForm.getAddress() != null) {
-            String streetAndNumber = studentForm.getAddress().getStreet();
-            if (studentForm.getAddress().getHouseNumber() != null && !studentForm.getAddress().getHouseNumber().isEmpty()) {
-                streetAndNumber += " " + studentForm.getAddress().getHouseNumber();
-            }
-            registration.setStudentAdres(streetAndNumber);
-            registration.setStudentPostnummer(studentForm.getAddress().getPostalCode());
-            registration.setStudentGemeente(studentForm.getAddress().getCity());
+            Address address = new Address();
+            address.setStreet(studentForm.getAddress().getStreet());
+            address.setHouseNumber(studentForm.getAddress().getHouseNumber());
+            address.setBox(studentForm.getAddress().getBox());
+            address.setPostalCode(studentForm.getAddress().getPostalCode());
+            address.setCity(studentForm.getAddress().getCity());
+            address.setCountry(studentForm.getAddress().getCountry());
+            registration.setStudentAddress(address);
         }
         
         registration.setStudentGsm(studentForm.getGsm());
@@ -158,6 +159,6 @@ public class StudentInfoController {
         logger.info("Student info saved for registration: {}", id);
 
         // Navigate to study program selection (next step in wizard)
-        return "redirect:/inschrijving/study-program?id=" + id;
+        return "redirect:/inschrijving/studierichting/" + id;
     }
 }

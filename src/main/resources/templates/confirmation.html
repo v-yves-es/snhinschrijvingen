@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Bevestiging - SPES Nostra Heule</title>
+</head>
+<body>
+    <section class="wizard-container">
+        <div class="container">
+            <div class="form-card">
+                <!-- Success Message -->
+                <div class="email-verification-success">
+                    <svg class="email-verification-success-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="32" r="30" fill="#10b981" fill-opacity="0.1"/>
+                        <path d="M20 32l8 8 16-16" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h1 class="email-verification-success-title">Inschrijving voltooid!</h1>
+                    <p class="email-verification-success-message">
+                        Uw inschrijving is succesvol ontvangen. U ontvangt een bevestigingsmail op 
+                        <strong th:text="${registration.email}"></strong>
+                    </p>
+                </div>
+                
+                <!-- Registration Info -->
+                <div class="email-verification-notice" style="margin-bottom: 2rem;">
+                    <h2 class="email-verification-notice-title">Wat nu?</h2>
+                    <p>
+                        Uw inschrijving wordt verwerkt door onze administratie. 
+                        U ontvangt binnenkort verdere instructies per e-mail.
+                    </p>
+                    <p>
+                        <strong>Ingediend op:</strong> 
+                        <span th:text="${#temporals.format(registration.submissionDate, 'dd/MM/yyyy HH:mm')}"></span>
+                    </p>
+                    <p>
+                        <strong>Inschrijvingsnummer:</strong> 
+                        <span th:text="${registration.id}"></span>
+                    </p>
+                </div>
+                
+                <!-- Summary sections (reuse from submission) -->
+                <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; color: #1f2937;">
+                    Samenvatting van uw inschrijving
+                </h2>
+                
+                <!-- Include same summary sections as submission page -->
+                <div class="summary-section">
+                    <h3>Algemene gegevens</h3>
+                    <div class="summary-row">
+                        <span class="summary-label">Naam:</span>
+                        <span class="summary-value" th:text="${registration.studentFirstname + ' ' + registration.studentLastname}"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Geboortedatum:</span>
+                        <span class="summary-value" th:text="${registration.studentGeboortedatum != null ? #temporals.format(registration.studentGeboortedatum, 'dd/MM/yyyy') : '-'}"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">E-mail ouder/voogd:</span>
+                        <span class="summary-value" th:text="${registration.email}"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">GSM leerling:</span>
+                        <span class="summary-value" th:text="${registration.studentGsm ?: '-'}"></span>
+                    </div>
+                </div>
+                
+                <div class="summary-section">
+                    <h3>Studierichting</h3>
+                    <div class="summary-row">
+                        <span class="summary-label">Leerjaar:</span>
+                        <span class="summary-value" th:text="${registration.selectedStudyYear}"></span>
+                    </div>
+                </div>
+                
+                <div class="summary-section">
+                    <h3>Ondertekening</h3>
+                    <div class="summary-row">
+                        <span class="summary-label">Ondertekend door:</span>
+                        <span class="summary-value" th:text="${registration.signatureName}"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Schoolreglement akkoord:</span>
+                        <span class="summary-value">Ja</span>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div style="margin-top: 2rem; text-align: center;">
+                    <a href="/" class="btn btn--primary">
+                        Terug naar home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <style>
+        .summary-section {
+            background: #f8f9fa;
+            border-left: 4px solid #0066cc;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+        .summary-section h3 {
+            color: #0066cc;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+        .summary-row {
+            display: flex;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+        .summary-label {
+            font-weight: 600;
+            color: #495057;
+            min-width: 200px;
+            flex-shrink: 0;
+        }
+        .summary-value {
+            color: #212529;
+        }
+    </style>
+</body>
+</html>

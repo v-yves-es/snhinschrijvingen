@@ -8,6 +8,7 @@ public class AddressDTO {
     
     private String street;
     private String houseNumber;
+    private String box;
     private String postalCode;
     private String city;
     private String country;
@@ -32,6 +33,14 @@ public class AddressDTO {
     
     public void setHouseNumber(String houseNumber) {
         this.houseNumber = houseNumber;
+    }
+    
+    public String getBox() {
+        return box;
+    }
+    
+    public void setBox(String box) {
+        this.box = box;
     }
     
     public String getPostalCode() {

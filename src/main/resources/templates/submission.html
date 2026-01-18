@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Verzenden - SPES Nostra Heule</title>
+    <style>
+        .summary-section {
+            background: #f8f9fa;
+            border-left: 4px solid #0066cc;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+        .summary-section h3 {
+            color: #0066cc;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            margin-top: 0;
+        }
+        .summary-row {
+            display: flex;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+        .summary-label {
+            font-weight: 600;
+            color: #495057;
+            min-width: 200px;
+            flex-shrink: 0;
+        }
+        .summary-value {
+            color: #212529;
+        }
+        .summary-value-empty {
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <section class="wizard-container">
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Overzicht inschrijving</h1>
+                
+                <form class="form" 
+                      th:action="@{/inschrijving/verzenden/__${registrationId}__}" 
+                      method="post" 
+                      th:object="${submissionForm}" 
+                      data-validate="true" 
+                      novalidate>
+                    
+                    <input type="hidden" name="id" th:value="${registrationId}">
+                    
+                    <!-- Wizard Progress -->
+                    <div th:replace="~{fragments/wizard :: wizard}"></div>
+                    
+                    <div class="email-verification-notice" style="margin-bottom: 2rem;">
+                        <h2 class="email-verification-notice-title">Controleer uw gegevens</h2>
+                        <p>Gelieve alle onderstaande gegevens zorgvuldig na te kijken voordat u de inschrijving definitief maakt.</p>
+                    </div>
+                    
+                    <!-- Student Info Summary -->
+                    <div class="summary-section">
+                        <h3>1. Algemene gegevens leerling</h3>
+                        <div class="summary-row">
+                            <span class="summary-label">Voornaam:</span>
+                            <span class="summary-value" th:text="${registration.studentFirstname ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Naam:</span>
+                            <span class="summary-value" th:text="${registration.studentLastname ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Geboortedatum:</span>
+                            <span class="summary-value" th:text="${registration.studentGeboortedatum != null ? #temporals.format(registration.studentGeboortedatum, 'dd/MM/yyyy') : '-'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Geboorteplaats:</span>
+                            <span class="summary-value" th:text="${registration.studentGeboorteplaats ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Geslacht:</span>
+                            <span class="summary-value" th:text="${registration.studentGeslacht == 'M' ? 'Jongen' : (registration.studentGeslacht == 'V' ? 'Meisje' : '-')}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Rijksregisternummer:</span>
+                            <span class="summary-value" th:text="${registration.studentRijksregisternummer ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Nationaliteit:</span>
+                            <span class="summary-value" th:text="${registration.studentNationaliteit ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">GSM:</span>
+                            <span class="summary-value" th:text="${registration.studentGsm ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">E-mailadres ouder/voogd:</span>
+                            <span class="summary-value" th:text="${registration.email ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Domicilieadres:</span>
+                            <span class="summary-value">
+                                <span th:if="${registration.studentAddress}">
+                                    <span th:text="${registration.studentAddress.street}"></span>
+                                    <span th:text="${registration.studentAddress.houseNumber}"></span>
+                                    <span th:if="${registration.studentAddress.box}" th:text="'bus ' + ${registration.studentAddress.box}"></span>,
+                                    <span th:text="${registration.studentAddress.postalCode}"></span>
+                                    <span th:text="${registration.studentAddress.city}"></span>
+                                </span>
+                                <span th:unless="${registration.studentAddress}">-</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Study Program Summary -->
+                    <div class="summary-section">
+                        <h3>2. Studierichting</h3>
+                        <div class="summary-row">
+                            <span class="summary-label">Leerjaar:</span>
+                            <span class="summary-value" th:text="${registration.selectedStudyYear ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Studierichting ID:</span>
+                            <span class="summary-value" th:text="${registration.selectedStudyProgramId ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row" th:if="${registration.studyProgramExtraInfo}">
+                            <span class="summary-label">Extra info:</span>
+                            <span class="summary-value" th:text="${registration.studyProgramExtraInfo}"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Previous School Summary -->
+                    <div class="summary-section">
+                        <h3>3. Vorige school</h3>
+                        <div class="summary-row">
+                            <span class="summary-label">School:</span>
+                            <span class="summary-value" th:text="${registration.vorigeSchool ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row" th:if="${registration.vorigeSchoolAnders}">
+                            <span class="summary-label">Andere school:</span>
+                            <span class="summary-value" th:text="${registration.vorigeSchoolAnders}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Leerjaar:</span>
+                            <span class="summary-value" th:text="${registration.vorigeSchoolJaar ?: '-'}"></span>
+                        </div>
+                        <div class="summary-row" th:if="${registration.richtingVorigeSchool}">
+                            <span class="summary-label">Richting:</span>
+                            <span class="summary-value" th:text="${registration.richtingVorigeSchool}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Toestemming contact:</span>
+                            <span class="summary-value" th:text="${registration.toestemmingVorigeSchool == 'J' ? 'Ja' : 'Nee'}"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Relations Summary -->
+                    <div class="summary-section">
+                        <h3>4. Relaties</h3>
+                        <p><em>Relatie gegevens worden getoond indien beschikbaar</em></p>
+                    </div>
+                    
+                    <!-- Doctor Summary -->
+                    <div class="summary-section" th:if="${registration.doctorName}">
+                        <h3>5. Huisarts</h3>
+                        <div class="summary-row">
+                            <span class="summary-label">Naam:</span>
+                            <span class="summary-value" th:text="${registration.doctorName}"></span>
+                        </div>
+                        <div class="summary-row" th:if="${registration.doctorPhone}">
+                            <span class="summary-label">Telefoon:</span>
+                            <span class="summary-value" th:text="${registration.doctorPhone}"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Care Needs Summary -->
+                    <div class="summary-section">
+                        <h3>6. Zorgvraag</h3>
+                        <div class="summary-row">
+                            <span class="summary-label">Bijzondere zorgvraag:</span>
+                            <span class="summary-value" th:text="${registration.hasCareNeeds == 'J' ? 'Ja' : 'Nee'}"></span>
+                        </div>
+                        <div class="summary-row" th:if="${registration.classCompositionWishes}">
+                            <span class="summary-label">Wensen klassamenstelling:</span>
+                            <span class="summary-value" th:text="${registration.classCompositionWishes}"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Privacy Summary -->
+                    <div class="summary-section">
+                        <h3>7. Privacy toestemmingen</h3>
+                        <div class="summary-row">
+                            <span class="summary-label">Foto's/video's:</span>
+                            <span class="summary-value" th:text="${registration.photoVideoConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Studieresultaten delen:</span>
+                            <span class="summary-value" th:text="${registration.studyResultsConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Oud-leerling data:</span>
+                            <span class="summary-value" th:text="${registration.alumniDataConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Hoger onderwijs:</span>
+                            <span class="summary-value" th:text="${registration.higherEducationConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Laptop Summary -->
+                    <div class="summary-section" th:if="${registration.laptopBrand}">
+                        <h3>8. Laptop</h3>
+                        <div class="summary-row">
+                            <span class="summary-label">Laptop merk:</span>
+                            <span class="summary-value" th:text="${registration.laptopBrand}"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- School Account Summary -->
+                    <div class="summary-section">
+                        <h3>9. Schoolrekening</h3>
+                        <div class="summary-row">
+                            <span class="summary-label">Financieel gesprek gewenst:</span>
+                            <span class="summary-value" th:text="${registration.financialSupportRequest == 'J' ? 'Ja' : 'Nee'}"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Signature Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Ondertekening</h2>
+                        
+                        <div class="email-verification-notice mb-4">
+                            <p>
+                                De inschrijving wordt definitief na schriftelijke akkoordverklaring met het schoolreglement; het indienen van het attest van basisonderwijs (niet in 1B) en het voldoen aan de toelatingsvoorwaarden.
+                                De school controleert ook eerst of er geen volzetverklaring bestaat voor de gekozen richting en jaar.
+                            </p>
+                            <p>
+                                De inschrijvende ouder verklaart t.o.v. de school in toepassing van de artikels 374 B.W. en 375 B.W. te handelen met instemming van de andere ouder.
+                                Bent u geen ouder/voogd, maar tekent u in naam van de ouder/voogd, dan is uw handtekening niet rechtsgeldig voor de inschrijving.
+                            </p>
+                        </div>
+                        
+                        <div class="position-relative mb-3">
+                            <label for="signatureName" class="form-label">
+                                NAAM van ouder(s) / voogd of andere persoon:
+                            </label>
+                            <input type="text" 
+                                   id="signatureName"
+                                   th:field="*{signatureName}" 
+                                   class="form-control" 
+                                   placeholder="Volledige naam"
+                                   required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        
+                        <div class="position-relative mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" 
+                                       id="schoolRegulationAgreement"
+                                       th:field="*{schoolRegulationAgreement}"
+                                       value="J"
+                                       class="form-check-input" 
+                                       required>
+                                <label class="form-check-label" for="schoolRegulationAgreement">
+                                    Ik ga akkoord met het <a href="https://www.snh.be/praktisch/schoolreglement" target="_blank">schoolreglement</a>
+                                </label>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        
+                        <div class="position-relative mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" 
+                                       id="additionalInfoRequest"
+                                       th:field="*{additionalInfoRequest}"
+                                       value="J"
+                                       class="form-check-input">
+                                <label class="form-check-label" for="additionalInfoRequest">
+                                    Ik wens nog bijkomende informatie, u kan mij telefonisch contacteren
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="form-nav-buttons">
+                        <a th:href="@{/inschrijving/schoolrekening/__${registrationId}__}" class="btn btn--secondary">
+                            <svg class="btn__icon btn__icon--left" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Vorige
+                        </a>
+                        <button type="submit" class="btn btn--primary">
+                            Inschrijving voltooien
+                            <svg class="btn__icon btn__icon--right" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M12 8l-4 4-4-4M8 12V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

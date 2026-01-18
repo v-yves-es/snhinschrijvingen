@@ -46,14 +46,17 @@ public class Registration {
     @Column(name = "student_lastname")
     private String studentLastname;
 
-    @Column(name = "student_adres")
-    private String studentAdres;
-
-    @Column(name = "student_postnummer")
-    private String studentPostnummer;
-
-    @Column(name = "student_gemeente")
-    private String studentGemeente;
+    // Student domicile address (embedded)
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "street", column = @Column(name = "student_street")),
+        @AttributeOverride(name = "houseNumber", column = @Column(name = "student_house_number")),
+        @AttributeOverride(name = "box", column = @Column(name = "student_box")),
+        @AttributeOverride(name = "postalCode", column = @Column(name = "student_postal_code")),
+        @AttributeOverride(name = "city", column = @Column(name = "student_city")),
+        @AttributeOverride(name = "country", column = @Column(name = "student_country"))
+    })
+    private Address studentAddress;
 
     @Column(name = "student_gsm")
     private String studentGsm;
@@ -98,6 +101,88 @@ public class Registration {
 
     @Column(name = "toestemming_vorige_school")
     private String toestemmingVorigeSchool;
+    
+    // Doctor information
+    @Column(name = "doctor_name")
+    private String doctorName;
+    
+    @Column(name = "doctor_phone")
+    private String doctorPhone;
+    
+    // Care needs information
+    @Column(name = "class_composition_wishes", length = 500)
+    private String classCompositionWishes;
+    
+    @Column(name = "has_care_needs")
+    private String hasCareNeeds;
+    
+    @Column(name = "medical_care_details", length = 1000)
+    private String medicalCareDetails;
+    
+    @Column(name = "receiving_treatment")
+    private String receivingTreatment;
+    
+    @Column(name = "doctor_contact_info", length = 500)
+    private String doctorContactInfo;
+    
+    @Column(name = "takes_medication")
+    private String takesMedication;
+    
+    @Column(name = "school_expectations", length = 1000)
+    private String schoolExpectations;
+    
+    @Column(name = "lesson_influence", length = 1000)
+    private String lessonInfluence;
+    
+    @Column(name = "clb_consult_permission")
+    private String clbConsultPermission;
+    
+    @Column(name = "social_emotional_info", length = 1000)
+    private String socialEmotionalInfo;
+    
+    @Column(name = "learning_difficulties", length = 1000)
+    private String learningDifficulties;
+    
+    @Column(name = "external_support", length = 500)
+    private String externalSupport;
+    
+    // Privacy consents
+    @Column(name = "photo_video_consent")
+    private String photoVideoConsent;
+    
+    @Column(name = "study_results_consent")
+    private String studyResultsConsent;
+    
+    @Column(name = "alumni_data_consent")
+    private String alumniDataConsent;
+    
+    @Column(name = "higher_education_consent")
+    private String higherEducationConsent;
+    
+    // Laptop information
+    @Column(name = "laptop_brand", length = 200)
+    private String laptopBrand;
+    
+    // School account / financial support
+    @Column(name = "financial_support_request")
+    private String financialSupportRequest;
+    
+    // Submission / signature
+    @Column(name = "signature_name", length = 200)
+    private String signatureName;
+    
+    @Column(name = "school_regulation_agreement")
+    private String schoolRegulationAgreement;
+    
+    @Column(name = "additional_info_request")
+    private String additionalInfoRequest;
+    
+    @Column(name = "submission_date")
+    private java.time.LocalDateTime submissionDate;
+    
+    // Relations (one-to-many with Relation entity)
+    @OneToMany(mappedBy = "registration", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Relation> relations = new java.util.ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
@@ -199,28 +284,15 @@ public class Registration {
         this.studentLastname = studentLastname;
     }
 
-    public String getStudentAdres() {
-        return studentAdres;
+    public Address getStudentAddress() {
+        if (studentAddress == null) {
+            studentAddress = new Address();
+        }
+        return studentAddress;
     }
 
-    public void setStudentAdres(String studentAdres) {
-        this.studentAdres = studentAdres;
-    }
-
-    public String getStudentPostnummer() {
-        return studentPostnummer;
-    }
-
-    public void setStudentPostnummer(String studentPostnummer) {
-        this.studentPostnummer = studentPostnummer;
-    }
-
-    public String getStudentGemeente() {
-        return studentGemeente;
-    }
-
-    public void setStudentGemeente(String studentGemeente) {
-        this.studentGemeente = studentGemeente;
+    public void setStudentAddress(Address studentAddress) {
+        this.studentAddress = studentAddress;
     }
 
     public String getStudentGsm() {
@@ -333,5 +405,215 @@ public class Registration {
 
     public void setToestemmingVorigeSchool(String toestemmingVorigeSchool) {
         this.toestemmingVorigeSchool = toestemmingVorigeSchool;
+    }
+    
+    public java.util.List<Relation> getRelations() {
+        return relations;
+    }
+    
+    public void setRelations(java.util.List<Relation> relations) {
+        this.relations = relations;
+    }
+    
+    public void addRelation(Relation relation) {
+        relations.add(relation);
+        relation.setRegistration(this);
+    }
+    
+    public void removeRelation(Relation relation) {
+        relations.remove(relation);
+        relation.setRegistration(null);
+    }
+    
+    public String getDoctorName() {
+        return doctorName;
+    }
+    
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
+    
+    public String getDoctorPhone() {
+        return doctorPhone;
+    }
+    
+    public void setDoctorPhone(String doctorPhone) {
+        this.doctorPhone = doctorPhone;
+    }
+    
+    public String getClassCompositionWishes() {
+        return classCompositionWishes;
+    }
+    
+    public void setClassCompositionWishes(String classCompositionWishes) {
+        this.classCompositionWishes = classCompositionWishes;
+    }
+    
+    public String getHasCareNeeds() {
+        return hasCareNeeds;
+    }
+    
+    public void setHasCareNeeds(String hasCareNeeds) {
+        this.hasCareNeeds = hasCareNeeds;
+    }
+    
+    public String getMedicalCareDetails() {
+        return medicalCareDetails;
+    }
+    
+    public void setMedicalCareDetails(String medicalCareDetails) {
+        this.medicalCareDetails = medicalCareDetails;
+    }
+    
+    public String getReceivingTreatment() {
+        return receivingTreatment;
+    }
+    
+    public void setReceivingTreatment(String receivingTreatment) {
+        this.receivingTreatment = receivingTreatment;
+    }
+    
+    public String getDoctorContactInfo() {
+        return doctorContactInfo;
+    }
+    
+    public void setDoctorContactInfo(String doctorContactInfo) {
+        this.doctorContactInfo = doctorContactInfo;
+    }
+    
+    public String getTakesMedication() {
+        return takesMedication;
+    }
+    
+    public void setTakesMedication(String takesMedication) {
+        this.takesMedication = takesMedication;
+    }
+    
+    public String getSchoolExpectations() {
+        return schoolExpectations;
+    }
+    
+    public void setSchoolExpectations(String schoolExpectations) {
+        this.schoolExpectations = schoolExpectations;
+    }
+    
+    public String getLessonInfluence() {
+        return lessonInfluence;
+    }
+    
+    public void setLessonInfluence(String lessonInfluence) {
+        this.lessonInfluence = lessonInfluence;
+    }
+    
+    public String getClbConsultPermission() {
+        return clbConsultPermission;
+    }
+    
+    public void setClbConsultPermission(String clbConsultPermission) {
+        this.clbConsultPermission = clbConsultPermission;
+    }
+    
+    public String getSocialEmotionalInfo() {
+        return socialEmotionalInfo;
+    }
+    
+    public void setSocialEmotionalInfo(String socialEmotionalInfo) {
+        this.socialEmotionalInfo = socialEmotionalInfo;
+    }
+    
+    public String getLearningDifficulties() {
+        return learningDifficulties;
+    }
+    
+    public void setLearningDifficulties(String learningDifficulties) {
+        this.learningDifficulties = learningDifficulties;
+    }
+    
+    public String getExternalSupport() {
+        return externalSupport;
+    }
+    
+    public void setExternalSupport(String externalSupport) {
+        this.externalSupport = externalSupport;
+    }
+    
+    public String getPhotoVideoConsent() {
+        return photoVideoConsent;
+    }
+    
+    public void setPhotoVideoConsent(String photoVideoConsent) {
+        this.photoVideoConsent = photoVideoConsent;
+    }
+    
+    public String getStudyResultsConsent() {
+        return studyResultsConsent;
+    }
+    
+    public void setStudyResultsConsent(String studyResultsConsent) {
+        this.studyResultsConsent = studyResultsConsent;
+    }
+    
+    public String getAlumniDataConsent() {
+        return alumniDataConsent;
+    }
+    
+    public void setAlumniDataConsent(String alumniDataConsent) {
+        this.alumniDataConsent = alumniDataConsent;
+    }
+    
+    public String getHigherEducationConsent() {
+        return higherEducationConsent;
+    }
+    
+    public void setHigherEducationConsent(String higherEducationConsent) {
+        this.higherEducationConsent = higherEducationConsent;
+    }
+    
+    public String getLaptopBrand() {
+        return laptopBrand;
+    }
+    
+    public void setLaptopBrand(String laptopBrand) {
+        this.laptopBrand = laptopBrand;
+    }
+    
+    public String getFinancialSupportRequest() {
+        return financialSupportRequest;
+    }
+    
+    public void setFinancialSupportRequest(String financialSupportRequest) {
+        this.financialSupportRequest = financialSupportRequest;
+    }
+    
+    public String getSignatureName() {
+        return signatureName;
+    }
+    
+    public void setSignatureName(String signatureName) {
+        this.signatureName = signatureName;
+    }
+    
+    public String getSchoolRegulationAgreement() {
+        return schoolRegulationAgreement;
+    }
+    
+    public void setSchoolRegulationAgreement(String schoolRegulationAgreement) {
+        this.schoolRegulationAgreement = schoolRegulationAgreement;
+    }
+    
+    public String getAdditionalInfoRequest() {
+        return additionalInfoRequest;
+    }
+    
+    public void setAdditionalInfoRequest(String additionalInfoRequest) {
+        this.additionalInfoRequest = additionalInfoRequest;
+    }
+    
+    public java.time.LocalDateTime getSubmissionDate() {
+        return submissionDate;
+    }
+    
+    public void setSubmissionDate(java.time.LocalDateTime submissionDate) {
+        this.submissionDate = submissionDate;
     }
 }

@@ -28,12 +28,12 @@ public class PreviousSchoolController {
         this.wizardService = wizardService;
     }
     
-    @GetMapping("/previous-school")
-    public String showPreviousSchoolForm(@RequestParam("id") UUID registrationId, Model model) {
-        Optional<Registration> registrationOpt = registrationService.findById(registrationId);
+    @GetMapping("/vorige-school/{id}")
+    public String showPreviousSchoolForm(@PathVariable("id") UUID id, Model model) {
+        Optional<Registration> registrationOpt = registrationService.findById(id);
         
         if (registrationOpt.isEmpty()) {
-            logger.warn("Registration not found for ID: {}", registrationId);
+            logger.warn("Registration not found for ID: {}", id);
             return "redirect:/inschrijving/start";
         }
         
@@ -48,21 +48,21 @@ public class PreviousSchoolController {
         form.setToestemmingVorigeSchool(registration.getToestemmingVorigeSchool());
         
         model.addAttribute("previousSchoolForm", form);
-        model.addAttribute("registrationId", registrationId);
+        model.addAttribute("registrationId", id);
         model.addAttribute("wizardSteps", wizardService.getWizardSteps(3, List.of(1, 2)));
         
         return "previous-school";
     }
     
-    @PostMapping("/previous-school")
+    @PostMapping("/vorige-school/{id}")
     public String submitPreviousSchoolForm(
-            @RequestParam("id") UUID registrationId,
+            @PathVariable("id") UUID id,
             @ModelAttribute PreviousSchoolForm form) {
         
-        Optional<Registration> registrationOpt = registrationService.findById(registrationId);
+        Optional<Registration> registrationOpt = registrationService.findById(id);
         
         if (registrationOpt.isEmpty()) {
-            logger.error("Registration not found for ID: {}", registrationId);
+            logger.error("Registration not found for ID: {}", id);
             return "redirect:/inschrijving/start";
         }
         
@@ -77,9 +77,9 @@ public class PreviousSchoolController {
         
         registrationService.updateRegistration(registration);
         
-        logger.info("Previous school info saved for registration: {}", registrationId);
+        logger.info("Previous school info saved for registration: {}", id);
         
         // Redirect to next wizard step (Relations)
-        return "redirect:/inschrijving/relations?id=" + registrationId;
+        return "redirect:/inschrijving/relaties/" + id;
     }
 }

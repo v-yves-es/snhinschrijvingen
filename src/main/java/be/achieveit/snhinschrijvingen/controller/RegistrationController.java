@@ -70,7 +70,7 @@ public class RegistrationController {
         if (!hasCompletedRegistrations && allRegistrations.size() == 1) {
             // First time registration, go directly to student-info
             logger.info("First registration for email: {}, redirecting to student-info", email);
-            return "redirect:/inschrijving/student-info?id=" + registrationId;
+            return "redirect:/inschrijving/leerling-info/" + registrationId;
         }
 
         // Show overview of all registrations
@@ -99,9 +99,18 @@ public class RegistrationController {
         // Route to appropriate step based on current step
         return switch (currentStep) {
             case "EMAIL_VERIFICATION" -> "redirect:/inschrijving/start";
-            case "STUDENT_INFO" -> "redirect:/inschrijving/student-info?id=" + registrationId;
-            // Add more steps as needed
-            default -> "redirect:/inschrijving/student-info?id=" + registrationId;
+            case "STUDENT_INFO" -> "redirect:/inschrijving/leerling-info/" + registrationId;
+            case "STUDY_PROGRAM" -> "redirect:/inschrijving/studierichting/" + registrationId;
+            case "PREVIOUS_SCHOOL" -> "redirect:/inschrijving/vorige-school/" + registrationId;
+            case "RELATIONS" -> "redirect:/inschrijving/relaties/" + registrationId;
+            case "DOCTOR" -> "redirect:/inschrijving/huisarts/" + registrationId;
+            case "CARE_NEEDS" -> "redirect:/inschrijving/zorgvraag/" + registrationId;
+            case "PRIVACY" -> "redirect:/inschrijving/privacy/" + registrationId;
+            case "LAPTOP" -> "redirect:/inschrijving/laptop/" + registrationId;
+            case "SCHOOL_ACCOUNT" -> "redirect:/inschrijving/schoolrekening/" + registrationId;
+            case "SUBMISSION" -> "redirect:/inschrijving/verzenden/" + registrationId;
+            case "SUBMITTED" -> "redirect:/inschrijving/bevestiging/" + registrationId;
+            default -> "redirect:/inschrijving/leerling-info/" + registrationId;
         };
     }
 }

@@ -2,7 +2,6 @@ package be.achieveit.snhinschrijvingen.controller;
 
 import be.achieveit.snhinschrijvingen.model.Registration;
 import be.achieveit.snhinschrijvingen.model.StudyDomain;
-import be.achieveit.snhinschrijvingen.model.StudyOrientation;
 import be.achieveit.snhinschrijvingen.model.StudyProgram;
 import be.achieveit.snhinschrijvingen.service.RegistrationService;
 import be.achieveit.snhinschrijvingen.service.StudyProgramService;
@@ -35,9 +34,9 @@ public class StudyProgramController {
         this.wizardService = wizardService;
     }
     
-    @GetMapping("/study-program")
-    public String showStudyProgramSelection(@RequestParam("id") UUID registrationId, Model model) {
-        Optional<Registration> registrationOpt = registrationService.findById(registrationId);
+    @GetMapping("/studierichting/{id}")
+    public String showStudyProgramSelection(@PathVariable UUID id, Model model) {
+        Optional<Registration> registrationOpt = registrationService.findById(id);
         
         if (registrationOpt.isEmpty()) {
             return "redirect:/inschrijving/start";
@@ -45,7 +44,7 @@ public class StudyProgramController {
         
         Registration registration = registrationOpt.get();
         
-        model.addAttribute("registrationId", registrationId.toString());
+        model.addAttribute("registrationId", id.toString());
         model.addAttribute("availableYears", studyProgramService.getAvailableYears());
         model.addAttribute("wizardSteps", wizardService.getWizardSteps(2, List.of(1)));
         
@@ -63,7 +62,7 @@ public class StudyProgramController {
         return "study-program";
     }
     
-    @GetMapping("/study-program/programs")
+    @GetMapping("/studierichting/programmas")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getStudyPrograms(@RequestParam("year") Integer year) {
         List<StudyProgram> programs = studyProgramService.getStudyProgramsByYear(year);
@@ -118,12 +117,12 @@ public class StudyProgramController {
         return ResponseEntity.ok(response);
     }
     
-    @PostMapping("/study-program")
-    public String saveStudyProgram(@RequestParam("id") UUID registrationId,
+    @PostMapping("/studierichting/{id}")
+    public String saveStudyProgram(@PathVariable UUID id,
                                   @RequestParam("studyProgramId") Long studyProgramId,
                                   @RequestParam(value = "extraInfo", required = false) String extraInfo,
                                   @RequestParam(value = "studyYear", required = false) Integer studyYear) {
-        Optional<Registration> registrationOpt = registrationService.findById(registrationId);
+        Optional<Registration> registrationOpt = registrationService.findById(id);
         
         if (registrationOpt.isEmpty()) {
             return "redirect:/inschrijving/start";
@@ -139,9 +138,9 @@ public class StudyProgramController {
         registrationService.updateRegistration(registration);
         
         logger.info("Study program saved for registration: {}, programId: {}, year: {}", 
-                    registrationId, studyProgramId, studyYear);
+                    id, studyProgramId, studyYear);
         
-        return "redirect:/inschrijving/previous-school?id=" + registrationId;
+        return "redirect:/inschrijving/vorige-school/" + id;
     }
     
     private Map<String, Object> mapProgram(StudyProgram program) {

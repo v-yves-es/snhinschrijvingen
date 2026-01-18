@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Huisarts - SPES Nostra Heule</title>
+</head>
+<body>
+    <section class="wizard-container">
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Huisarts</h1>
+                
+                <form class="form" 
+                      th:action="@{/inschrijving/huisarts/__${registrationId}__}" 
+                      method="post" 
+                      th:object="${doctorForm}" 
+                      data-validate="true" 
+                      novalidate>
+                    
+                    <!-- Hidden registration ID -->
+                    <input type="hidden" name="id" th:value="${registrationId}">
+                    
+                    <!-- Wizard Progress -->
+                    <div th:replace="~{fragments/wizard :: wizard}"></div>
+                    
+                    <!-- Doctor Information Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Gegevens huisarts</h2>
+                        
+                        <!-- Doctor Name -->
+                        <div class="position-relative mb-3">
+                            <label for="doctorName" class="form-label">Naam huisarts</label>
+                            <input type="text" 
+                                   id="doctorName"
+                                   th:field="*{doctorName}" 
+                                   class="form-control" 
+                                   placeholder="Naam huisarts"
+                                   required
+                                   data-min-length="2">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        
+                        <!-- Doctor Phone -->
+                        <div class="position-relative mb-3">
+                            <label for="doctorPhone" class="form-label">Telefoonnummer (optioneel)</label>
+                            <input type="tel" 
+                                   id="doctorPhone"
+                                   th:field="*{doctorPhone}" 
+                                   class="form-control" 
+                                   placeholder="+32 4XX XX XX XX"
+                                   data-validate="phone">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/relaties/__${registrationId}__}, 'Vorige', 'Volgende', true)}"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

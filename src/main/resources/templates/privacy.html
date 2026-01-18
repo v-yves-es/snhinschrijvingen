@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Privacy - SPES Nostra Heule</title>
+</head>
+<body>
+    <section class="wizard-container">
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Privacy</h1>
+                
+                <form class="form" 
+                      th:action="@{/inschrijving/privacy/__${registrationId}__}" 
+                      method="post" 
+                      th:object="${privacyForm}" 
+                      data-validate="true" 
+                      novalidate>
+                    
+                    <!-- Hidden registration ID -->
+                    <input type="hidden" name="id" th:value="${registrationId}">
+                    
+                    <!-- Wizard Progress -->
+                    <div th:replace="~{fragments/wizard :: wizard}"></div>
+                    
+                    <!-- Privacy Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Toestemmingen</h2>
+                        
+                        <!-- Photo/Video Consent -->
+                        <div class="position-relative mb-4">
+                            <label class="form-label">
+                                Ik geef toestemming om foto's of filmfragmenten van mijn zoon of dochter te nemen?
+                            </label>
+                            <div class="form-radio-group">
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{photoVideoConsent}" value="J" class="form-check-input" required>
+                                    <span>Ja</span>
+                                </label>
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{photoVideoConsent}" value="N" class="form-check-input">
+                                    <span>Nee</span>
+                                </label>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        
+                        <!-- Study Results Consent -->
+                        <div class="position-relative mb-4">
+                            <label class="form-label">
+                                Ik geef toestemming om studieresultaten en/of zorginfo door te geven aan de vorige school in het kader van interne kwaliteitszorg?
+                            </label>
+                            <div class="form-radio-group">
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{studyResultsConsent}" value="J" class="form-check-input" required>
+                                    <span>Ja</span>
+                                </label>
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{studyResultsConsent}" value="N" class="form-check-input">
+                                    <span>Nee</span>
+                                </label>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        
+                        <!-- Alumni Data Consent -->
+                        <div class="position-relative mb-4">
+                            <label class="form-label">
+                                Ik geef toestemming om naam, adres, e-mailadres, gsm-nummer te bewaren als oud-leerling van onze school?
+                            </label>
+                            <div class="form-radio-group">
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{alumniDataConsent}" value="J" class="form-check-input" required>
+                                    <span>Ja</span>
+                                </label>
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{alumniDataConsent}" value="N" class="form-check-input">
+                                    <span>Nee</span>
+                                </label>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        
+                        <!-- Higher Education Consent -->
+                        <div class="position-relative mb-4">
+                            <label class="form-label">
+                                Ik geef de toestemming om voornaam, naam, postadres, e-mailadres en studierichting door te geven aan de volgende instellingen van het hoger onderwijs?
+                            </label>
+                            <div class="form-radio-group">
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{higherEducationConsent}" value="J" class="form-check-input" required>
+                                    <span>Ja</span>
+                                </label>
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{higherEducationConsent}" value="N" class="form-check-input">
+                                    <span>Nee</span>
+                                </label>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/zorgvraag/__${registrationId}__}, 'Vorige', 'Volgende', true)}"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

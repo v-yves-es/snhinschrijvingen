@@ -71,7 +71,7 @@ public class EmailVerificationService {
                 
                 %s
                 
-                Deze link is uniek en kan gebruikt worden om:
+                Deze link is uniek en wordt gebruikt om:
                 • Uw emailadres te verifiëren
                 • Verder te gaan met een bestaande inschrijving
                 • Nieuwe inschrijvingen te starten

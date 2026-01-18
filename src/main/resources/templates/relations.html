@@ -14,7 +14,7 @@
                     <h1 class="form-title">Relaties</h1>
                     
                     <form class="form" 
-                          th:action="@{/inschrijving/relations(id=${registrationId})}" 
+                          th:action="@{/inschrijving/relaties/__${registrationId}__}" 
                           method="post" 
                           th:object="${relationsForm}" 
                           data-validate="true" 
@@ -28,7 +28,9 @@
                         
                         <!-- Relation 1 (Always visible) -->
                         <div class="form-section">
-                            <h2 class="form-section-title">Relatie 1 (verplicht)</h2>
+                            <div class="form-section-header">
+                                <h2 class="form-section-title">Relatie 1 (verplicht)</h2>
+                            </div>
                             
                             <!-- Relation Type -->
                             <div class="position-relative mb-3">
@@ -112,7 +114,12 @@
                             </div>
                             
                             <!-- Address fields using fragment -->
-                            <h3 class="form-section-subtitle">Adres</h3>
+                            <div class="form-section-header">
+                                <h3 class="form-section-subtitle">Adres</h3>
+                                <button type="button" class="btn btn--outline btn--small copy-address-btn" onclick="copyDomicileAddress('relation1')">
+                                    Kopieer domicilieadres
+                                </button>
+                            </div>
                             <div th:replace="~{fragments/address-fields :: addressFields('relation1.address', ${relationsForm.relation1.address})}"></div>
                         </div>
                         
@@ -218,17 +225,65 @@
                             </div>
                             
                             <!-- Address fields using fragment -->
-                            <h3 class="form-section-subtitle">Adres</h3>
+                            <div class="form-section-header">
+                                <h3 class="form-section-subtitle">Adres</h3>
+                                <button type="button" class="btn btn--outline btn--small copy-address-btn" onclick="copyDomicileAddress('relation2')">
+                                    Kopieer domicilieadres
+                                </button>
+                            </div>
                             <div th:replace="~{fragments/address-fields :: addressFields('relation2.address', ${relationsForm.relation2.address})}"></div>
                         </div>
                         
                         <!-- Form Actions -->
-                        <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/previous-school(id=${registrationId})}, 'Vorige', 'Volgende', true)}"></div>
+                        <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/vorige-school/__${registrationId}__}, 'Vorige', 'Volgende', true)}"></div>
                     </form>
                     
                     <!-- Relations-specific JavaScript -->
-                    <script>
+                    <script th:inline="javascript">
                         console.log('=== RELATIONS SCRIPT LOADING ===');
+                        
+                        // Domicile address data from Registration entity - make global
+                        window.domicileAddress = {
+                            straat: /*[[${registration.studentAddress?.street}]]*/ '',
+                            huisnr: /*[[${registration.studentAddress?.houseNumber}]]*/ '',
+                            bus: /*[[${registration.studentAddress?.box}]]*/ '',
+                            postcode: /*[[${registration.studentAddress?.postalCode}]]*/ '',
+                            gemeente: /*[[${registration.studentAddress?.city}]]*/ ''
+                        };
+                        
+                        console.log('Domicile address loaded:', window.domicileAddress);
+                        
+                        // Make function global
+                        window.copyDomicileAddress = function(relationPrefix) {
+                            console.log('Copying domicile address to', relationPrefix);
+                            console.log('Source data:', window.domicileAddress);
+                            
+                            // Map field names
+                            const fields = {
+                                straat: relationPrefix + '.address.street',
+                                huisnr: relationPrefix + '.address.houseNumber',
+                                bus: relationPrefix + '.address.box',
+                                postcode: relationPrefix + '.address.postalCode',
+                                gemeente: relationPrefix + '.address.city'
+                            };
+                            
+                            // Copy values to relation address fields
+                            Object.keys(fields).forEach(key => {
+                                const fieldName = fields[key];
+                                const input = document.querySelector(`[name="${fieldName}"]`);
+                                console.log(`Field: ${fieldName}, Input:`, input, `Value: ${window.domicileAddress[key]}`);
+                                if (input) {
+                                    input.value = window.domicileAddress[key] || '';
+                                    // Trigger validation
+                                    if (window.FormValidator) {
+                                        const event = new Event('blur', { bubbles: true });
+                                        input.dispatchEvent(event);
+                                    }
+                                }
+                            });
+                            
+                            console.log('Domicile address copied successfully');
+                        };
                         
                         function initRelationsToggle() {
                             console.log('Init relations toggle');

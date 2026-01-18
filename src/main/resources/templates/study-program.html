@@ -13,7 +13,7 @@
             <div class="form-card">
                 <h1 class="form-title">Kies je studierichting</h1>
                 
-                <form class="form" th:action="@{/inschrijving/study-program(id=${registrationId})}" method="post" id="studyProgramForm" data-validate="true" novalidate>
+                <form class="form" th:action="@{/inschrijving/studierichting/__${registrationId}__}" method="post" id="studyProgramForm" data-validate="true" novalidate>
                     <input type="hidden" name="id" th:value="${registrationId}">
                     <input type="hidden" name="studyProgramId" id="selectedProgramId" th:value="${selectedProgramId}" required data-program-required="true">
                     <input type="hidden" name="studyYear" id="selectedYearInput" required>
@@ -76,7 +76,7 @@
                     
                     <!-- Form Actions -->
                     <div class="form-actions">
-                        <a th:href="@{/inschrijving/student-info(id=${registrationId})}" class="btn btn--secondary">
+                        <a th:href="@{/inschrijving/leerling-info/__${registrationId}__}" class="btn btn--secondary">
                             <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" style="transform: rotate(180deg);">
                                 <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
@@ -135,7 +135,7 @@
                         }
                         
                         // Fetch study programs for selected year
-                        fetch(`/inschrijving/study-program/programs?year=${year}`)
+                        fetch(`/inschrijving/studierichting/programmas?year=${year}`)
                             .then(response => response.json())
                             .then(data => {
                                 renderPrograms(data);
@@ -170,7 +170,7 @@
                             secondYearInfo.style.display = 'block';
                         }
                         
-                        fetch(`/inschrijving/study-program/programs?year=${year}`)
+                        fetch(`/inschrijving/studierichting/programmas?year=${year}`)
                             .then(response => response.json())
                             .then(data => {
                                 renderPrograms(data);

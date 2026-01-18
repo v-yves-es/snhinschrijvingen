@@ -12,39 +12,36 @@
 
                 <h1 class="form-title">Verificatie Email Verzonden</h1>
                 
-                <!-- Success Alert -->
-                <div class="alert alert-success fade show" role="alert">
-                    <strong>✅ Email succesvol verzonden!</strong><br>
-                    We hebben een verificatie-email gestuurd naar: <strong th:text="${email}">email@voorbeeld.be</strong>
+                <!-- Success Message -->
+                <div class="email-sent-success">
+                    <svg class="email-sent-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/>
+                    </svg>
+                    <p class="email-sent-message">
+                        We hebben een verificatie-email gestuurd naar:<br>
+                        <strong th:text="${email}">email@voorbeeld.be</strong>
+                    </p>
                 </div>
                 
-                <!-- Info Alert -->
-                <div class="alert alert-info fade show" role="alert">
-                    <div class="alert-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                            <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                        <div class="alert-icon-content">
-                            <strong>Volgende stappen:</strong>
-                            <ol style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
-                                <li>Open uw mailbox</li>
-                                <li>Zoek naar een email van <strong>SNH Inschrijvingen</strong></li>
-                                <li>Controleer ook uw <strong>spam/ongewenste e-mail</strong> map</li>
-                                <li>Klik op de <strong>verificatielink</strong> in de email</li>
-                                <li>U wordt automatisch doorgestuurd naar de volgende stap</li>
-                            </ol>
-                        </div>
-                    </div>
+                <!-- Instructions -->
+                <div class="email-sent-instructions">
+                    <h2 class="email-sent-subtitle">Volgende stappen</h2>
+                    <ol class="email-sent-list">
+                        <li>Open uw mailbox</li>
+                        <li>Zoek naar een email van <strong>SNH Inschrijvingen</strong></li>
+                        <li>Controleer ook uw <strong>spam/ongewenste e-mail</strong> map</li>
+                        <li>Klik op de <strong>verificatielink</strong> in de email</li>
+                        <li>U wordt automatisch doorgestuurd naar het inschrijvingsformulier</li>
+                    </ol>
                 </div>
                 
-                <!-- Warning Alert -->
-                <div class="alert alert-warning fade show" role="alert">
-                    <strong>⚠️ Email niet ontvangen?</strong><br>
-                    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                <!-- Help Section -->
+                <div class="email-sent-help">
+                    <h3 class="email-sent-help-title">Email niet ontvangen?</h3>
+                    <ul class="email-sent-help-list">
                         <li>Wacht enkele minuten en controleer opnieuw</li>
                         <li>Controleer uw spam/junk mail folder</li>
-                        <li>Controleer of het emailadres correct is: <strong th:text="${email}">email@voorbeeld.be</strong></li>
+                        <li>Verifieer dat het emailadres correct is</li>
                         <li>Neem contact op met de school als het probleem aanhoudt</li>
                     </ul>
                 </div>

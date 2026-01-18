@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Laptop - SPES Nostra Heule</title>
+</head>
+<body>
+    <section class="wizard-container">
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Laptop</h1>
+                
+                <form class="form" 
+                      th:action="@{/inschrijving/laptop/__${registrationId}__}" 
+                      method="post" 
+                      th:object="${laptopForm}" 
+                      data-validate="true" 
+                      novalidate>
+                    
+                    <!-- Hidden registration ID -->
+                    <input type="hidden" name="id" th:value="${registrationId}">
+                    
+                    <!-- Wizard Progress -->
+                    <div th:replace="~{fragments/wizard :: wizard}"></div>
+                    
+                    <!-- Signpost-Leermiddel Laptop -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Signpost-Leermiddel Laptop</h2>
+                        
+                        <div class="position-relative mb-3">
+                            <label for="laptopBrand" class="form-label">
+                                Ik ben eigenaar van een laptop aangekocht via signpost. Het merk van de laptop:
+                            </label>
+                            <input type="text" 
+                                   id="laptopBrand"
+                                   th:field="*{laptopBrand}" 
+                                   class="form-control" 
+                                   placeholder="voorbeeld: Lenovo Thinkpad E15">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Laptopproject Information -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Laptopproject</h2>
+                        
+                        <div class="email-verification-notice">
+                            <h3 class="email-verification-notice-title">Beste leerling, beste ouder</h3>
+                            
+                            <p>Ook in schooljaar 2025-2026 gaan we verder met ons laptopproject. De regeling is als volgt.</p>
+                            
+                            <h4 style="text-decoration: underline; font-weight: 600; margin-top: 1.5rem; margin-bottom: 1rem;">
+                                Leerlingen die nog <strong>geen</strong> schoollaptop (via Signpost-Leermiddel) hebben
+                            </h4>
+                            
+                            <p>
+                                Leerlingen die nog geen schoollaptop (via Signpost-Leermiddel) hebben, krijgen eind augustus een melding dat ze hun 
+                                schoollaptop kunnen ophalen op school. Die laptop is gebruiksklaar. Elke leerling ontvangt dan ook een gebruikersnaam 
+                                en wachtwoord om op de laptop te kunnen werken alsook de accountgegevens voor Smartschool.
+                            </p>
+                            
+                            <p>Per schooljaar huren de leerlingen deze laptop aan school.</p>
+                            
+                            <ul>
+                                <li>
+                                    <strong>Schoolrekening 1:</strong> 30 euro voor een uitgebreid legaal software-abonnement (Windows 11, Microsoft Office 365, 
+                                    Adobe, OneDrive, antivirus…) + een uitgebreid pakket WeZooz, een online lesplatform met digitaal lesmateriaal voor 
+                                    leerlingen secundair onderwijs. Alles is ook te gebruiken op andere pc's thuis.
+                                </li>
+                                <li>
+                                    <strong>Schoolrekening 2-3-4:</strong> telkens 50 euro. Leerlingen die via een andere school in samenwerking met Signpost 
+                                    een eigen laptop hebben aangekocht en die laptop verder in Spes Nostra gebruiken, krijgen dit bedrag grotendeels terugbetaald.
+                                </li>
+                            </ul>
+                            
+                            <p>
+                                De laptops en toebehoren zijn en blijven eigendom van de school. De leerling krijgt die in bruikleen. 
+                                Bij schoolverandering dient de leerling alles op eigen initiatief, onbeschadigd aan school terug te bezorgen. 
+                                Bij verzuim hiertoe verbinden de ouders of de meerderjarige leerling zich tot betaling van de vervangingswaarde van de laptop.
+                            </p>
+                            
+                            <h4 style="font-weight: 600; margin-top: 1.5rem; margin-bottom: 1rem;">
+                                WAAROM ZORGT SCHOOL VOOR DIE LAPTOPS?
+                            </h4>
+                            
+                            <p>De laptops die we via school aanbieden:</p>
+                            
+                            <ul>
+                                <li>zijn zeer betaalbaar, niet noodzakelijk nieuw maar wel gecontroleerd en klaar voor gebruik,</li>
+                                <li>zijn stevig van constructie,</li>
+                                <li>worden bij problemen binnen de paar dagen hersteld,</li>
+                                <li>worden via school beheerd. School zorgt voor de gepaste programma's en zet die op de laptops. Bij problemen met die programma's kun je op school terecht,</li>
+                                <li>worden via Intune geconfigureerd zodat leerlingen opstarten via hun Microsoft-account van school. Zo is er een permanente koppeling met OneDrive en de Office365-wereld,</li>
+                                <li>staan onder garantie. Problemen eigen aan de laptop worden gratis hersteld. Bij problemen waar de leerling verantwoordelijk is, is er per schadegeval een franchise van 39 euro. Voorwaarde is wel dat het toestel in zijn beschermingscover (indien aanwezig) of hoesje zit. Vandalisme en/of moedwillige schade valt nooit onder garantie.</li>
+                            </ul>
+                            
+                            <p style="margin-top: 1.5rem;">
+                                <a href="/documentation/laptopproject_2025.pdf" target="_blank" class="btn btn--outline btn--small">
+                                    <svg class="btn__icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M8 1v10M8 11l-3-3M8 11l3-3M2 14h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Meer informatie: laptopproject in 2025 (PDF)
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/privacy/__${registrationId}__}, 'Vorige', 'Volgende', true)}"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

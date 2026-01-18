@@ -11,13 +11,16 @@
             <div class="form-card">
                 <h1 class="form-title">Verifiëer emailadres</h1>
                 
-                <!-- Info Alert -->
-                <div class="alert alert-info fade show" role="alert">
-                    <div>Om te kunnen starten met het inschrijfproces moet uw emailadres geverifieerd worden.</div><br>
-
-                    <strong>Belangrijk:</strong>
-                    Geef het <strong>emailadres van de ouder of voogd</strong> op, niet dit van de leerling die u wenst in te schrijven.<br><br>
-                    Na het opgeven van het emailadres zal een <strong>verificatie-email</strong> verstuurd worden met een persoonlijke link, waarna het inschrijvingsproces kan aangevat worden.
+                <!-- Introduction -->
+                <div class="email-verification-intro">
+                    <p>Om te kunnen starten met het inschrijfproces moet uw emailadres geverifieerd worden.</p>
+                </div>
+                
+                <!-- Important Notice -->
+                <div class="email-verification-notice">
+                    <h2 class="email-verification-notice-title">Belangrijk</h2>
+                    <p>Geef het <strong>emailadres van de ouder of voogd</strong> op, niet dit van de leerling die u wenst in te schrijven.</p>
+                    <p>Na het opgeven van het emailadres zal een <strong>verificatie-email</strong> verstuurd worden met een persoonlijke link, waarna het inschrijvingsproces kan aangevat worden.</p>
                 </div>
                 
                 <form class="form" th:action="@{/inschrijving/start}" method="post" th:object="${emailForm}" data-validate="true" novalidate>

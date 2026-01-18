@@ -7,7 +7,7 @@
     <!-- Reusable address fields fragment -->
     <th:block th:fragment="addressFields(prefix, address)">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <div class="position-relative mb-3">
                     <label th:for="${prefix + 'Street'}" class="form-label">Straat</label>
                     <input type="text" 
@@ -20,7 +20,7 @@
                     <div class="invalid-feedback"></div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="position-relative mb-3">
                     <label th:for="${prefix + 'HouseNumber'}" class="form-label">Nummer</label>
                     <input type="text" 
@@ -30,6 +30,18 @@
                            class="form-control" 
                            placeholder="Nr."
                            required>
+                    <div class="invalid-feedback"></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="position-relative mb-3">
+                    <label th:for="${prefix + 'Box'}" class="form-label">Bus</label>
+                    <input type="text" 
+                           th:id="${prefix + 'Box'}"
+                           th:name="${prefix + '.box'}" 
+                           th:value="${address?.box}"
+                           class="form-control" 
+                           placeholder="Bus">
                     <div class="invalid-feedback"></div>
                 </div>
             </div>

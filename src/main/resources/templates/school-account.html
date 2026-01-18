@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Schoolrekening - SPES Nostra Heule</title>
+</head>
+<body>
+    <section class="wizard-container">
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Schoolrekening</h1>
+                
+                <form class="form" 
+                      th:action="@{/inschrijving/schoolrekening/__${registrationId}__}" 
+                      method="post" 
+                      th:object="${schoolAccountForm}" 
+                      data-validate="true" 
+                      novalidate>
+                    
+                    <!-- Hidden registration ID -->
+                    <input type="hidden" name="id" th:value="${registrationId}">
+                    
+                    <!-- Wizard Progress -->
+                    <div th:replace="~{fragments/wizard :: wizard}"></div>
+                    
+                    <!-- Financial Support Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Financiële ondersteuning</h2>
+                        
+                        <div class="position-relative mb-4">
+                            <label class="form-label">
+                                Ik heb het financieel moeilijk en wens een gesprek hierover met een vertrouwenspersoon
+                            </label>
+                            <small class="form-text text-muted d-block mb-3">
+                                Met financiële problemen wordt bedoeld: sociale toelagen op je kindergeld, leefloon, 
+                                verhoogde tegemoetkoming gezondheidszorgen, langdurig werkloos...
+                            </small>
+                            <div class="form-radio-group">
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{financialSupportRequest}" value="J" class="form-check-input" required>
+                                    <span>Ja</span>
+                                </label>
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{financialSupportRequest}" value="N" class="form-check-input">
+                                    <span>Nee</span>
+                                </label>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/laptop/__${registrationId}__}, 'Vorige', 'Volgende', true)}"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

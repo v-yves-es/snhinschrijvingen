@@ -12,7 +12,7 @@
         <div class="container">
             <div class="form-card">
                 <h1 class="form-title">Vorige school</h1>
-                <form class="form" th:action="@{/inschrijving/previous-school(id=${registrationId})}" method="post" th:object="${previousSchoolForm}" data-validate="true" novalidate>
+                <form class="form" th:action="@{/inschrijving/vorige-school/__${registrationId}__}" method="post" th:object="${previousSchoolForm}" data-validate="true" novalidate>
                     
                     <!-- Hidden registration ID -->
                     <input type="hidden" name="id" th:value="${registrationId}">
@@ -145,7 +145,7 @@
                     </div>
 
                     <!-- Form Actions -->
-                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/study-program(id=${registrationId})}, 'Vorige', 'Volgende', true)}"></div>
+                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/studierichting/__${registrationId}__}, 'Vorige', 'Volgende', true)}"></div>
                 </form>
             </div>
         </div>

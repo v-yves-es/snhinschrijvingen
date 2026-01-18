@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Zorgvraag - SPES Nostra Heule</title>
+</head>
+<body>
+    <section class="wizard-container">
+        <div class="container">
+            <div class="form-card">
+                <h1 class="form-title">Zorgvraag</h1>
+                
+                <form class="form" 
+                      th:action="@{/inschrijving/zorgvraag/__${registrationId}__}" 
+                      method="post" 
+                      th:object="${careNeedsForm}" 
+                      data-validate="true" 
+                      novalidate>
+                    
+                    <!-- Hidden registration ID -->
+                    <input type="hidden" name="id" th:value="${registrationId}">
+                    
+                    <!-- Wizard Progress -->
+                    <div th:replace="~{fragments/wizard :: wizard}"></div>
+                    
+                    <!-- Wensen klassamenstelling -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Wensen klassamenstelling</h2>
+                        
+                        <div class="position-relative mb-3">
+                            <label for="classCompositionWishes" class="form-label">
+                                Wensen i.v.m. klassamenstelling
+                            </label>
+                            <small class="form-text text-muted d-block mb-2">
+                                Enkel te realiseren indien organisatorisch haalbaar!
+                            </small>
+                            <input type="text" 
+                                   id="classCompositionWishes"
+                                   th:field="*{classCompositionWishes}" 
+                                   class="form-control" 
+                                   placeholder="Vul hier uw wensen in">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bijzondere zorgvraag -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Bijzondere zorgvraag</h2>
+                        
+                        <div class="mb-4">
+                            <p class="text-muted">
+                                Het is belangrijk dat wij als school al bij inschrijving de nodige input krijgen over een eventuele zorgvraag. 
+                                Dat kan gaan om een medische zorg, een socio-emotionele zorg of een leerproblematiek. 
+                                U mag erop rekenen dat we als school heel discreet omgaan met deze informatie.
+                            </p>
+                        </div>
+                        
+                        <div class="position-relative mb-3">
+                            <label class="form-label">Bijzondere zorgvraag?</label>
+                            <small class="form-text text-muted d-block mb-3">
+                                Wanneer uw zoon/dochter medische zorg nodig heeft op school, zijn er bekwame helpers toegewezen om de EHBO op zich te nemen. 
+                                Mocht uw zoon/dochter echter bijzondere zorgnoden hebben, dan vragen we u om ons een schriftelijk attest met de instructies 
+                                van de behandelende arts te bezorgen samen met de schriftelijke toestemming van u als ouder dat de bekwame helper verbonden 
+                                aan de school die zorg mag toedienen.
+                            </small>
+                            
+                            <div class="form-radio-group">
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{hasCareNeeds}" value="N" class="form-check-input" id="hasCareNeedsNo">
+                                    <span>Wij hebben GEEN bijzondere zorgvraag</span>
+                                </label>
+                                <label class="form-radio">
+                                    <input type="radio" th:field="*{hasCareNeeds}" value="J" class="form-check-input" id="hasCareNeedsYes">
+                                    <span>Wij hebben WEL een bijzondere zorgvraag</span>
+                                </label>
+                            </div>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Extra care needs section (conditionally shown) -->
+                    <div id="careNeedsDetails" style="display: none;">
+                        
+                        <!-- Privacy notice -->
+                        <div class="form-section">
+                            <div class="email-verification-notice">
+                                <h2 class="email-verification-notice-title">Privacyverklaring</h2>
+                                <p>
+                                    De privacywet verbiedt de verwerking van persoonsgegevens die de gezondheid betreffen, tenzij u de school hiervoor 
+                                    schriftelijk toestemming geeft. U kan, indien u dat wenst, deze toestemming op elk moment intrekken. 
+                                    U hebt ook het recht deze gegevens in te zien en indien nodig te laten verbeteren.
+                                </p>
+                                <p>
+                                    U bent niet verplicht gegevens over de gezondheid van uw zoon of dochter mee te delen. 
+                                    De school kan echter geen rekening houden met gegevens die haar niet bekend zijn.
+                                </p>
+                                <p><strong>De school zal deze gegevens enkel verwerken met de bedoeling:</strong></p>
+                                <ul>
+                                    <li>adequaat te kunnen reageren bij risicosituaties,</li>
+                                    <li>uw zoon/dochter te begeleiden bij zijn/haar studie, studiekeuze en socio-emotionele ontwikkeling.</li>
+                                </ul>
+                                <p>
+                                    Enkel de personen die rechtstreeks bij de begeleiding van uw zoon/dochter betrokken zijn, kunnen deze gegevens raadplegen. 
+                                    Deze personen zijn ertoe gehouden het vertrouwelijk karakter van deze informatie te respecteren.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Medische zorg -->
+                        <div class="form-section">
+                            <h2 class="form-section-title">Medische zorg</h2>
+                            
+                            <div class="position-relative mb-3">
+                                <label for="medicalCareDetails" class="form-label">
+                                    Van welke gegevens over de gezondheid van uw kind wenst u de school op de hoogte te brengen?
+                                </label>
+                                <input type="text" 
+                                       id="medicalCareDetails"
+                                       th:field="*{medicalCareDetails}" 
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            
+                            <div class="position-relative mb-3">
+                                <label class="form-label">Wordt uw kind hiervoor behandeld?</label>
+                                <div class="form-radio-group">
+                                    <label class="form-radio">
+                                        <input type="radio" th:field="*{receivingTreatment}" value="J" class="form-check-input">
+                                        <span>Ja</span>
+                                    </label>
+                                    <label class="form-radio">
+                                        <input type="radio" th:field="*{receivingTreatment}" value="N" class="form-check-input">
+                                        <span>Nee</span>
+                                    </label>
+                                </div>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            
+                            <div class="position-relative mb-3">
+                                <label for="doctorContactInfo" class="form-label">
+                                    Indien ja, graag naam, adres en telefoonnummer van de behandelende (huis)arts om eventueel contact te kunnen nemen
+                                </label>
+                                <input type="text" 
+                                       id="doctorContactInfo"
+                                       th:field="*{doctorContactInfo}" 
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            
+                            <div class="position-relative mb-3">
+                                <label class="form-label">Neemt uw kind hiervoor medicatie?</label>
+                                <div class="form-radio-group">
+                                    <label class="form-radio">
+                                        <input type="radio" th:field="*{takesMedication}" value="J" class="form-check-input">
+                                        <span>Ja</span>
+                                    </label>
+                                    <label class="form-radio">
+                                        <input type="radio" th:field="*{takesMedication}" value="N" class="form-check-input">
+                                        <span>Nee</span>
+                                    </label>
+                                </div>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            
+                            <div class="position-relative mb-3">
+                                <label for="schoolExpectations" class="form-label">
+                                    Wat verwacht u van de school op dit vlak? Wat moeten we vooraf weten of doen (o.a. over het gebruik van medicatie)? 
+                                    Wat mogen we zeker niet doen? De school zal, indien nodig, met u overleggen over wat zij haalbaar acht en wat niet.
+                                </label>
+                                <textarea id="schoolExpectations"
+                                          th:field="*{schoolExpectations}" 
+                                          class="form-control"
+                                          rows="3"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            
+                            <div class="position-relative mb-3">
+                                <label for="lessonInfluence" class="form-label">
+                                    Bent u van oordeel dat de gezondheidstoestand het volgen van bepaalde lessen beïnvloedt? Zo ja, hoe? 
+                                    Ook hier zal de school, indien nodig, met u overleggen over wat zij haalbaar acht en wat niet.
+                                </label>
+                                <textarea id="lessonInfluence"
+                                          th:field="*{lessonInfluence}" 
+                                          class="form-control"
+                                          rows="3"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            
+                            <div class="position-relative mb-3">
+                                <label class="form-label">Mag (de arts van) het CLB verslagen die hierover bestaan, opvragen of hiervoor overleggen?</label>
+                                <div class="form-radio-group">
+                                    <label class="form-radio">
+                                        <input type="radio" th:field="*{clbConsultPermission}" value="J" class="form-check-input">
+                                        <span>Ja</span>
+                                    </label>
+                                    <label class="form-radio">
+                                        <input type="radio" th:field="*{clbConsultPermission}" value="N" class="form-check-input">
+                                        <span>Nee</span>
+                                    </label>
+                                </div>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sociaal-emotioneel functioneren -->
+                        <div class="form-section">
+                            <h2 class="form-section-title">Sociaal-emotioneel functioneren</h2>
+                            
+                            <div class="position-relative mb-3">
+                                <label for="socialEmotionalInfo" class="form-label">
+                                    Wenst u zaken te melden zoals aanpassingsproblemen, pesterijen, laag zelfvertrouwen, faalangst, 
+                                    (recent) overlijden van een (naaste) familielid …?
+                                </label>
+                                <textarea id="socialEmotionalInfo"
+                                          th:field="*{socialEmotionalInfo}" 
+                                          class="form-control"
+                                          rows="3"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Leren en studeren -->
+                        <div class="form-section">
+                            <h2 class="form-section-title">Leren en studeren</h2>
+                            
+                            <div class="mb-3">
+                                <p class="text-muted">
+                                    Als er een gemotiveerd verslag van een deskundige en/of een individueel handelingsplan/zorgafspraken uit de vorige school 
+                                    beschikbaar is/zijn, ontvangen we dit graag zo snel mogelijk om zo de individuele noden van uw zoon/dochter goed te kunnen 
+                                    inschatten en de gepaste begeleiding te kunnen opstarten.
+                                </p>
+                            </div>
+                            
+                            <div class="position-relative mb-3">
+                                <label for="learningDifficulties" class="form-label">
+                                    Heeft uw zoon/dochter in het verleden moeilijkheden ondervonden op vlak van studiemethodiek, planning, probleemvakken, 
+                                    leerstoornis (bv. dyslexie, ADHD), taalachterstand …?
+                                </label>
+                                <textarea id="learningDifficulties"
+                                          th:field="*{learningDifficulties}" 
+                                          class="form-control"
+                                          rows="3"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Externe ondersteuning -->
+                        <div class="form-section">
+                            <h2 class="form-section-title">Externe ondersteuning</h2>
+                            
+                            <div class="position-relative mb-3">
+                                <label for="externalSupport" class="form-label">
+                                    Krijgt uw zoon/dochter momenteel externe hulpverlening (GON-begeleiding, logopedie …)? Zo ja, van wie?
+                                </label>
+                                <input type="text" 
+                                       id="externalSupport"
+                                       th:field="*{externalSupport}" 
+                                       class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div th:replace="~{fragments/navigation :: navigation(@{/inschrijving/huisarts/__${registrationId}__}, 'Vorige', 'Volgende', true)}"></div>
+                </form>
+                
+                <!-- JavaScript for conditional visibility -->
+                <script>
+                    (function() {
+                        const hasCareNeedsYes = document.getElementById('hasCareNeedsYes');
+                        const hasCareNeedsNo = document.getElementById('hasCareNeedsNo');
+                        const careNeedsDetails = document.getElementById('careNeedsDetails');
+                        
+                        function toggleCareNeedsDetails() {
+                            if (hasCareNeedsYes && hasCareNeedsYes.checked) {
+                                careNeedsDetails.style.display = 'block';
+                                // Make fields not required as they're conditional
+                            } else {
+                                careNeedsDetails.style.display = 'none';
+                                // Clear values when hidden
+                                careNeedsDetails.querySelectorAll('input[type="text"], textarea').forEach(function(field) {
+                                    if (!field.value) {
+                                        field.value = '';
+                                    }
+                                });
+                            }
+                        }
+                        
+                        // Add event listeners
+                        if (hasCareNeedsYes) hasCareNeedsYes.addEventListener('change', toggleCareNeedsDetails);
+                        if (hasCareNeedsNo) hasCareNeedsNo.addEventListener('change', toggleCareNeedsDetails);
+                        
+                        // Initialize on page load
+                        toggleCareNeedsDetails();
+                    })();
+                </script>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

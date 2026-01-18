@@ -1,10 +1,10 @@
 # SNH Inschrijvingen - Applicatie Status
 
 **Versie:** 0.0.1-SNAPSHOT  
-**Laatst bijgewerkt:** 29 december 2025  
+**Laatst bijgewerkt:** 18 januari 2026 17:12  
 **Spring Boot:** 3.5.9  
 **Java:** 25  
-**Status:** Fase 2 - 4 wizard stappen voltooid  
+**Status:** ✅ Fase 2 VOLTOOID - Alle 10 wizard stappen geïmplementeerd + Critical bugfixes  
 
 ---
 
@@ -34,7 +34,8 @@ Online inschrijvingssysteem voor SPES Nostra Heule, waarmee ouders/voogden hun k
 
 ### Status
 ✅ **Fase 1 voltooid**: Email verificatie systeem en basis wizard structuur  
-🚧 **Fase 2 in ontwikkeling**: Volledige wizard implementatie
+✅ **Fase 2 voltooid**: Volledige wizard implementatie (10 stappen) + Critical bugfixes  
+🚧 **Fase 3 voorbereid**: Email integratie & server-side validatie
 
 ---
 
@@ -99,37 +100,60 @@ snhinschrijvingen/
 be.achieveit.snhinschrijvingen/
 ├── SnhinschrijvingenApplication.java
 ├── controller/
+│   ├── CustomErrorController.java
 │   ├── EmailVerificationController.java
 │   ├── RegistrationController.java
 │   ├── StudentInfoController.java
-│   └── CustomErrorController.java
+│   ├── StudyProgramController.java
+│   ├── PreviousSchoolController.java
+│   ├── RelationsController.java
+│   ├── DoctorController.java
+│   ├── CareNeedsController.java
+│   ├── PrivacyController.java
+│   ├── LaptopController.java
+│   ├── SchoolAccountController.java
+│   └── SubmissionController.java
 ├── dto/
 │   ├── EmailForm.java
 │   ├── StudentForm.java
-│   ├── PreviousSchoolForm.java
 │   ├── StudyProgramForm.java
-│   └── RelationForm.java
+│   ├── PreviousSchoolForm.java
+│   ├── RelationForm.java
+│   ├── DoctorForm.java
+│   ├── CareNeedsForm.java
+│   ├── PrivacyForm.java
+│   ├── LaptopForm.java
+│   ├── SchoolAccountForm.java
+│   └── SubmissionForm.java
 ├── model/
 │   ├── Registration.java
+│   ├── Relation.java (JPA entity)
+│   ├── Address.java (embedded)
 │   ├── RegistrationStatus.java
 │   ├── EmailStatus.java
 │   ├── Nationaliteit.java
 │   ├── SchoolYear.java
 │   ├── WizardStep.java
-│   ├── Address.java
 │   ├── StudyDomain.java
 │   ├── StudyOrientation.java
 │   └── StudyProgram.java
 ├── repository/
 │   ├── RegistrationRepository.java
+│   ├── RelationRepository.java
 │   ├── SchoolYearRepository.java
-│   └── NationalityRepository.java
+│   ├── NationalityRepository.java
+│   ├── StudyDomainRepository.java
+│   ├── StudyOrientationRepository.java
+│   └── StudyProgramRepository.java
 ├── service/
 │   ├── RegistrationService.java
 │   ├── EmailVerificationService.java
 │   ├── SchoolYearService.java
 │   ├── NationalityService.java
-│   └── WizardService.java
+│   ├── WizardService.java
+│   ├── StudyProgramService.java
+│   ├── StudyDomainService.java
+│   └── StudyOrientationService.java
 ├── config/
 │   └── DataInitializer.java
 └── initializer/
@@ -148,6 +172,82 @@ be.achieveit.snhinschrijvingen/
 |------|------|------------|--------------|
 | `id` | UUID | PRIMARY KEY | Uniek inschrijvings-ID |
 | `email` | String | NOT NULL | Emailadres ouder/voogd |
+| `email_hash` | String | UNIQUE | Unieke hash voor verificatie |
+| `email_status` | Enum | NOT NULL | PENDING, VERIFIED, EXPIRED |
+| `verification_sent_at` | LocalDateTime | | Tijdstip verificatie mail |
+| `verified_at` | LocalDateTime | | Tijdstip verificatie |
+| `registration_status` | Enum | NOT NULL | DRAFT, SUBMITTED, PROCESSING, COMPLETED, CANCELLED |
+| `current_step` | String | | Huidige wizard stap |
+| `created_at` | LocalDateTime | NOT NULL | Aanmaak tijdstip |
+| `updated_at` | LocalDateTime | | Laatste wijziging |
+| **Leerling gegevens** ||||
+| `voornaam` | String(100) | | Voornaam leerling |
+| `naam` | String(100) | | Achternaam leerling |
+| `geboortedatum` | LocalDate | | Geboortedatum |
+| `geboorteplaats` | String(100) | | Geboorteplaats |
+| `geslacht` | String(1) | | M/V |
+| `rijksregisternummer` | String(15) | | Rijksregisternummer |
+| `nationaliteit` | String(50) | | Nationaliteit |
+| `thuistaal` | String(50) | | Thuistaal |
+| `gsm_nummer` | String(20) | | GSM-nummer leerling |
+| **Domicilieadres (embedded Address)** ||||
+| `student_address_*` | Address | | Embedded adres object |
+| **Studierichting** ||||
+| `selected_study_year` | Integer | | Gekozen leerjaar (1-6) |
+| `selected_study_program_id` | Long | FK | ID van gekozen studierichting |
+| `study_program_extra_info` | String(500) | | Extra info bij twijfel |
+| **Vorige school** ||||
+| `vorige_school` | String(200) | | Naam vorige school |
+| `vorige_school_anders` | String(200) | | Andere school (vrij veld) |
+| `vorige_school_jaar` | String(20) | | Jaar vorige school |
+| `richting_vorige_school` | String(200) | | Gevolgde richting |
+| `toestemming_vorige_school` | String(1) | | J/N toestemming contact |
+| **Huisarts** ||||
+| `doctor_name` | String(200) | | Naam huisarts |
+| `doctor_phone` | String(20) | | Telefoon huisarts |
+| **Zorgvraag** ||||
+| `class_composition_wishes` | String(500) | | Wensen klassamenstelling |
+| `has_care_needs` | String(1) | | J/N bijzondere zorgvraag |
+| `medical_care_details` | String(1000) | | Medische zorg details |
+| `receiving_treatment` | String(1) | | J/N in behandeling |
+| `doctor_contact_info` | String(500) | | Contactinfo behandelend arts |
+| `takes_medication` | String(1) | | J/N medicatie |
+| `school_expectations` | String(1000) | | Verwachtingen school |
+| `lesson_influence` | String(1000) | | Invloed op lessen |
+| `clb_consult_permission` | String(1) | | J/N CLB toestemming |
+| `social_emotional_info` | String(1000) | | Sociaal-emotionele info |
+| `learning_difficulties` | String(1000) | | Leermoeilijkheden |
+| `external_support` | String(500) | | Externe hulpverlening |
+| **Privacy toestemmingen** ||||
+| `photo_video_consent` | String(1) | | J/N foto's/video's |
+| `study_results_consent` | String(1) | | J/N studieresultaten delen |
+| `alumni_data_consent` | String(1) | | J/N oud-leerling data |
+| `higher_education_consent` | String(1) | | J/N hoger onderwijs |
+| **Laptop** ||||
+| `laptop_brand` | String(200) | | Merk Signpost laptop |
+| **Schoolrekening** ||||
+| `financial_support_request` | String(1) | | J/N financieel gesprek |
+| **Ondertekening** ||||
+| `signature_name` | String(200) | | Naam ondertekenaar |
+| `school_regulation_agreement` | String(1) | | J akkoord schoolreglement |
+| `additional_info_request` | String(1) | | J bijkomende info gewenst |
+| `submission_date` | LocalDateTime | | Ingediend op |
+
+### Entity: Relation
+
+**Tabel:** `relations`
+
+| Veld | Type | Constraints | Beschrijving |
+|------|------|------------|--------------|
+| `id` | Long | PRIMARY KEY | Auto-increment ID |
+| `registration_id` | UUID | FK | Link naar registration |
+| `relation_type` | String(50) | NOT NULL | Type relatie |
+| `first_name` | String(100) | NOT NULL | Voornaam |
+| `last_name` | String(100) | NOT NULL | Achternaam |
+| `phone` | String(20) | NOT NULL | Telefoonnummer |
+| `email` | String(200) | NOT NULL | Email |
+| **Adres (embedded Address)** ||||
+| `address_*` | Address | | Embedded adres object |
 | `email_hash` | String | NOT NULL, UNIQUE | SHA-256 hash van email |
 | `school_year` | String | NOT NULL | Schooljaar (bijv. "2025-2026") |
 | `status` | Enum | NOT NULL | PENDING / COMPLETED |
@@ -1417,11 +1517,18 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 | `http://localhost:8080/inschrijving/start` | Email verificatie start |
 | `http://localhost:8080/inschrijving/email-sent` | Email sent bevestiging |
 | `http://localhost:8080/inschrijving/verify/{id}/{hash}` | Email verificatie link |
-| `http://localhost:8080/inschrijving/overview` | Registrations overview |
-| `http://localhost:8080/inschrijving/student-info?id={id}` | Wizard stap 1: Student info formulier |
-| `http://localhost:8080/inschrijving/previous-school?id={id}` | Wizard stap 2: Vorige school formulier |
-| `http://localhost:8080/inschrijving/study-program?id={id}` | Wizard stap 3: Studierichting kiezen |
-| `http://localhost:8080/inschrijving/relations?id={id}` | Wizard stap 4: Relaties/contactpersonen |
+| `http://localhost:8080/inschrijving/leerling-info/{id}` | Stap 1: Leerling info |
+| `http://localhost:8080/inschrijving/studierichting/{id}` | Stap 2: Studierichting |
+| `http://localhost:8080/inschrijving/studierichting/programmas?year={n}` | AJAX: Studierichtingen per jaar |
+| `http://localhost:8080/inschrijving/vorige-school/{id}` | Stap 3: Vorige school |
+| `http://localhost:8080/inschrijving/relaties/{id}` | Stap 4: Relaties/contactpersonen |
+| `http://localhost:8080/inschrijving/huisarts/{id}` | Stap 5: Huisarts |
+| `http://localhost:8080/inschrijving/zorgvraag/{id}` | Stap 6: Zorgvraag |
+| `http://localhost:8080/inschrijving/privacy/{id}` | Stap 7: Privacy toestemmingen |
+| `http://localhost:8080/inschrijving/laptop/{id}` | Stap 8: Laptop |
+| `http://localhost:8080/inschrijving/schoolrekening/{id}` | Stap 9: Schoolrekening |
+| `http://localhost:8080/inschrijving/verzenden/{id}` | Stap 10: Overzicht & verzenden |
+| `http://localhost:8080/inschrijving/bevestiging/{id}` | Bevestigingspagina (na submit) |
 | `http://localhost:8080/alerts-demo.html` | Alert componenten demo |
 | `http://localhost:8080/buttons-demo.html` | Button types demo |
 | `http://localhost:8080/validation-demo.html` | Form validatie demo |
@@ -1451,82 +1558,334 @@ java -jar target/snhinschrijvingen-0.0.1-SNAPSHOT.jar
 
 ---
 
+---
+
+## 💡 Thymeleaf Best Practices & Lessons Learned
+
+### URL Expressies met Variabelen
+
+**FOUT - Literal substitution zonder escaping:**
+```html
+<!-- Dit wordt niet geïnterpreteerd en blijft letterlijk ${registrationId} -->
+th:action="@{/inschrijving/leerling-info/${registrationId}}"
+<!-- Resultaat: /inschrijving/leerling-info/$%7BregistrationId%7D -->
+```
+
+**CORRECT - Inline expressie met dubbele underscores:**
+```html
+<!-- Thymeleaf evalueert de expressie en vervangt deze met de waarde -->
+th:action="@{/inschrijving/leerling-info/__${registrationId}__}"
+<!-- Resultaat: /inschrijving/leerling-info/a76fea67-026e-43bc-9d66-2baa7680917f -->
+```
+
+**Alternatieve syntaxen:**
+```html
+<!-- Met explicit parameter (verbose): -->
+th:action="@{/inschrijving/leerling-info/{id}(id=${registrationId})}"
+
+<!-- Met literal substitution (minder leesbaar): -->
+th:action="@{|/inschrijving/leerling-info/${registrationId}|}"
+
+<!-- Onze gekozen syntax (clean en duidelijk): -->
+th:action="@{/inschrijving/leerling-info/__${registrationId}__}"
+```
+
+### Model Attribute Naming Consistency
+
+**Probleem:** Inconsistente attribute namen tussen controller en template
+```java
+// Controller:
+model.addAttribute("id", registrationId);  // ❌ FOUT
+
+// Template:
+${registrationId}  // Geeft null!
+```
+
+**Oplossing:** Gebruik dezelfde naam overal
+```java
+// Controller:
+model.addAttribute("registrationId", registrationId);  // ✅ CORRECT
+
+// Template:
+${registrationId}  // Werkt perfect!
+```
+
+### Entity Field Name Mapping
+
+**Probleem:** Template gebruikt veldnamen die niet bestaan in entity
+```html
+<!-- Template: -->
+${registration.voornaam}  <!-- ❌ Property not found! -->
+
+<!-- Registration entity heeft: -->
+private String studentFirstname;  <!-- Niet "voornaam" -->
+```
+
+**Oplossing:** Exacte veldnamen gebruiken
+```html
+<!-- Template: -->
+${registration.studentFirstname}  <!-- ✅ CORRECT -->
+```
+
+### Null-Safe Expressions
+
+**FOUT - Kan NPE geven:**
+```html
+${#temporals.format(registration.studentGeboortedatum, 'dd/MM/yyyy')}
+```
+
+**CORRECT - Null-safe met ternary:**
+```html
+${registration.studentGeboortedatum != null ? 
+  #temporals.format(registration.studentGeboortedatum, 'dd/MM/yyyy') : '-'}
+```
+
+**Of met elvis operator:**
+```html
+${registration.studentFirstname ?: '-'}
+```
+
+### Fragment Calls met URL Parameters
+
+**Syntax voor navigation fragment:**
+```html
+<!-- FOUT: -->
+th:replace="~{fragments/navigation :: navigation(@{/inschrijving/vorige/{id}(id=${registrationId})}, ...)}"
+
+<!-- CORRECT: -->
+th:replace="~{fragments/navigation :: navigation(@{/inschrijving/vorige/__${registrationId}__}, ...)}"
+```
+
+### Lessons Learned Checklist
+
+- ✅ **Altijd `__${var}__` gebruiken** voor variabelen in `@{...}` URL expressies
+- ✅ **Consistente naming** tussen controller model attributes en template variabelen
+- ✅ **Exact field names** uit entity gebruiken in templates
+- ✅ **Null-safe expressions** met ternary of elvis operator
+- ✅ **Test alle URLs** na refactoring van URL structuur
+- ✅ **Gebruik dezelfde pattern** overal (maintenance!)
+
+---
+
 ## Status Summary
 
-### ✅ Completed
-- Email verificatie systeem
-- Multi-registratie ondersteuning
-- Database model (Registration, SchoolYear, Nationality, StudyProgram entities)
-- Services (Registration, EmailVerification, Wizard, SchoolYear, Nationality, StudyProgram)
-- Repositories (Spring Data JPA)
-- **Wizard Stap 1:** Student Info formulier (Algemeen)
-- **Wizard Stap 2:** Previous School (Vorige School) met Select2 dropdown
-- **Wizard Stap 3:** Study Program Selection (Richting) met dynamische filtering
-- **Wizard Stap 4:** Relations (Relaties/Contactpersonen)
-- Wizard structuur en navigatie (4 stappen actief)
-- **Select2 integratie:**
-  - Select2 4.1.0-rc.0 bibliotheek
+### ✅ Completed - FASE 2 VOLLEDIG VOLTOOID!
+
+**Core Systeem:**
+- [x] Email verificatie systeem
+- [x] Multi-registratie ondersteuning
+- [x] Database model (Registration, Relation, Address, StudyProgram entities)
+- [x] Services (Registration, EmailVerification, Wizard, SchoolYear, Nationality, StudyProgram)
+- [x] Repositories (Spring Data JPA)
+
+**Alle 10 Wizard Stappen:**
+- [x] **Stap 1:** Leerling Info (`/inschrijving/leerling-info/{id}`)
+- [x] **Stap 2:** Studierichting (`/inschrijving/studierichting/{id}`)
+- [x] **Stap 3:** Vorige School (`/inschrijving/vorige-school/{id}`)
+- [x] **Stap 4:** Relaties (`/inschrijving/relaties/{id}`)
+- [x] **Stap 5:** Huisarts (`/inschrijving/huisarts/{id}`)
+- [x] **Stap 6:** Zorgvraag (`/inschrijving/zorgvraag/{id}`)
+- [x] **Stap 7:** Privacy (`/inschrijving/privacy/{id}`)
+- [x] **Stap 8:** Laptop (`/inschrijving/laptop/{id}`)
+- [x] **Stap 9:** Schoolrekening (`/inschrijving/schoolrekening/{id}`)
+- [x] **Stap 10:** Verzenden + Bevestiging (`/inschrijving/verzenden/{id}` + `/bevestiging/{id}`)
+
+**URL Herstructurering:**
+- [x] Alle URLs vertaald naar Nederlands
+- [x] Query parameters vervangen door path variables
+- [x] RESTful URL structuur
+- [x] Thymeleaf URL encoding gefixed (`__${var}__` syntax)
+- [x] Email verificatie redirects gefixed
+- [x] Navigation links consistency
+
+**Critical Bugfixes (18 jan 2026):**
+- [x] **Email verificatie link:** Redirect naar nieuwe URL structuur
+- [x] **URL encoding:** 10 templates gefixed met `__${registrationId}__`
+- [x] **Null registration ID:** Model attribute naam gecorrigeerd
+- [x] **Field name mismatch:** Template velden aligned met Registration entity
+
+**Frontend Componenten:**
+- [x] **Select2 integratie (4.1.0-rc.0):**
   - Custom styling met SNH branding (#c92617)
   - Optgroup styling voor categorieën
   - Nederlandse vertalingen
   - Zoekfunctionaliteit
   - data-no-scroll attribuut voor kleine datasets
-  - Arrow styling gefixed
   - Blauwe focus border (#80bdff)
-  - Validatie integratie in select2-init.js
-- **Client-side validatie systeem (volledig):**
+  - Validatie integratie
+  
+- [x] **Client-side validatie systeem (volledig):**
   - Real-time validatie (form-validation.js)
   - Nederlandse foutmeldingen
-  - Support voor alle field types:
-    - Text, email, tel inputs
-    - Select dropdowns
-    - Select2 dropdowns (met custom events)
-    - Radio buttons (inclusief dynamische)
-    - Checkboxes
-    - Textareas
-    - Date inputs (Flatpickr)
+  - Support voor alle field types (text, email, tel, select, select2, radio, checkbox, textarea, date)
   - Validatie rules: required, email, phone, rijksregisternummer, postcode, min/max length
-  - Visual feedback: rood/groen borders, foutmeldingen onder velden
+  - Visual feedback: rood/groen borders, foutmeldingen
   - Auto-scroll naar eerste fout bij submit
-  - Browser native validatie uitgeschakeld (novalidate)
-  - Submit button altijd enabled (gebruiker kan fouten zien)
-  - Select2 validatie: events in select2-init.js, direct feedback bij selectie
-  - Radio button validatie: groepsvalidatie, preventie dubbele checks
-- Alert systeem (8 types)
-- Navigatie fragment (herbruikbaar)
-- Button system (primary, secondary, outline)
-- Thymeleaf fragments (layout, wizard, navigation)
-- CSS framework (custom branding met domeinkleuren)
-- Demo pagina's (alerts, buttons, validation)
-- Flatpickr datepicker integratie (Nederlands, maandag start)
-- Study programs database met 100+ richtingen
-- **Herbruikbare componenten:**
-  - Address fragment (`fragments/address-fields.html`)
-  - Unified single version (geen simple/detailed)
-  - Gebruikt door student-info EN relations
-  - Address model class (POJO)
-- **Relations formulier (Stap 4):**
-  - RelationForm DTO met Address objects
-  - Select2 dropdown voor relatietype (zonder zoekfunctie)
-  - 9 relatietypes: vader, moeder, plusvader, plusmoeder, voogd, grootvader, grootmoeder, pleegvader, pleegmoeder
-  - Minimaal 1, maximaal 2 relaties
-  - Dynamisch toevoegen/verwijderen tweede relatie
-  - Volledig gevalideerd (naam, voornaam, tel, email, adres)
+  - **Verborgen velden skippen** (window.getComputedStyle check)
+  - Select2 validatie met custom events
+  - Radio button groepsvalidatie
+  
+- [x] Alert systeem (8 types)
+- [x] Navigatie fragment (herbruikbaar)
+- [x] Button system (primary, secondary, outline)
+- [x] Thymeleaf fragments (layout, wizard, navigation, address-fields)
+- [x] CSS framework (custom branding met domeinkleuren)
+- [x] Demo pagina's (alerts, buttons, validation)
+- [x] Flatpickr datepicker integratie (Nederlands, maandag start)
+
+**Database & Data:**
+- [x] Study programs database met 100+ richtingen
+- [x] Study domains met kleuren (4 domeinen)
+- [x] Study orientations (3 types)
+- [x] Nationaliteiten lijst
+- [x] Schooljaren beheer
+
+**Herbruikbare Componenten:**
+- [x] Address fragment (`fragments/address-fields.html`)
+- [x] Address model class (embedded entity)
+- [x] Gebruikt door student-info EN relations
+- [x] "Kopieer domicilieadres" functionaliteit in relations
+
+**Specifieke Features per Stap:**
+
+**Stap 1 - Leerling Info:**
+- Alle persoonlijke gegevens leerling
+- Embedded Address object voor domicilieadres
+- GSM en email validatie
+- Flatpickr datepicker
+
+**Stap 2 - Studierichting:**
+- Dynamische filtering per leerjaar (AJAX)
+- Gegroepeerde weergave jaar 3-6 (domeinen/oriëntaties)
+- Platte lijst jaar 1-2
+- Kleurcodering per domein
+
+**Stap 3 - Vorige School:**
+- Select2 dropdown met 22+ scholen
+- Gegroepeerd (basis/secundair/anders)
+- "Anders" optie met vrij tekstveld
+- Toestemming gegevensuitwisseling
+
+**Stap 4 - Relaties:**
+- Relation JPA entity (one-to-many)
+- Min 1, max 2 relaties
+- 9 relatietypes (vader, moeder, plus-, voogd, groot-, pleeg-)
+- Dynamisch toevoegen/verwijderen
+- "Kopieer domicilieadres" knop
+- Volledig gevalideerd
+
+**Stap 5 - Huisarts:**
+- Naam (verplicht)
+- Telefoonnummer (optioneel)
+
+**Stap 6 - Zorgvraag:**
+- Wensen klassamenstelling
+- Bijzondere zorgvraag (J/N)
+- **Conditionele sectie** met JavaScript toggle:
+  - Privacyverklaring
+  - Medische zorg (7 vragen)
+  - Sociaal-emotioneel
+  - Leren en studeren
+  - Externe ondersteuning
+
+**Stap 7 - Privacy:**
+- 4 toestemmingsvragen (alle verplicht):
+  - Foto's/filmfragmenten
+  - Studieresultaten delen
+  - Oud-leerling data
+  - Hoger onderwijs
+
+**Stap 8 - Laptop:**
+- Signpost laptop merk (optioneel)
+- Laptopproject info box met:
+  - Prijsinformatie
+  - Eigendomsregeling
+  - Voordelen (6 bullets)
+  - PDF download link
+
+**Stap 9 - Schoolrekening:**
+- Financieel gesprek gewenst (J/N, verplicht)
+- Uitleg financiële problemen
+
+**Stap 10 - Verzenden + Bevestiging:**
+- **Read-only overzicht** alle ingevoerde data (9 secties)
+- **Ondertekening sectie:**
+  - Juridische tekst (B.W. artikels)
+  - Naam ouder/voogd (verplicht)
+  - Schoolreglement checkbox (verplicht)
+  - Bijkomende info checkbox (optioneel)
+- "Inschrijving voltooien" button
+- **Bevestigingspagina:**
+  - Geen wizard steps
+  - Success indicator (groene checkmark)
+  - Email bevestigingsmelding
+  - Submission datum/tijd + UUID
+  - Read-only samenvatting
+  - "Terug naar home" button
 
 ### 🚧 In Progress
-- Database refinement (study program selection persistence)
-- Relation entities implementeren (database persistence)
-- Wizard stap 5 (volgende stap in planning)
+- Geen - Fase 2 is volledig afgerond inclusief bugfixes!
 
-### 📋 To Do
-- Zie `TODO.md` voor volledige lijst
+### 📋 To Do (Fase 3)
 - Email integratie (echte verzending)
-- Wizard stappen 4-9
 - Server-side validatie
-- Error handling
+- Error handling & logging
 - Testing (unit, integration)
 - Production database (PostgreSQL/MySQL)
 - Deployment configuratie
+- Admin dashboard
+
+---
+
+## 🐛 Recente Bugfixes (18 januari 2026)
+
+### Email Verificatie Link Fout
+**Probleem:** Email verificatie link redirected naar oude URL met query parameters  
+**Oplossing:** 
+- `RegistrationController.verifyEmail()` aangepast: `redirect:/inschrijving/leerling-info/{id}`
+- `RegistrationController.continueRegistration()` uitgebreid met alle 10 wizard stappen
+
+### URL Encoding Probleem
+**Probleem:** URLs werden gerenderd als `/inschrijving/leerling-info/$%7BregistrationId%7D`  
+**Oorzaak:** Thymeleaf variabelen in `@{...}` expressies niet correct escaped  
+**Oplossing:** Alle templates gefixed met `__${registrationId}__` syntax
+- ✅ 10 form actions gefixed
+- ✅ 6 navigation fragment calls gefixed  
+- ✅ 2 href links gefixed
+
+**Gefixte templates:**
+1. student-info.html
+2. study-program.html  
+3. previous-school.html
+4. relations.html
+5. doctor.html
+6. care-needs.html
+7. privacy.html
+8. laptop.html
+9. school-account.html
+10. submission.html
+
+### Null Registration ID Probleem
+**Probleem:** Van `/vorige-school/{id}` naar volgende ging naar `/vorige-school/null`  
+**Oorzaak:** PreviousSchoolController gebruikte `model.addAttribute("id", id)` ipv `"registrationId"`  
+**Oplossing:** Model attribute naam gecorrigeerd + navigation link syntax gefixed
+
+### Field Name Mismatch
+**Probleem:** Templates gebruikten veldnamen die niet bestaan in Registration entity  
+**Voorbeeld:** `${registration.voornaam}` → Property not found error  
+**Oplossing:** Alle velden in submission.html en confirmation.html gecorrigeerd:
+- `voornaam` → `studentFirstname`
+- `naam` → `studentLastname`  
+- `geboortedatum` → `studentGeboortedatum`
+- `geslacht` → `studentGeslacht`
+- `rijksregisternummer` → `studentRijksregisternummer`
+- `nationaliteit` → `studentNationaliteit`
+- `gsmNummer` → `studentGsm`
+- Null-safe date formatting toegevoegd
+- Dubbel GSM veld verwijderd
+- Label verduidelijkt: "E-mailadres ouder/voogd", "GSM leerling"
+
+**Impact:** Volledige wizard flow werkt nu van start tot bevestiging zonder errors!
 
 ---
 

@@ -11,6 +11,7 @@ applyTo: '**/*.java, **/*.kt'
 - Write code with good maintainability practices, including comments on why certain design decisions were made.
 - Handle edge cases and write clear exception handling.
 - For libraries or external dependencies, mention their usage and purpose in comments.
+- Always consult the latest Spring Boot documentation via Context7 MCP server when working on Spring Boot related tasks to ensure best practices and up-to-date patterns are followed.
 
 ## Spring Boot Instructions
 
@@ -49,6 +50,43 @@ applyTo: '**/*.java, **/*.kt'
 
 - Use parameterized queries | Always use Spring Data JPA or `NamedParameterJdbcTemplate` to prevent SQL injection.
 - Validate request bodies and parameters using JSR-380 (`@NotNull`, `@Size`, etc.) annotations and `BindingResult`
+
+### Exception Handling
+
+- Use `@ControllerAdvice` for centralized exception handling across all controllers.
+- Implement RFC 7807 Problem Details for HTTP APIs by setting `spring.mvc.problemdetails.enabled=true`.
+- Create custom exception classes that extend appropriate base exceptions.
+- Return consistent error response structures with proper HTTP status codes.
+
+### Testing
+
+- Write unit tests for services using mocks (Mockito).
+- Use `@WebMvcTest` for isolated controller layer tests.
+- Use `@DataJpaTest` for repository layer tests with in-memory database.
+- Write integration tests with `@SpringBootTest` for end-to-end scenarios.
+- Aim for high test coverage of business logic.
+
+### API Design
+
+- Follow REST principles consistently (proper HTTP methods: GET, POST, PUT, DELETE, PATCH).
+- Use appropriate HTTP status codes (200, 201, 204, 400, 404, 500, etc.).
+- Use DTOs for request/response objects, never expose entities directly.
+- Document APIs using SpringDoc OpenAPI (formerly Swagger).
+
+### Transaction Management
+
+- Apply `@Transactional` at service level, not repository level.
+- Specify `readOnly=true` for read-only transactions to optimize performance.
+- Keep transactions short and avoid long-running operations within them.
+- Be mindful of transaction boundaries and propagation settings.
+
+### Performance & Monitoring
+
+- Enable Spring Boot Actuator for production monitoring (`spring-boot-starter-actuator`).
+- Expose relevant endpoints: `/actuator/health`, `/actuator/metrics`, `/actuator/info`.
+- Use HikariCP connection pooling (default in Spring Boot) and tune pool settings.
+- Implement caching strategically using `@Cacheable`, `@CachePut`, `@CacheEvict`.
+- Monitor application metrics and set up alerts for critical thresholds.
 
 ## Build and Verification
 

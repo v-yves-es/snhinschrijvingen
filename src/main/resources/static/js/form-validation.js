@@ -155,8 +155,19 @@
                 return;
             }
             
-            // Skip fields that are in hidden containers
-            if (field.offsetParent === null && field.type !== 'hidden') {
+            // Skip fields that are in hidden containers or have display:none
+            // Check if field itself or any parent is hidden
+            let element = field;
+            let isHidden = false;
+            while (element && element !== form) {
+                const style = window.getComputedStyle(element);
+                if (style.display === 'none' || style.visibility === 'hidden') {
+                    isHidden = true;
+                    break;
+                }
+                element = element.parentElement;
+            }
+            if (isHidden) {
                 return;
             }
 

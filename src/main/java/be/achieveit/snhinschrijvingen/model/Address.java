@@ -1,8 +1,12 @@
 package be.achieveit.snhinschrijvingen.model;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class Address {
     private String street;
     private String houseNumber;
+    private String box;
     private String postalCode;
     private String city;
     private String country;
@@ -10,9 +14,10 @@ public class Address {
     public Address() {
     }
 
-    public Address(String street, String houseNumber, String postalCode, String city, String country) {
+    public Address(String street, String houseNumber, String box, String postalCode, String city, String country) {
         this.street = street;
         this.houseNumber = houseNumber;
+        this.box = box;
         this.postalCode = postalCode;
         this.city = city;
         this.country = country;
@@ -32,6 +37,14 @@ public class Address {
 
     public void setHouseNumber(String houseNumber) {
         this.houseNumber = houseNumber;
+    }
+
+    public String getBox() {
+        return box;
+    }
+
+    public void setBox(String box) {
+        this.box = box;
     }
 
     public String getPostalCode() {

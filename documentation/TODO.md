@@ -1,7 +1,7 @@
 # SNH Inschrijvingen - TODO List
 
-**Laatst bijgewerkt:** 29 december 2025  
-**Status:** Fase 2 - Stap 4 (Relaties) voltooid, voorbereiding Fase 3
+**Laatst bijgewerkt:** 18 januari 2026 17:12  
+**Status:** Fase 2 - VOLTOOID! Alle 10 wizard stappen geïmplementeerd + Critical bugfixes
 
 ---
 
@@ -22,8 +22,11 @@
 ## Prioriteiten Overzicht
 
 ### 🔴 Hoge Prioriteit (Must Have)
-- [ ] Wizard stappen 3-8 implementeren
-- [ ] Study program selectie persisteren in database
+- [x] Wizard stappen 1-10 implementeren - **VOLTOOID!**
+- [x] URL's vertalen naar Nederlands - **VOLTOOID!**
+- [x] Path variables ipv query parameters - **VOLTOOID!**
+- [x] URL encoding bugfixes - **VOLTOOID!**
+- [x] Field name consistency - **VOLTOOID!**
 - [ ] Email integratie (echte verzending)
 - [ ] Server-side validatie
 - [ ] Error handling & logging
@@ -47,107 +50,276 @@
 
 ## Fase 2: Wizard Voltooiing
 
+### 🐛 Critical Bugfixes - 18 januari 2026 17:12
+
+**Opgelost tijdens sessie:**
+- [x] **Email verificatie link fout:** Redirect naar oude URL structuur gefixed
+  - `RegistrationController.verifyEmail()`: `student-info?id=` → `leerling-info/{id}`
+  - `RegistrationController.continueRegistration()`: Alle 10 stappen toegevoegd aan switch statement
+- [x] **URL encoding probleem:** `${registrationId}` → `__${registrationId}__` in 10 templates
+  - Alle form actions gefixed met correcte Thymeleaf syntax
+  - Alle navigation fragment calls gefixed
+  - Alle href links gefixed (study-program, submission)
+- [x] **Null registration ID:** PreviousSchoolController gebruikte `id` ipv `registrationId`
+  - Model attribute naam gecorrigeerd naar `registrationId`
+  - Navigation link syntax gefixed naar `__${registrationId}__`
+- [x] **Field name mismatch in templates:** submission.html en confirmation.html
+  - `voornaam` → `studentFirstname`
+  - `naam` → `studentLastname`
+  - `geboortedatum` → `studentGeboortedatum`
+  - `geslacht` → `studentGeslacht`
+  - `rijksregisternummer` → `studentRijksregisternummer`
+  - `nationaliteit` → `studentNationaliteit`
+  - `gsmNummer`/`thuistaal` → `studentGsm`
+  - Null-safe date formatting toegevoegd
+  - Dubbel GSM veld verwijderd
+
+**Impact:** Volledige wizard flow werkt nu correct van start tot bevestiging!
+
+---
+
 ### ✅ Stap 1: Algemeen (Student Info) - VOLTOOID
 
-**Status:** ✅ Completed
+**Status:** ✅ Completed  
+**URL:** `/inschrijving/leerling-info/{id}`
 
 **Geïmplementeerd:**
 - [x] StudentForm DTO aangemaakt
-- [x] Controller endpoint: `/inschrijving/student-info`
+- [x] Controller endpoint met path variable
 - [x] Template: `student-info.html`
 - [x] Form sectie: Leerling (voornaam, naam, rijksregisternummer, geboortedatum, geboorteplaats, geslacht, nationaliteit)
-- [x] Form sectie: Domicilieadres (straat, nummer, postcode, gemeente, GSM)
-- [x] Form sectie: Vorige school (naam/adres, jaar, richting, toestemming gegevensuitwisseling)
-- [x] Registration entity uitgebreid met alle velden
+- [x] Form sectie: Domicilieadres (Address object hergebruik)
+- [x] Registration entity uitgebreid met Address embedded object
 - [x] Service methods: `updateStudentInfo()`
 - [x] Client-side validatie
 - [x] Flatpickr datepicker integratie (Nederlands)
-- [x] Wizard update: stap 1 actief
 - [x] Pre-fill bij herladen
-- [x] Responsive layout (Bootstrap grid)
+- [x] "Kopieer domicilieadres" knop bij relaties
 
 ---
 
-### ✅ Stap 2: Vorige School (Previous School) - VOLTOOID
+### ✅ Stap 2: Studierichting (Study Program) - VOLTOOID
 
-**Status:** ✅ Completed
-
-**Geïmplementeerd:**
-- [x] PreviousSchoolForm DTO aangemaakt
-- [x] Controller endpoint: `/inschrijving/previous-school`
-- [x] Template: `previous-school.html`
-- [x] Select2 dropdown met zoekfunctie
-- [x] Gegroepeerde schoollijst:
-  - Basisonderwijs (17 scholen)
-  - Secundair onderwijs (5 scholen)
-  - Andere (custom input)
-- [x] "Anders" functionaliteit met dynamisch tekstveld
-- [x] Jaar vorige school (radio buttons: 3de/4de jaar + anders)
-- [x] Gevolgde richting (text input)
-- [x] Toestemming gegevensuitwisseling (ja/nee)
-- [x] Wizard navigatie (vorige/volgende)
-- [x] Client-side validatie
-- [x] Pre-fill bij herladen
-
-**Select2 Integratie:**
-- [x] Select2 bibliotheek geïntegreerd (4.1.0-rc.0)
-- [x] Custom styling met SNH branding (#c92617)
-- [x] Optgroup styling voor categorieën
-- [x] Nederlandse vertalingen
-- [x] Zoekfunctionaliteit
-- [x] data-no-scroll attribuut voor kleine lijsten
-- [x] Arrow styling gefixed (geen box meer)
-- [x] Responsive design
-
----
-
-### ✅ Stap 3: Studierichting (Study Program Selection) - VOLTOOID
-
-**Status:** ✅ Completed
+**Status:** ✅ Completed  
+**URL:** `/inschrijving/studierichting/{id}`  
+**AJAX Endpoint:** `/inschrijving/studierichting/programmas`
 
 **Geïmplementeerd:**
 - [x] StudyProgramForm DTO aangemaakt
-- [x] Controller endpoint: `/inschrijving/study-program`
+- [x] Controller endpoints met path variable
 - [x] Template: `study-program.html`
 - [x] Database entities: StudyDomain, StudyOrientation, StudyProgram
 - [x] Services: StudyProgramService, StudyDomainService, StudyOrientationService
-- [x] Select2 jaar dropdown (1-6) met data-no-scroll
+- [x] Select2 jaar dropdown (1-6)
 - [x] Dynamische richtingen weergave per jaar (AJAX)
 - [x] Jaar 1-2: Platte lijst met radiobuttons
 - [x] Jaar 3-6: Gegroepeerd per domein/oriëntatie met kleurcodering
 - [x] Data initialisatie (100+ studierichtingen)
-- [x] Info box voor 2de jaar (plus/accent klassen)
-- [x] Extra info textarea bij twijfel (optioneel)
-- [x] Wizard navigatie (vorige/volgende)
-- [x] Client-side validatie
-- [x] Pre-fill bij herladen
+- [x] Extra info textarea bij twijfel
+- [x] Nederlandse URL
 
-**Database vulling:**
-- [x] Study domains met kleuren (Economie, Maatschappij, STEM, Taal)
-- [x] Study orientations (Doorstroom, Doorstroom/arbeidsmarkt, Arbeidsmarkt)
-- [x] Study programs voor jaar 1-6 (volledige lijst)
+---
+
+### ✅ Stap 3: Vorige School (Previous School) - VOLTOOID
+
+**Status:** ✅ Completed  
+**URL:** `/inschrijving/vorige-school/{id}`
+
+**Geïmplementeerd:**
+- [x] PreviousSchoolForm DTO aangemaakt
+- [x] Controller endpoint met path variable
+- [x] Template: `previous-school.html`
+- [x] Select2 dropdown met zoekfunctie
+- [x] Gegroepeerde schoollijst (17 basis + 5 secundair)
+- [x] "Anders" functionaliteit met dynamisch tekstveld
+- [x] Jaar vorige school (radio buttons)
+- [x] Gevolgde richting (text input)
+- [x] Toestemming gegevensuitwisseling (ja/nee)
+- [x] Nederlandse URL
 
 ---
 
 ### ✅ Stap 4: Relaties (Relations) - VOLTOOID
 
-**Status:** ✅ Completed
+**Status:** ✅ Completed  
+**URL:** `/inschrijving/relaties/{id}`
 
 **Geïmplementeerd:**
-- [x] RelationForm DTO aangemaakt
-- [x] Controller endpoint: `/inschrijving/relations`
+- [x] RelationForm DTO met Address objects
+- [x] Relation entity (JPA one-to-many)
+- [x] Controller endpoint met path variable
 - [x] Template: `relations.html`
-- [x] Select2 dropdown voor relatietype zonder zoekfunctie (data-no-scroll)
-- [x] Relatietypes: vader, moeder, plusvader, plusmoeder, voogd, grootvader, grootmoeder, pleegvader, pleegmoeder
-- [x] Formulier velden per relatie:
-  - Type relatie (select2 dropdown, verplicht)
-  - Naam en voornaam (text input, verplicht)
-  - Telefoonnummer (tel input, verplicht)
-  - Email (email input, verplicht)
-  - Volledig adres (herbruikbaar fragment)
-- [x] Mogelijkheid om 2 relaties toe te voegen
-- [x] "Tweede relatie toevoegen" functionaliteit met dynamisch form-section blok
-- [x] "Relatie verwijderen" functionaliteit voor tweede relatie
+- [x] Select2 dropdown voor relatietype
+- [x] 9 relatietypes (vader, moeder, plus-, voogd, groot-, pleeg-)
+- [x] Minimaal 1, maximaal 2 relaties
+- [x] Dynamisch toevoegen/verwijderen tweede relatie
+- [x] "Kopieer domicilieadres" functionaliteit
+- [x] Volledig gevalideerd (incl. verborgen velden skippen)
+- [x] Nederlandse URL
+
+---
+
+### ✅ Stap 5: Huisarts (Doctor) - VOLTOOID
+
+**Status:** ✅ Completed  
+**URL:** `/inschrijving/huisarts/{id}`
+
+**Geïmplementeerd:**
+- [x] DoctorForm DTO aangemaakt
+- [x] Controller endpoint met path variable
+- [x] Template: `doctor.html`
+- [x] Naam huisarts (text input, verplicht)
+- [x] Telefoonnummer (tel input, optioneel)
+- [x] Registration entity uitgebreid (doctorName, doctorPhone)
+- [x] Client-side validatie
+- [x] Pre-fill bij herladen
+- [x] Nederlandse URL
+
+---
+
+### ✅ Stap 6: Zorgvraag (Care Needs) - VOLTOOID
+
+**Status:** ✅ Completed  
+**URL:** `/inschrijving/zorgvraag/{id}`
+
+**Geïmplementeerd:**
+- [x] CareNeedsForm DTO aangemaakt
+- [x] Controller endpoint met path variable
+- [x] Template: `care-needs.html`
+- [x] Wensen klassamenstelling (text input)
+- [x] Bijzondere zorgvraag (J/N radio buttons)
+- [x] Conditionele sectie bij "WEL zorgvraag":
+  - [x] Privacyverklaring (notice box)
+  - [x] Medische zorg (7 vragen)
+  - [x] Sociaal-emotioneel functioneren
+  - [x] Leren en studeren
+  - [x] Externe ondersteuning
+- [x] Registration entity uitgebreid (11 velden)
+- [x] JavaScript toggle voor conditionele zichtbaarheid
+- [x] Nederlandse URL
+
+---
+
+### ✅ Stap 7: Privacy (Privacy Consents) - VOLTOOID
+
+**Status:** ✅ Completed  
+**URL:** `/inschrijving/privacy/{id}`
+
+**Geïmplementeerd:**
+- [x] PrivacyForm DTO aangemaakt
+- [x] Controller endpoint met path variable
+- [x] Template: `privacy.html`
+- [x] 4 toestemmingsvragen (radio buttons, verplicht):
+  - [x] Foto's/filmfragmenten
+  - [x] Studieresultaten vorige school
+  - [x] Oud-leerling gegevens bewaren
+  - [x] Gegevens hoger onderwijs
+- [x] Registration entity uitgebreid (4 velden)
+- [x] Client-side validatie (required)
+- [x] Nederlandse URL
+
+---
+
+### ✅ Stap 8: Laptop - VOLTOOID
+
+**Status:** ✅ Completed  
+**URL:** `/inschrijving/laptop/{id}`
+
+**Geïmplementeerd:**
+- [x] LaptopForm DTO aangemaakt
+- [x] Controller endpoint met path variable
+- [x] Template: `laptop.html`
+- [x] Signpost laptop merk (text input, optioneel)
+- [x] Laptopproject informatie box met:
+  - [x] Info voor leerlingen zonder laptop
+  - [x] Prijsinformatie (30 + 3x50 euro)
+  - [x] Eigendomsregeling
+  - [x] Voordelen schoollaptops (6 bullets)
+  - [x] PDF download link
+- [x] Registration entity uitgebreid (laptopBrand)
+- [x] Nederlandse URL
+
+---
+
+### ✅ Stap 9: Schoolrekening (School Account) - VOLTOOID
+
+**Status:** ✅ Completed  
+**URL:** `/inschrijving/schoolrekening/{id}`
+
+**Geïmplementeerd:**
+- [x] SchoolAccountForm DTO aangemaakt
+- [x] Controller endpoint met path variable
+- [x] Template: `school-account.html`
+- [x] Financieel gesprek gewenst (J/N radio buttons, verplicht)
+- [x] Uitleg over financiële problemen (text-muted)
+- [x] Registration entity uitgebreid (financialSupportRequest)
+- [x] Client-side validatie
+- [x] Nederlandse URL
+
+---
+
+### ✅ Stap 10: Verzenden (Submission & Confirmation) - VOLTOOID
+
+**Status:** ✅ Completed  
+**URLs:**  
+- `/inschrijving/verzenden/{id}` (overzicht + ondertekening)
+- `/inschrijving/bevestiging/{id}` (confirmation page)
+
+**Geïmplementeerd:**
+- [x] SubmissionForm DTO aangemaakt (3 velden)
+- [x] SubmissionController met 3 endpoints
+- [x] Template: `submission.html`
+  - [x] Read-only overzicht ALLE ingevoerde data (9 secties)
+  - [x] Summary styling (gray boxes met blue border)
+  - [x] Ondertekening sectie met juridische tekst
+  - [x] Naam ouder/voogd (text input, verplicht)
+  - [x] Schoolreglement akkoord (checkbox, verplicht)
+  - [x] Bijkomende info (checkbox, optioneel)
+  - [x] "Inschrijving voltooien" button
+- [x] Template: `confirmation.html`
+  - [x] Geen wizard steps
+  - [x] Success indicator (groene checkmark)
+  - [x] Email bevestigingsmelding
+  - [x] Ingediend op datum/tijd
+  - [x] Inschrijvingsnummer (UUID)
+  - [x] Read-only samenvatting belangrijkste data
+  - [x] "Terug naar home" button
+- [x] Registration entity uitgebreid:
+  - [x] signatureName
+  - [x] schoolRegulationAgreement
+  - [x] additionalInfoRequest
+  - [x] submissionDate (auto-filled)
+- [x] CurrentStep = "SUBMITTED"
+- [x] Nederlandse URLs
+
+---
+
+## Fase 2 SAMENVATTING - ✅ VOLLEDIG VOLTOOID!
+
+**Alle 10 wizard stappen zijn geïmplementeerd:**
+
+1. ✅ Leerling info (student-info)
+2. ✅ Studierichting (study-program)
+3. ✅ Vorige school (previous-school)
+4. ✅ Relaties (relations)
+5. ✅ Huisarts (doctor)
+6. ✅ Zorgvraag (care-needs)
+7. ✅ Privacy (privacy)
+8. ✅ Laptop (laptop)
+9. ✅ Schoolrekening (school-account)
+10. ✅ Verzenden + Bevestiging (submission + confirmation)
+
+**Additionele verbeteringen:**
+- [x] Alle URLs vertaald naar Nederlands
+- [x] Query parameters vervangen door path variables
+- [x] Validatie verbeterd (verborgen velden skippen)
+- [x] Address refactoring (embedded object)
+- [x] Kopieer domicilieadres functionaliteit
+- [x] Conditionele zorgvraag sectie
+- [x] Complete read-only overview bij submission
+- [x] Professional confirmation page
+
+---
 - [x] Minimum 1 relatie verplicht voor doorgaan naar volgende stap
 - [x] Wizard navigatie (vorige/volgende)
 - [x] Client-side validatie op alle velden
