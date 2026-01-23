@@ -2,6 +2,7 @@ package be.achieveit.snhinschrijvingen.controller;
 
 import be.achieveit.snhinschrijvingen.dto.PreviousSchoolForm;
 import be.achieveit.snhinschrijvingen.model.Registration;
+import be.achieveit.snhinschrijvingen.service.PreviousSchoolService;
 import be.achieveit.snhinschrijvingen.service.RegistrationService;
 import be.achieveit.snhinschrijvingen.service.WizardService;
 import org.slf4j.Logger;
@@ -22,10 +23,14 @@ public class PreviousSchoolController {
     
     private final RegistrationService registrationService;
     private final WizardService wizardService;
+    private final PreviousSchoolService previousSchoolService;
     
-    public PreviousSchoolController(RegistrationService registrationService, WizardService wizardService) {
+    public PreviousSchoolController(RegistrationService registrationService, 
+                                   WizardService wizardService,
+                                   PreviousSchoolService previousSchoolService) {
         this.registrationService = registrationService;
         this.wizardService = wizardService;
+        this.previousSchoolService = previousSchoolService;
     }
     
     @GetMapping("/vorige-school/{id}")
@@ -50,6 +55,10 @@ public class PreviousSchoolController {
         model.addAttribute("previousSchoolForm", form);
         model.addAttribute("registrationId", id);
         model.addAttribute("wizardSteps", wizardService.getWizardSteps(3, List.of(1, 2)));
+        
+        // Add school options grouped by category
+        model.addAttribute("schoolsByCategory", previousSchoolService.getSchoolsByCategory());
+        model.addAttribute("schoolYearsByCategory", previousSchoolService.getSchoolYearsByCategory());
         
         return "previous-school";
     }

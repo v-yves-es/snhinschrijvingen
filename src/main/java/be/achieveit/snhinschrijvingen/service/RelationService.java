@@ -1,9 +1,13 @@
 package be.achieveit.snhinschrijvingen.service;
 
+import be.achieveit.snhinschrijvingen.dto.RelationTypeOption;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Service for handling relation related data and mappings.
@@ -11,19 +15,19 @@ import java.util.Map;
 @Service
 public class RelationService {
 
-    // Relation type ID to readable text mapping
-    private static final Map<String, String> RELATION_TYPE_MAPPING = new HashMap<>();
+    // Relation type options with sort order
+    private static final List<RelationTypeOption> RELATION_TYPES = new ArrayList<>();
     
     static {
-        RELATION_TYPE_MAPPING.put("13", "Vader");
-        RELATION_TYPE_MAPPING.put("14", "Moeder");
-        RELATION_TYPE_MAPPING.put("5", "Plusvader");
-        RELATION_TYPE_MAPPING.put("6", "Plusmoeder");
-        RELATION_TYPE_MAPPING.put("2", "Voogd");
-        RELATION_TYPE_MAPPING.put("9", "Grootvader");
-        RELATION_TYPE_MAPPING.put("10", "Grootmoeder");
-        RELATION_TYPE_MAPPING.put("7", "Pleegvader");
-        RELATION_TYPE_MAPPING.put("8", "Pleegmoeder");
+        RELATION_TYPES.add(new RelationTypeOption("13", "Vader", 1));
+        RELATION_TYPES.add(new RelationTypeOption("14", "Moeder", 2));
+        RELATION_TYPES.add(new RelationTypeOption("5", "Plusvader", 3));
+        RELATION_TYPES.add(new RelationTypeOption("6", "Plusmoeder", 4));
+        RELATION_TYPES.add(new RelationTypeOption("2", "Voogd", 5));
+        RELATION_TYPES.add(new RelationTypeOption("9", "Grootvader", 6));
+        RELATION_TYPES.add(new RelationTypeOption("10", "Grootmoeder", 7));
+        RELATION_TYPES.add(new RelationTypeOption("7", "Pleegvader", 8));
+        RELATION_TYPES.add(new RelationTypeOption("8", "Pleegmoeder", 9));
     }
     
     /**
@@ -36,15 +40,37 @@ public class RelationService {
         if (relationTypeId == null || relationTypeId.isEmpty()) {
             return null;
         }
-        return RELATION_TYPE_MAPPING.getOrDefault(relationTypeId, relationTypeId);
+        return RELATION_TYPES.stream()
+                .filter(rt -> rt.getId().equals(relationTypeId))
+                .map(RelationTypeOption::getName)
+                .findFirst()
+                .orElse(relationTypeId);
     }
     
     /**
-     * Gets all available relation types with their names.
+     * Gets all available relation types with their names (legacy method).
      * 
      * @return Map of relation type ID to name
+     * @deprecated Use {@link #getAllRelationTypeOptions()} instead for structured data
      */
+    @Deprecated
     public Map<String, String> getAllRelationTypes() {
-        return new HashMap<>(RELATION_TYPE_MAPPING);
+        return RELATION_TYPES.stream()
+                .collect(Collectors.toMap(
+                        RelationTypeOption::getId,
+                        RelationTypeOption::getName,
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new
+                ));
+    }
+    
+    /**
+     * Gets all available relation types as structured RelationTypeOption objects.
+     * Types are already sorted by sortOrder.
+     * 
+     * @return List of RelationTypeOption objects
+     */
+    public List<RelationTypeOption> getAllRelationTypeOptions() {
+        return new ArrayList<>(RELATION_TYPES);
     }
 }

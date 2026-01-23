@@ -6,6 +6,7 @@ import be.achieveit.snhinschrijvingen.model.Registration;
 import be.achieveit.snhinschrijvingen.model.Relation;
 import be.achieveit.snhinschrijvingen.repository.RelationRepository;
 import be.achieveit.snhinschrijvingen.service.RegistrationService;
+import be.achieveit.snhinschrijvingen.service.RelationService;
 import be.achieveit.snhinschrijvingen.service.WizardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +22,16 @@ public class RelationsController {
     private final RegistrationService registrationService;
     private final WizardService wizardService;
     private final RelationRepository relationRepository;
+    private final RelationService relationService;
     
     public RelationsController(RegistrationService registrationService, 
                               WizardService wizardService,
-                              RelationRepository relationRepository) {
+                              RelationRepository relationRepository,
+                              RelationService relationService) {
         this.registrationService = registrationService;
         this.wizardService = wizardService;
         this.relationRepository = relationRepository;
+        this.relationService = relationService;
     }
     
     @GetMapping("/relaties/{id}")
@@ -86,6 +90,9 @@ public class RelationsController {
         model.addAttribute("registration", registration);
         model.addAttribute("wizardSteps", wizardService.getWizardSteps(4));
         
+        // Add relation type options
+        model.addAttribute("relationTypes", relationService.getAllRelationTypeOptions());
+        
         return "relations";
     }
     
@@ -105,6 +112,7 @@ public class RelationsController {
             model.addAttribute("registrationId", registrationId);
             model.addAttribute("registration", registration);
             model.addAttribute("wizardSteps", wizardService.getWizardSteps(4));
+            model.addAttribute("relationTypes", relationService.getAllRelationTypeOptions());
             return "relations";
         }
         

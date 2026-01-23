@@ -42,15 +42,9 @@
                                         data-no-scroll="true"
                                         required>
                                     <option value="">-- Selecteer --</option>
-                                    <option value="13">Vader</option>
-                                    <option value="14">Moeder</option>
-                                    <option value="5">Plusvader</option>
-                                    <option value="6">Plusmoeder</option>
-                                    <option value="2">Voogd</option>
-                                    <option value="9">Grootvader</option>
-                                    <option value="10">Grootmoeder</option>
-                                    <option value="7">Pleegvader</option>
-                                    <option value="8">Pleegmoeder</option>
+                                    <option th:each="relationType : ${relationTypes}" 
+                                            th:value="${relationType.id}" 
+                                            th:text="${relationType.name}">Type relatie</option>
                                 </select>
                                 <div class="invalid-feedback"></div>
                             </div>
@@ -157,15 +151,9 @@
                                         data-placeholder="Selecteer een type relatie"
                                         data-no-scroll="true">
                                     <option value="">-- Selecteer --</option>
-                                    <option value="13">Vader</option>
-                                    <option value="14">Moeder</option>
-                                    <option value="5">Plusvader</option>
-                                    <option value="6">Plusmoeder</option>
-                                    <option value="2">Voogd</option>
-                                    <option value="9">Grootvader</option>
-                                    <option value="10">Grootmoeder</option>
-                                    <option value="7">Pleegvader</option>
-                                    <option value="8">Pleegmoeder</option>
+                                    <option th:each="relationType : ${relationTypes}" 
+                                            th:value="${relationType.id}" 
+                                            th:text="${relationType.name}">Type relatie</option>
                                 </select>
                                 <div class="invalid-feedback"></div>
                             </div>

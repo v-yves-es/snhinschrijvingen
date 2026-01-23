@@ -119,21 +119,13 @@
                                     <label class="form-label">Geslacht</label>
                                     <div class="invalid-feedback"></div>
                                     <div class="form-radio-group">
-                                        <label class="form-radio">
-                                            <input type="radio" th:field="*{geslacht}" value="M" class="form-check-input" required>
-                                            <span>Man</span>
-                                        </label>
-                                        <label class="form-radio">
-                                            <input type="radio" th:field="*{geslacht}" value="V" class="form-check-input">
-                                            <span>Vrouw</span>
-                                        </label>
-                                        <label class="form-radio">
-                                            <input type="radio" th:field="*{geslacht}" value="A" class="form-check-input">
-                                            <span>Andere</span>
-                                        </label>
-                                        <label class="form-radio">
-                                            <input type="radio" th:field="*{geslacht}" value="X" class="form-check-input">
-                                            <span>Dat zeg ik liever niet</span>
+                                        <label th:each="gender, iterStat : ${genderOptions}" class="form-radio">
+                                            <input type="radio" 
+                                                   th:field="*{geslacht}" 
+                                                   th:value="${gender.code}" 
+                                                   class="form-check-input" 
+                                                   th:required="${iterStat.first}">
+                                            <span th:text="${gender.label}">Gender label</span>
                                         </label>
                                     </div>
                                 </div>

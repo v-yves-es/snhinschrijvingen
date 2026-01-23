@@ -1,7 +1,7 @@
 # SNH Inschrijvingen - TODO List
 
-**Laatst bijgewerkt:** 18 januari 2026 17:12  
-**Status:** Fase 2 - VOLTOOID! Alle 10 wizard stappen geïmplementeerd + Critical bugfixes
+**Laatst bijgewerkt:** 23 januari 2026 14:54  
+**Status:** Fase 2 - VOLTOOID! Alle 10 wizard stappen + UI/UX verbeteringen + Bugfixes + Data Centralisatie
 
 ---
 
@@ -27,6 +27,8 @@
 - [x] Path variables ipv query parameters - **VOLTOOID!**
 - [x] URL encoding bugfixes - **VOLTOOID!**
 - [x] Field name consistency - **VOLTOOID!**
+- [x] UI/UX verbeteringen (info boxes, error pages, multi-line) - **VOLTOOID!**
+- [x] Data centralisatie (Single Source of Truth) - **VOLTOOID!**
 - [ ] Email integratie (echte verzending)
 - [ ] Server-side validatie
 - [ ] Error handling & logging
@@ -50,31 +52,123 @@
 
 ## Fase 2: Wizard Voltooiing
 
-### 🐛 Critical Bugfixes - 18 januari 2026 17:12
+### ✅ UI/UX Verbeteringen - 23 januari 2026 14:34
 
 **Opgelost tijdens sessie:**
-- [x] **Email verificatie link fout:** Redirect naar oude URL structuur gefixed
-  - `RegistrationController.verifyEmail()`: `student-info?id=` → `leerling-info/{id}`
-  - `RegistrationController.continueRegistration()`: Alle 10 stappen toegevoegd aan switch statement
-- [x] **URL encoding probleem:** `${registrationId}` → `__${registrationId}__` in 10 templates
-  - Alle form actions gefixed met correcte Thymeleaf syntax
-  - Alle navigation fragment calls gefixed
-  - Alle href links gefixed (study-program, submission)
-- [x] **Null registration ID:** PreviousSchoolController gebruikte `id` ipv `registrationId`
-  - Model attribute naam gecorrigeerd naar `registrationId`
-  - Navigation link syntax gefixed naar `__${registrationId}__`
-- [x] **Field name mismatch in templates:** submission.html en confirmation.html
-  - `voornaam` → `studentFirstname`
-  - `naam` → `studentLastname`
-  - `geboortedatum` → `studentGeboortedatum`
-  - `geslacht` → `studentGeslacht`
-  - `rijksregisternummer` → `studentRijksregisternummer`
-  - `nationaliteit` → `studentNationaliteit`
-  - `gsmNummer`/`thuistaal` → `studentGsm`
-  - Null-safe date formatting toegevoegd
-  - Dubbel GSM veld verwijderd
 
-**Impact:** Volledige wizard flow werkt nu correct van start tot bevestiging!
+#### 1. Care Needs Multi-line Support
+- [x] **Multi-line tekstgebieden:** Alle text inputs in care-needs.html geconverteerd naar textarea
+  - `medicalCareDetails`: 3 rijen
+  - `doctorContactInfo`: 3 rijen
+  - `externalSupport`: 3 rijen
+- [x] **Line breaks behouden in submission:** CSS class `summary-item-value--multiline` toegevoegd
+  - `white-space: pre-wrap` voor newline behoud
+  - `display: block` voor correcte weergave
+  - Alle 7 multi-line velden in submission.html aangepast
+
+#### 2. Care Needs Details in Submission
+- [x] **Volledige data weergave:** Care needs details toegevoegd aan submission.html
+  - Medische zorg (7 velden)
+  - Sociaal-emotioneel functioneren
+  - Leren en studeren
+  - Externe ondersteuning
+- [x] **Conditioneel tonen:** Alleen zichtbaar als hasCareNeeds = 'J'
+- [x] **Gestructureerd:** Per categorie met subsection titles
+
+#### 3. Error Pagina's Modernisering
+- [x] **404.html:** Geconverteerd naar info-box systeem
+  - `info-box--error` voor beide boxen (rode danger kleur)
+  - Foutmelding + instructies
+  - SVG icoon bij button
+- [x] **500.html:** Geconverteerd naar info-box systeem
+  - `info-box--error` voor beide boxen
+  - Consistente styling met 404
+- [x] **CSS class toegevoegd:** `info-box--error` als alias voor `info-box--danger`
+  - `border-left-color: #dc3545`
+  - `background: #fff5f5`
+
+#### 4. Email-Sent Pagina Modernisering
+- [x] **Info boxes:** Instructies en Help secties geconverteerd
+  - `info-box--info` voor "Volgende stappen" (blauw)
+  - `info-box--warning` voor "Email niet ontvangen?" (oranje)
+- [x] **Success sectie behouden:** Custom styling met groot email icoon
+
+#### 5. Data Mapping & Display Improvements
+- [x] **School Year beschrijving:** Global ModelAttribute voor wizard pages
+  - SchoolYearService.getRegistrationSchoolYear()
+  - Beschikbaar in header voor alle wizard pages
+- [x] **School ID to Name mapping:** Gebruikt database data ipv hardcoded
+- [x] **Gender display:** Service method voor "Man"/"Vrouw"/"Andere"/"Dat zeg ik liever niet"
+- [x] **Nationality full name:** Volledige naam ipv 2-letter code
+- [x] **Relation type namen:** Service method om ID naar naam te mappen
+- [x] **Study program details:** School year, orientation en program namen
+- [x] **Previous school handling:** "Andere school" tekst correcte weergave
+
+#### 6. Student Info Improvements
+- [x] **GSM leerling veld toegevoegd:** Links van rijksregisternummer
+  - Beide velden 50% breedte
+  - Getoond in submission.html
+
+#### 7. Financial Page Restructure (school-account.html)
+- [x] **Titel gewijzigd:** "Schoolrekening" → "Financieel"
+- [x] **Blok 1 - Schoolrekening:**
+  - IBAN rekeningnummer (verplicht)
+  - Naam rekeninghouder(s) (verplicht)
+- [x] **Blok 2 - Financiële ondersteuning:**
+  - Bestaande content behouden
+
+#### 8. Study Program Info Box
+- [x] **2de jaar info:** Extra info-box toegevoegd
+  - Uitleg over plus- en accentklassen
+  - Contact link naar melissa.declercq@snh.be
+  - Consistente styling met andere info boxes
+
+#### 9. Submission Page Improvements
+- [x] **Relatie titels:** Type naam ipv "Relatie 1", "Relatie 2"
+  - "Vader", "Moeder", "Plusvader", etc.
+  - Type relatie regel verwijderd (duplicate info)
+- [x] **Previous school:** Toon custom naam als "Andere school" gekozen
+- [x] **Care needs volgorde:** Eerst wensen klassamenstelling, dan zorgvraag, dan details
+
+#### 10. Code Quality & Maintainability
+- [x] **Duplicate code eliminatie:**
+  - School year mapping in service
+  - Relation type mapping in service
+  - Gender mapping in service
+  - Study program data ophalen via services
+- [x] **Thymeleaf URL syntax:** Consistent gebruik van `__${variable}__` in @{...}
+- [x] **CSS naming:** `info-box--error` toegevoegd naast `info-box--danger`
+
+#### 11. Data Centralisatie (Single Source of Truth) - 23 januari 2026 14:54
+- [x] **Geslacht Opties Gecentraliseerd:**
+  - GenderOption DTO aangemaakt (code, label, sortOrder)
+  - GenderService.getAllGenderOptions() methode toegevoegd
+  - student-info.html dynamisch gegenereerd met th:each loop
+  - StudentInfoController inject GenderService
+  - **Impact:** 2 plaatsen → 1 plaats (-8 regels duplicatie)
+  
+- [x] **Relatie Types Gecentraliseerd:**
+  - RelationTypeOption DTO aangemaakt (id, name, sortOrder)
+  - RelationService.getAllRelationTypeOptions() methode toegevoegd
+  - relations.html dynamisch gegenereerd met th:each loop
+  - RelationsController inject RelationService
+  - **Impact:** 3 plaatsen → 1 plaats (-27 regels duplicatie)
+  
+- [x] **Scholen Gecentraliseerd:**
+  - SchoolOption DTO aangemaakt (id, name, category, sortOrder)
+  - PreviousSchoolService.getAllSchoolOptions() methode toegevoegd
+  - PreviousSchoolService.getSchoolsByCategoryForDisplay() voor gegroepeerde weergave
+  - previous-school.html dynamisch gegenereerd met categorieën
+  - PreviousSchoolController inject service
+  - **Impact:** 3 plaatsen → 1 plaats (-60 regels duplicatie)
+  
+- [x] **Totale Code Reductie:**
+  - ~95 regels HTML duplicatie geëlimineerd
+  - 8 data plaatsen → 3 centralized services
+  - 100% consistentie gegarandeerd
+  - Future-proof voor database migratie
+
+**Impact:** Applicatie ziet er professioneler uit met consistente styling, betere data weergave, en correcte multi-line ondersteuning!
 
 ---
 
@@ -1542,11 +1636,15 @@ volumes:
 ### Code Improvements
 
 **Prioriteit:** 🟢 Laag  
-**Status:** ❌ Not Started
+**Status:** ✅ Grotendeels Voltooid
+
+**Voltooid:**
+- [x] Reduce code duplication (gender, relation types, schools gecentraliseerd)
+- [x] Extract magic strings naar constants (DTOs met sortOrder)
+- [x] Single Source of Truth principle toegepast
+- [x] Data centralisatie: ~95 regels HTML duplicatie geëlimineerd
 
 **Te doen:**
-- [ ] Extract magic strings naar constants
-- [ ] Reduce code duplication in controllers
 - [ ] Improve error messages
 - [ ] Add JavaDoc comments
 - [ ] Refactor large methods

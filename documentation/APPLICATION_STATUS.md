@@ -1,10 +1,10 @@
 # SNH Inschrijvingen - Applicatie Status
 
 **Versie:** 0.0.1-SNAPSHOT  
-**Laatst bijgewerkt:** 18 januari 2026 17:12  
+**Laatst bijgewerkt:** 23 januari 2026 14:54  
 **Spring Boot:** 3.5.9  
 **Java:** 25  
-**Status:** ✅ Fase 2 VOLTOOID - Alle 10 wizard stappen geïmplementeerd + Critical bugfixes  
+**Status:** ✅ Fase 2 VOLTOOID - Alle 10 wizard stappen + UI/UX verbeteringen + Bugfixes + Data Centralisatie  
 
 ---
 
@@ -20,7 +20,7 @@
 8. [API Endpoints](#api-endpoints)
 9. [Wizard Flow](#wizard-flow)
 10. [Validatie Systeem](#validatie-systeem)
-11. [Alert Systeem](#alert-systeem)
+11. [Info Box Systeem](#info-box-systeem)
 12. [Navigatie Systeem](#navigatie-systeem)
 13. [Testing](#testing)
 14. [Documentatie](#documentatie)
@@ -34,8 +34,27 @@ Online inschrijvingssysteem voor SPES Nostra Heule, waarmee ouders/voogden hun k
 
 ### Status
 ✅ **Fase 1 voltooid**: Email verificatie systeem en basis wizard structuur  
-✅ **Fase 2 voltooid**: Volledige wizard implementatie (10 stappen) + Critical bugfixes  
+✅ **Fase 2 voltooid**: Volledige wizard implementatie (10 stappen) + Critical bugfixes + UI/UX verbeteringen + Data Centralisatie  
 🚧 **Fase 3 voorbereid**: Email integratie & server-side validatie
+
+### Recente Updates (23 januari 2026)
+- ✅ Multi-line tekstgebieden met newline behoud in submission
+- ✅ Care needs details volledig zichtbaar in submission overzicht
+- ✅ Error pagina's (404, 500) gemoderniseerd met info-box systeem
+- ✅ Email-sent pagina verbeterd met info boxes
+- ✅ Data mapping services (gender, nationality, relation types, school year)
+- ✅ GSM leerling veld toegevoegd aan student info
+- ✅ Financial page geherstructureerd (schoolrekening blokken)
+- ✅ Study program info box voor 2de jaar
+- ✅ Submission page verbeteringen (relatie titels, previous school, volgorde)
+- ✅ **Data Centralisatie (Single Source of Truth):**
+  - Gender opties: 2 plaatsen → 1 plaats (-8 regels)
+  - Relation types: 3 plaatsen → 1 plaats (-27 regels)
+  - Scholen: 3 plaatsen → 1 plaats (-60 regels)
+  - Totaal: ~95 regels HTML duplicatie geëlimineerd
+  - DTOs aangemaakt (GenderOption, RelationTypeOption, SchoolOption)
+  - Dynamische Thymeleaf templates met th:each loops
+  - 100% consistency gegarandeerd
 
 ---
 
@@ -124,7 +143,10 @@ be.achieveit.snhinschrijvingen/
 │   ├── PrivacyForm.java
 │   ├── LaptopForm.java
 │   ├── SchoolAccountForm.java
-│   └── SubmissionForm.java
+│   ├── SubmissionForm.java
+│   ├── GenderOption.java (centralized gender data)
+│   ├── RelationTypeOption.java (centralized relation types)
+│   └── SchoolOption.java (centralized school data)
 ├── model/
 │   ├── Registration.java
 │   ├── Relation.java (JPA entity)
@@ -865,6 +887,152 @@ public class WizardStep {
     private boolean active;    // Is actieve stap
     private boolean completed; // Is voltooid
 }
+```
+
+### GenderService
+
+**Locatie:** `be.achieveit.snhinschrijvingen.service.GenderService`
+
+**Verantwoordelijkheden:**
+- Centralized gender data management (Single Source of Truth)
+- Gender code naar tekst mapping
+- Dynamic form generation support
+
+**Key Methods:**
+
+```java
+// Gender code naar leesbare tekst
+String getGenderText(String genderCode)
+
+// Alle gender opties voor dropdowns/radio buttons
+List<GenderOption> getAllGenderOptions()
+```
+
+**GenderOption DTO:**
+```java
+public class GenderOption {
+    private String code;       // "M", "V", "A", "X"
+    private String label;      // "Man", "Vrouw", "Andere", "Dat zeg ik liever niet"
+    private Integer sortOrder; // Voor display volgorde
+}
+```
+
+**Data:**
+- M → "Man"
+- V → "Vrouw"
+- A → "Andere"
+- X → "Dat zeg ik liever niet"
+
+### RelationService
+
+**Locatie:** `be.achieveit.snhinschrijvingen.service.RelationService`
+
+**Verantwoordelijkheden:**
+- Centralized relation type data management
+- Relation type ID naar naam mapping
+- Dynamic form generation support
+
+**Key Methods:**
+
+```java
+// Relation type ID naar naam
+String getRelationTypeName(String relationTypeId)
+
+// Alle relation types voor dropdowns
+List<RelationTypeOption> getAllRelationTypeOptions()
+```
+
+**RelationTypeOption DTO:**
+```java
+public class RelationTypeOption {
+    private String id;         // "13", "14", "5", etc.
+    private String name;       // "Vader", "Moeder", "Plusvader", etc.
+    private Integer sortOrder; // Voor display volgorde
+}
+```
+
+**Data:**
+- 13 → "Vader"
+- 14 → "Moeder"
+- 5 → "Plusvader"
+- 6 → "Plusmoeder"
+- 2 → "Voogd"
+- 9 → "Grootvader"
+- 10 → "Grootmoeder"
+- 7 → "Pleegvader"
+- 8 → "Pleegmoeder"
+
+### PreviousSchoolService
+
+**Locatie:** `be.achieveit.snhinschrijvingen.service.PreviousSchoolService`
+
+**Verantwoordelijkheden:**
+- Centralized school data management
+- School ID naar naam mapping
+- Grouped school display (basis/secundair/anders)
+
+**Key Methods:**
+
+```java
+// School ID naar naam
+String getSchoolName(Long schoolId)
+
+// Alle scholen voor dropdowns
+List<SchoolOption> getAllSchoolOptions()
+
+// Scholen gegroepeerd per categorie
+Map<String, List<SchoolOption>> getSchoolsByCategoryForDisplay()
+```
+
+**SchoolOption DTO:**
+```java
+public class SchoolOption {
+    private Long id;            // 1, 2, 3, etc.
+    private String name;        // "Vrije Basisschool Heule", etc.
+    private String category;    // "BASISONDERWIJS", "SECUNDAIR", "ANDERS"
+    private Integer sortOrder;  // Voor display volgorde
+}
+```
+
+**Categories:**
+- BASISONDERWIJS (13 scholen)
+- SECUNDAIR (9 scholen)
+- ANDERS (1 optie: "Andere school")
+
+### SchoolYearService
+
+**Locatie:** `be.achieveit.snhinschrijvingen.service.SchoolYearService`
+
+**Verantwoordelijkheden:**
+- School year data management
+- Current registration year bepalen
+
+**Key Methods:**
+
+```java
+// Huidige registratie schooljaar
+SchoolYear getRegistrationSchoolYear()
+
+// School year code naar beschrijving
+String mapSchoolYearCode(String code)
+```
+
+### NationalityService
+
+**Locatie:** `be.achieveit.snhinschrijvingen.service.NationalityService`
+
+**Verantwoordelijkheden:**
+- Nationality data management
+- Nationality code naar volledige naam
+
+**Key Methods:**
+
+```java
+// Nationality code naar volledige naam
+String getNationalityFullName(String code)
+
+// Alle nationaliteiten
+List<Nationaliteit> getAllNationalities()
 ```
 
 ---
@@ -1823,8 +1991,67 @@ th:replace="~{fragments/navigation :: navigation(@{/inschrijving/vorige/__${regi
   - Read-only samenvatting
   - "Terug naar home" button
 
+### ✅ Data Centralisatie (Single Source of Truth) - 23 januari 2026
+
+**Probleem:**
+- Gender opties, relation types en scholen stonden op meerdere plaatsen
+- HTML hardcoded values + Java service mappings
+- Risico op inconsistentie bij wijzigingen
+- ~95 regels duplicatie in templates
+
+**Oplossing:**
+
+**1. Gender Opties Gecentraliseerd:**
+- `GenderOption` DTO aangemaakt (code, label, sortOrder)
+- `GenderService.getAllGenderOptions()` voor dynamic rendering
+- `student-info.html` dynamisch met `th:each` loop
+- **Impact:** 2 plaatsen → 1 plaats (-8 regels HTML)
+
+**2. Relation Types Gecentraliseerd:**
+- `RelationTypeOption` DTO aangemaakt (id, name, sortOrder)
+- `RelationService.getAllRelationTypeOptions()` voor dynamic rendering
+- `relations.html` dynamisch met `th:each` loop
+- **Impact:** 3 plaatsen → 1 plaats (-27 regels HTML)
+
+**3. Scholen Gecentraliseerd:**
+- `SchoolOption` DTO aangemaakt (id, name, category, sortOrder)
+- `PreviousSchoolService.getAllSchoolOptions()` en `getSchoolsByCategoryForDisplay()`
+- `previous-school.html` dynamisch met categorieën
+- **Impact:** 3 plaatsen → 1 plaats (-60 regels HTML)
+
+**Resultaat:**
+- ✅ Totaal ~95 regels HTML duplicatie geëlimineerd
+- ✅ 8 data locaties → 3 centralized services
+- ✅ 100% consistentie gegarandeerd
+- ✅ Future-proof voor database migratie
+- ✅ Wijziging op 1 plaats = overal updated
+
+**Voorbeeld Template Voor:**
+```html
+<!-- Hardcoded (4x duplicate): -->
+<input type="radio" value="M"> <span>Man</span>
+<input type="radio" value="V"> <span>Vrouw</span>
+<input type="radio" value="A"> <span>Andere</span>
+<input type="radio" value="X"> <span>Dat zeg ik liever niet</span>
+```
+
+**Voorbeeld Template Na:**
+```html
+<!-- Dynamic (1x, reusable): -->
+<label th:each="gender : ${genderOptions}" class="form-radio">
+    <input type="radio" th:field="*{geslacht}" th:value="${gender.code}">
+    <span th:text="${gender.label}">Gender</span>
+</label>
+```
+
+**Voordelen:**
+- Gender toevoegen: 1 regel in GenderService
+- Overal automatisch beschikbaar
+- Geen template aanpassingen nodig
+- Consistent in student-info.html én submission.html
+
 ### 🚧 In Progress
-- Geen - Fase 2 is volledig afgerond inclusief bugfixes!
+- Geen - Fase 2 is volledig afgerond inclusief bugfixes en data centralisatie!
 
 ### 📋 To Do (Fase 3)
 - Email integratie (echte verzending)

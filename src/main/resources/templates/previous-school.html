@@ -32,34 +32,11 @@
                                             data-placeholder="-- Selecteer een school --"
                                             required>
                                         <option value="">-- Selecteer een school --</option>
-                                        <optgroup label="Basisonderwijs">
-                                            <option value="101">BAMO Moorsele</option>
-                                            <option value="102">Basisschool Wevelgem</option>
-                                            <option value="103">Centrumschool Zwevegem</option>
-                                            <option value="104">Damiaanschool Kortrijk</option>
-                                            <option value="105">De Gulleboom Gullegem</option>
-                                            <option value="106">De Waterlelie Moorsele</option>
-                                            <option value="107">Dobbelsteen XL Heule</option>
-                                            <option value="108">Het Open Groene Marke</option>
-                                            <option value="109">Kinderland Don Bosco</option>
-                                            <option value="110">Sint-Amandscollege Zuid Kortrijk</option>
-                                            <option value="111">Sint-Pauluscollege Wevelgem</option>
-                                            <option value="112">VBS De Watermolen Heule</option>
-                                            <option value="113">VBS Sint-Eloois-Winkel</option>
-                                            <option value="114">VBS Sint-Katharina</option>
-                                            <option value="115">VBS Spes Nostra Heule</option>
-                                            <option value="116">VBS St. Vincentius Bissegem</option>
-                                            <option value="117">Wijnbergschool Wevelgem</option>
-                                        </optgroup>
-                                        <optgroup label="Secundair onderwijs">
-                                            <option value="1">Atheneum Kortrijk</option>
-                                            <option value="11">Prizma Middenschool Lendelede</option>
-                                            <option value="12">Sint-Aloysiuscollege Menen</option>
-                                            <option value="13">Sint-Pauluscollege Wevelgem</option>
-                                            <option value="15">Spes Nostra Kuurne</option>
-                                        </optgroup>
-                                        <optgroup label="Andere">
-                                            <option value="0">➕ Andere school (niet in lijst)</option>
+                                        <optgroup th:each="entry : ${schoolsByCategory}" 
+                                                  th:label="${entry.key}">
+                                            <option th:each="school : ${entry.value}" 
+                                                    th:value="${school.id}" 
+                                                    th:text="${school.name}">School naam</option>
                                         </optgroup>
                                     </select>
                                     <div class="invalid-feedback"></div>
@@ -85,17 +62,11 @@
                                             data-placeholder="-- Selecteer een jaar --"
                                             required>
                                         <option value="">-- Selecteer een jaar --</option>
-                                        <optgroup label="Basisonderwijs">
-                                            <option value="B5">5de leerjaar basisonderwijs</option>
-                                            <option value="B6">6de leerjaar basisonderwijs</option>
-                                        </optgroup>
-                                        <optgroup label="Secundair onderwijs">
-                                            <option value="S1">1ste jaar secundair onderwijs</option>
-                                            <option value="S2">2de jaar secundair onderwijs</option>
-                                            <option value="S3">3de jaar secundair onderwijs</option>
-                                            <option value="S4">4de jaar secundair onderwijs</option>
-                                            <option value="S5">5de jaar secundair onderwijs</option>
-                                            <option value="S6">6de jaar secundair onderwijs</option>
+                                        <optgroup th:each="categoryEntry : ${schoolYearsByCategory}" 
+                                                  th:label="${categoryEntry.key}">
+                                            <option th:each="yearEntry : ${categoryEntry.value}" 
+                                                    th:value="${yearEntry.key}" 
+                                                    th:text="${yearEntry.value}">Jaar label</option>
                                         </optgroup>
                                     </select>
                                     <div class="invalid-feedback"></div>

@@ -3,6 +3,7 @@ package be.achieveit.snhinschrijvingen.controller;
 import be.achieveit.snhinschrijvingen.dto.StudentForm;
 import be.achieveit.snhinschrijvingen.model.Address;
 import be.achieveit.snhinschrijvingen.model.Registration;
+import be.achieveit.snhinschrijvingen.service.GenderService;
 import be.achieveit.snhinschrijvingen.service.NationalityService;
 import be.achieveit.snhinschrijvingen.service.RegistrationService;
 import be.achieveit.snhinschrijvingen.service.WizardService;
@@ -25,14 +26,17 @@ public class StudentInfoController {
     private final WizardService wizardService;
     private final RegistrationService registrationService;
     private final NationalityService nationalityService;
+    private final GenderService genderService;
 
     public StudentInfoController(
             final WizardService wizardService,
             final RegistrationService registrationService,
-            final NationalityService nationalityService) {
+            final NationalityService nationalityService,
+            final GenderService genderService) {
         this.wizardService = wizardService;
         this.registrationService = registrationService;
         this.nationalityService = nationalityService;
+        this.genderService = genderService;
     }
 
     @GetMapping("/leerling-info/{id}")
@@ -102,6 +106,7 @@ public class StudentInfoController {
 
         model.addAttribute("studentForm", studentForm);
         model.addAttribute("nationaliteiten", nationalityService.getAllNationalities());
+        model.addAttribute("genderOptions", genderService.getAllGenderOptions());
 
         return "student-info";
     }
