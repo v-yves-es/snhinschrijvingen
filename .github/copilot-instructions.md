@@ -11,7 +11,9 @@ applyTo: '**/*.java, **/*.kt'
 - Write code with good maintainability practices, including comments on why certain design decisions were made.
 - Handle edge cases and write clear exception handling.
 - For libraries or external dependencies, mention their usage and purpose in comments.
-- Always consult the latest Spring Boot documentation via Context7 MCP server when working on Spring Boot related tasks to ensure best practices and up-to-date patterns are followed.
+- **ALWAYS start by reviewing `/documentation/APPLICATION_STATUS.md` and `/documentation/TODO.md`** to understand the current project state and priorities before making changes.
+- **ALWAYS consult the latest Spring Boot documentation via Context7 MCP server** when working on Spring Boot related tasks to ensure best practices and up-to-date patterns are followed.
+- When in doubt about Spring Boot features, use Context7 to query the official Spring Boot documentation library.
 
 ## Spring Boot Instructions
 
@@ -94,6 +96,26 @@ applyTo: '**/*.java, **/*.kt'
 - If the project uses Maven, run `mvn clean package`.
 - Ensure all tests pass as part of the build.
 
+## Documentation References
+
+### Context7 Spring Boot Documentation
+- **ALWAYS** check Context7 for latest Spring Boot documentation before implementing features
+- Use Context7 MCP server to query: `/spring-projects/spring-boot` for latest practices
+- Verify dependency versions and best practices against official Spring documentation
+- Check for security advisories and deprecation notices
+- For Thymeleaf questions, query `/thymeleaf/thymeleaf` via Context7
+- For Spring Data JPA, query `/spring-projects/spring-data-jpa` via Context7
+- For Spring Security features, query `/spring-projects/spring-security` via Context7
+
+### Project Documentation
+Before starting work, **ALWAYS** review in this order:
+1. `@documentation/TODO.md` - Current tasks and priorities
+2. `@documentation/APPLICATION_STATUS.md` - System architecture and implemented features
+3. Then relevant specific docs:
+   - `@documentation/REGISTRATION_FLOW.md` - Wizard flow details
+   - `@documentation/FORM_VALIDATION.md` - Validation rules and patterns
+   - `@documentation/THYMELEAF_STRUCTURE.md` - Template patterns and fragments
+
 ## Useful Commands
 
 | Gradle Command            | Maven Command                     | Description                                   |
@@ -103,3 +125,50 @@ applyTo: '**/*.java, **/*.kt'
 | `./gradlew test`          |`./mvnw test`                      | Run tests.                                    |
 | `./gradlew bootJar`       |`./mvnw spring-boot:repackage`     | Package the application as a JAR.             |
 | `./gradlew bootBuildImage`|`./mvnw spring-boot:build-image`   | Package the application as a container image. |
+
+## Spring Boot Best Practices
+
+### REST Controllers
+- Use `@RestController` for API endpoints, `@Controller` for Thymeleaf views
+- Follow RESTful URL patterns: `/resource/{id}` not `/resource?id={id}`
+- Use proper HTTP methods: GET (read), POST (create/update), DELETE (delete)
+- Return appropriate HTTP status codes
+
+### Exception Handling
+- Use `@ControllerAdvice` for global exception handling
+- Create custom exceptions that extend `RuntimeException`
+- Log exceptions with appropriate levels (ERROR for unexpected, WARN for business logic)
+- Return user-friendly error messages in Dutch
+
+### Data Access
+- Always use `@Transactional` on service methods that modify data
+- Use `Optional<T>` for methods that might not find entities
+- Prefer Spring Data JPA derived query methods over custom queries when possible
+- Use `@Query` for complex queries that can't be derived
+
+### Performance
+- Use lazy loading for relationships (default for `@OneToMany`, `@ManyToMany`)
+- Add database indexes on frequently queried fields
+- Use pagination for large result sets
+- Cache frequently accessed, rarely changing data with `@Cacheable`
+
+### Testing
+- Write unit tests for services (mock repositories)
+- Write integration tests for controllers (use `@SpringBootTest` and `MockMvc`)
+- Use `@DataJpaTest` for repository tests
+- Aim for 80%+ test coverage on business logic
+
+### Thymeleaf Best Practices
+- **URL Expressions:** Always use `__${variable}__` syntax for variables in `@{...}` URL expressions
+  - Example: `th:action="@{/inschrijving/leerling-info/__${registrationId}__}"`
+  - Never use literal `${...}` without double underscores (results in URL encoding issues)
+- **Model Attributes:** Use consistent naming between controller and template
+  - Controller: `model.addAttribute("registrationId", id)`
+  - Template: `${registrationId}` (same name!)
+- **Entity Field Names:** Use exact field names from Java entities in templates
+  - Example: Entity has `studentFirstname` → use `${registration.studentFirstname}` not `${registration.voornaam}`
+- **Null Safety:** Always use null-safe expressions with ternary or elvis operator
+  - Example: `${registration.studentFirstname ?: '-'}`
+  - Example: `${registration.studentGeboortedatum != null ? #temporals.format(registration.studentGeboortedatum, 'dd/MM/yyyy') : '-'}`
+- **Fragment Calls:** Keep URL parameter syntax consistent in fragment calls
+  - Example: `th:replace="~{fragments/navigation :: navigation(@{/vorige/__${registrationId}__}, ...)}"`

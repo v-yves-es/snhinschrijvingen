@@ -11,27 +11,27 @@
             <div class="form-card">
                 <h1 class="form-title">Interne serverfout</h1>
                 
-                <!-- 500 Alert -->
-                <div class="alert alert-danger fade show" role="alert">
-                    <div>
-                        <strong>Foutcode: 500</strong><br>
+                <!-- 500 Error Info -->
+                <div class="info-box info-box--error mb-4">
+                    <h2 class="info-box__title">Foutcode: 500</h2>
+                    <p class="info-box__text">
                         Er is een interne fout opgetreden op de server. Onze excuses voor het ongemak.
-                    </div>
+                    </p>
                 </div>
 
-                <div class="alert alert-info fade show" role="alert" style="margin-top: 1.5rem;">
-                    <div>
-                        <strong>Wat kunt u doen?</strong>
-                        <ul style="margin: 0.5rem 0 0 1.5rem;">
-                            <li>Probeer het over enkele ogenblikken opnieuw</li>
-                            <li>Indien het probleem aanhoudt, contacteer de schooladministratie</li>
-                            <li>Vermeld bij contact de datum en het tijdstip van deze fout</li>
-                        </ul>
-                    </div>
+                <div class="info-box info-box--error">
+                    <h2 class="info-box__title">Wat kunt u doen?</h2>
+                    <ul class="info-box__list">
+                        <li>Probeer het over enkele ogenblikken opnieuw</li>
+                        <li>Indien het probleem aanhoudt, contacteer de schooladministratie</li>
+                    </ul>
                 </div>
 
                 <div class="form-actions" style="margin-top: 2rem;">
                     <a th:href="@{/inschrijving/start}" class="btn btn--primary">
+                        <svg class="btn__icon btn__icon--left" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M2 8l4-4M2 8l4 4M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                         Terug naar startpagina
                     </a>
                 </div>

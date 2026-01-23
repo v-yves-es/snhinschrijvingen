@@ -57,6 +57,7 @@ public class RelationsController {
                 form.getRelation1().getAddress().setBox(relation1.getAddress().getBox());
                 form.getRelation1().getAddress().setPostalCode(relation1.getAddress().getPostalCode());
                 form.getRelation1().getAddress().setCity(relation1.getAddress().getCity());
+                form.getRelation1().getAddress().setCountry(relation1.getAddress().getCountry());
             }
         }
         
@@ -76,6 +77,7 @@ public class RelationsController {
                 form.getRelation2().getAddress().setBox(relation2.getAddress().getBox());
                 form.getRelation2().getAddress().setPostalCode(relation2.getAddress().getPostalCode());
                 form.getRelation2().getAddress().setCity(relation2.getAddress().getCity());
+                form.getRelation2().getAddress().setCountry(relation2.getAddress().getCountry());
             }
         }
         
@@ -127,7 +129,8 @@ public class RelationsController {
         address1.setBox(relationsForm.getRelation1().getAddress().getBox());
         address1.setPostalCode(relationsForm.getRelation1().getAddress().getPostalCode());
         address1.setCity(relationsForm.getRelation1().getAddress().getCity());
-        address1.setCountry("België");
+        address1.setCountry(relationsForm.getRelation1().getAddress().getCountry() != null 
+            ? relationsForm.getRelation1().getAddress().getCountry() : "België");
         relation1.setAddress(address1);
         
         relationRepository.save(relation1);
@@ -153,7 +156,8 @@ public class RelationsController {
             address2.setBox(relationsForm.getRelation2().getAddress().getBox());
             address2.setPostalCode(relationsForm.getRelation2().getAddress().getPostalCode());
             address2.setCity(relationsForm.getRelation2().getAddress().getCity());
-            address2.setCountry("België");
+            address2.setCountry(relationsForm.getRelation2().getAddress().getCountry() != null 
+                ? relationsForm.getRelation2().getAddress().getCountry() : "België");
             relation2.setAddress(address2);
             
             relationRepository.save(relation2);

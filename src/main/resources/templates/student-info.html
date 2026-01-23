@@ -53,18 +53,34 @@
                             </div>
                         </div>
 
-                        <!-- Row 2: Rijksregisternummer (full width) -->
-                        <div class="position-relative mb-3">
-                            <label for="rijksregisternummer" class="form-label">Rijksregisternummer</label>
-                            <input type="text" 
-                                   id="rijksregisternummer" 
-                                   th:field="*{rijksregisternummer}" 
-                                   class="form-control" 
-                                   placeholder="YYMMDD-XXX.XX"
-                                   required
-                                   data-validate="rijksregisternummer"
-                                   maxlength="15">
-                            <div class="invalid-feedback"></div>
+                        <!-- Row 2: GSM en Rijksregisternummer -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label for="gsm" class="form-label">GSM-nummer leerling</label>
+                                    <input type="tel" 
+                                           id="gsm" 
+                                           th:field="*{gsm}" 
+                                           class="form-control" 
+                                           placeholder="04XX XX XX XX"
+                                           data-validate="phone">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label for="rijksregisternummer" class="form-label">Rijksregisternummer</label>
+                                    <input type="text" 
+                                           id="rijksregisternummer" 
+                                           th:field="*{rijksregisternummer}" 
+                                           class="form-control" 
+                                           placeholder="YYMMDD-XXX.XX"
+                                           required
+                                           data-validate="rijksregisternummer"
+                                           maxlength="15">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Row 3: Geboortedatum en Geboorteplaats -->
@@ -144,7 +160,7 @@
                     <!-- Domicilieadres Section -->
                     <div class="form-section">
                         <h2 class="form-section-title">Domicilieadres</h2>
-                        <div th:replace="~{fragments/address-fields :: addressFields('address', ${studentForm.address})}"></div>
+                        <div th:replace="~{fragments/address-fields :: addressFields('address', ${studentForm.address}, true)}"></div>
                     </div>
 
                     <!-- Form Actions -->

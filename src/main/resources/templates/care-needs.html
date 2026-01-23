@@ -28,18 +28,15 @@
                         <h2 class="form-section-title">Wensen klassamenstelling</h2>
                         
                         <div class="position-relative mb-3">
-                            <label for="classCompositionWishes" class="form-label">
-                                Wensen i.v.m. klassamenstelling
-                            </label>
-                            <small class="form-text text-muted d-block mb-2">
-                                Enkel te realiseren indien organisatorisch haalbaar!
-                            </small>
-                            <input type="text" 
+                            <input type="text"
                                    id="classCompositionWishes"
                                    th:field="*{classCompositionWishes}" 
                                    class="form-control" 
                                    placeholder="Vul hier uw wensen in">
                             <div class="invalid-feedback"></div>
+                            <small class="form-text text-muted d-block mb-2">
+                                Enkel te realiseren indien organisatorisch haalbaar!
+                            </small>
                         </div>
                     </div>
                     
@@ -47,23 +44,24 @@
                     <div class="form-section">
                         <h2 class="form-section-title">Bijzondere zorgvraag</h2>
                         
-                        <div class="mb-4">
-                            <p class="text-muted">
+                        <div class="info-box info-box--info mb-4">
+                            <p class="info-box__text">
                                 Het is belangrijk dat wij als school al bij inschrijving de nodige input krijgen over een eventuele zorgvraag. 
                                 Dat kan gaan om een medische zorg, een socio-emotionele zorg of een leerproblematiek. 
                                 U mag erop rekenen dat we als school heel discreet omgaan met deze informatie.
                             </p>
                         </div>
                         
-                        <div class="position-relative mb-3">
-                            <label class="form-label">Bijzondere zorgvraag?</label>
-                            <small class="form-text text-muted d-block mb-3">
+                        <div class="info-box info-box--info mb-4">
+                            <p class="info-box__text">
                                 Wanneer uw zoon/dochter medische zorg nodig heeft op school, zijn er bekwame helpers toegewezen om de EHBO op zich te nemen. 
                                 Mocht uw zoon/dochter echter bijzondere zorgnoden hebben, dan vragen we u om ons een schriftelijk attest met de instructies 
                                 van de behandelende arts te bezorgen samen met de schriftelijke toestemming van u als ouder dat de bekwame helper verbonden 
                                 aan de school die zorg mag toedienen.
-                            </small>
-                            
+                            </p>
+                        </div>
+                        
+                        <div class="position-relative mb-3">
                             <div class="form-radio-group">
                                 <label class="form-radio">
                                     <input type="radio" th:field="*{hasCareNeeds}" value="N" class="form-check-input" id="hasCareNeedsNo">
@@ -83,23 +81,23 @@
                         
                         <!-- Privacy notice -->
                         <div class="form-section">
-                            <div class="email-verification-notice">
-                                <h2 class="email-verification-notice-title">Privacyverklaring</h2>
-                                <p>
+                            <div class="info-box info-box--warning">
+                                <h2 class="info-box__title">Privacyverklaring</h2>
+                                <p class="info-box__text">
                                     De privacywet verbiedt de verwerking van persoonsgegevens die de gezondheid betreffen, tenzij u de school hiervoor 
                                     schriftelijk toestemming geeft. U kan, indien u dat wenst, deze toestemming op elk moment intrekken. 
                                     U hebt ook het recht deze gegevens in te zien en indien nodig te laten verbeteren.
                                 </p>
-                                <p>
+                                <p class="info-box__text">
                                     U bent niet verplicht gegevens over de gezondheid van uw zoon of dochter mee te delen. 
                                     De school kan echter geen rekening houden met gegevens die haar niet bekend zijn.
                                 </p>
-                                <p><strong>De school zal deze gegevens enkel verwerken met de bedoeling:</strong></p>
+                                <p class="info-box__text"><strong>De school zal deze gegevens enkel verwerken met de bedoeling:</strong></p>
                                 <ul>
                                     <li>adequaat te kunnen reageren bij risicosituaties,</li>
                                     <li>uw zoon/dochter te begeleiden bij zijn/haar studie, studiekeuze en socio-emotionele ontwikkeling.</li>
                                 </ul>
-                                <p>
+                                <p class="info-box__text">
                                     Enkel de personen die rechtstreeks bij de begeleiding van uw zoon/dochter betrokken zijn, kunnen deze gegevens raadplegen. 
                                     Deze personen zijn ertoe gehouden het vertrouwelijk karakter van deze informatie te respecteren.
                                 </p>
@@ -114,10 +112,10 @@
                                 <label for="medicalCareDetails" class="form-label">
                                     Van welke gegevens over de gezondheid van uw kind wenst u de school op de hoogte te brengen?
                                 </label>
-                                <input type="text" 
-                                       id="medicalCareDetails"
-                                       th:field="*{medicalCareDetails}" 
-                                       class="form-control">
+                                <textarea id="medicalCareDetails"
+                                          th:field="*{medicalCareDetails}" 
+                                          class="form-control"
+                                          rows="3"></textarea>
                                 <div class="invalid-feedback"></div>
                             </div>
                             
@@ -140,10 +138,10 @@
                                 <label for="doctorContactInfo" class="form-label">
                                     Indien ja, graag naam, adres en telefoonnummer van de behandelende (huis)arts om eventueel contact te kunnen nemen
                                 </label>
-                                <input type="text" 
-                                       id="doctorContactInfo"
-                                       th:field="*{doctorContactInfo}" 
-                                       class="form-control">
+                                <textarea id="doctorContactInfo"
+                                          th:field="*{doctorContactInfo}" 
+                                          class="form-control"
+                                          rows="3"></textarea>
                                 <div class="invalid-feedback"></div>
                             </div>
                             
@@ -223,8 +221,8 @@
                         <div class="form-section">
                             <h2 class="form-section-title">Leren en studeren</h2>
                             
-                            <div class="mb-3">
-                                <p class="text-muted">
+                            <div class="info-box info-box--info">
+                                <p class="info-box__text">
                                     Als er een gemotiveerd verslag van een deskundige en/of een individueel handelingsplan/zorgafspraken uit de vorige school 
                                     beschikbaar is/zijn, ontvangen we dit graag zo snel mogelijk om zo de individuele noden van uw zoon/dochter goed te kunnen 
                                     inschatten en de gepaste begeleiding te kunnen opstarten.
@@ -252,10 +250,10 @@
                                 <label for="externalSupport" class="form-label">
                                     Krijgt uw zoon/dochter momenteel externe hulpverlening (GON-begeleiding, logopedie …)? Zo ja, van wie?
                                 </label>
-                                <input type="text" 
-                                       id="externalSupport"
-                                       th:field="*{externalSupport}" 
-                                       class="form-control">
+                                <textarea id="externalSupport"
+                                          th:field="*{externalSupport}" 
+                                          class="form-control"
+                                          rows="3"></textarea>
                                 <div class="invalid-feedback"></div>
                             </div>
                         </div>

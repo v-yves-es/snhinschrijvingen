@@ -2,50 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
 <head>
-    <title>Verzenden - SPES Nostra Heule</title>
-    <style>
-        .summary-section {
-            background: #f8f9fa;
-            border-left: 4px solid #0066cc;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-radius: 4px;
-        }
-        .summary-section h3 {
-            color: #0066cc;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            margin-top: 0;
-        }
-        .summary-row {
-            display: flex;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .summary-row:last-child {
-            border-bottom: none;
-        }
-        .summary-label {
-            font-weight: 600;
-            color: #495057;
-            min-width: 200px;
-            flex-shrink: 0;
-        }
-        .summary-value {
-            color: #212529;
-        }
-        .summary-value-empty {
-            color: #6c757d;
-            font-style: italic;
-        }
-    </style>
+    <title>Bevestiging inschrijving - SPES Nostra Heule</title>
 </head>
 <body>
     <section class="wizard-container">
         <div class="container">
             <div class="form-card">
-                <h1 class="form-title">Overzicht inschrijving</h1>
+                <h1 class="form-title">Bevestiging inschrijving</h1>
                 
                 <form class="form" 
                       th:action="@{/inschrijving/verzenden/__${registrationId}__}" 
@@ -59,188 +22,335 @@
                     <!-- Wizard Progress -->
                     <div th:replace="~{fragments/wizard :: wizard}"></div>
                     
-                    <div class="email-verification-notice" style="margin-bottom: 2rem;">
-                        <h2 class="email-verification-notice-title">Controleer uw gegevens</h2>
-                        <p>Gelieve alle onderstaande gegevens zorgvuldig na te kijken voordat u de inschrijving definitief maakt.</p>
+                    <div class="info-box info-box--info mb-4">
+                        <h2 class="info-box--primary">Controleer uw gegevens</h2>
+                        <p class="info-box__text">
+                            Gelieve alle onderstaande gegevens zorgvuldig na te kijken voordat u de inschrijving definitief maakt.
+                            Na bevestiging van de inschrijving zal dit overzicht u bezorgd worden op het e-mailadres: 
+                            <strong th:text="${registration.email}"></strong>
+                        </p>
                     </div>
                     
                     <!-- Student Info Summary -->
-                    <div class="summary-section">
-                        <h3>1. Algemene gegevens leerling</h3>
-                        <div class="summary-row">
-                            <span class="summary-label">Voornaam:</span>
-                            <span class="summary-value" th:text="${registration.studentFirstname ?: '-'}"></span>
+                    <div class="summary-card">
+                        <div class="summary-card__header">
+                            <div class="summary-card__number">1</div>
+                            <h3 class="summary-card__title">Algemene gegevens leerling</h3>
                         </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Naam:</span>
-                            <span class="summary-value" th:text="${registration.studentLastname ?: '-'}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Geboortedatum:</span>
-                            <span class="summary-value" th:text="${registration.studentGeboortedatum != null ? #temporals.format(registration.studentGeboortedatum, 'dd/MM/yyyy') : '-'}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Geboorteplaats:</span>
-                            <span class="summary-value" th:text="${registration.studentGeboorteplaats ?: '-'}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Geslacht:</span>
-                            <span class="summary-value" th:text="${registration.studentGeslacht == 'M' ? 'Jongen' : (registration.studentGeslacht == 'V' ? 'Meisje' : '-')}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Rijksregisternummer:</span>
-                            <span class="summary-value" th:text="${registration.studentRijksregisternummer ?: '-'}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Nationaliteit:</span>
-                            <span class="summary-value" th:text="${registration.studentNationaliteit ?: '-'}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">GSM:</span>
-                            <span class="summary-value" th:text="${registration.studentGsm ?: '-'}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">E-mailadres ouder/voogd:</span>
-                            <span class="summary-value" th:text="${registration.email ?: '-'}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Domicilieadres:</span>
-                            <span class="summary-value">
-                                <span th:if="${registration.studentAddress}">
-                                    <span th:text="${registration.studentAddress.street}"></span>
-                                    <span th:text="${registration.studentAddress.houseNumber}"></span>
-                                    <span th:if="${registration.studentAddress.box}" th:text="'bus ' + ${registration.studentAddress.box}"></span>,
-                                    <span th:text="${registration.studentAddress.postalCode}"></span>
-                                    <span th:text="${registration.studentAddress.city}"></span>
+                        <div class="summary-card__body">
+                            <div class="summary-item">
+                                <span class="summary-item-label">Voornaam:</span>
+                                <span class="summary-item-value" th:text="${registration.studentFirstname ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Naam:</span>
+                                <span class="summary-item-value" th:text="${registration.studentLastname ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">GSM leerling:</span>
+                                <span class="summary-item-value" th:text="${registration.studentGsm ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Geboortedatum:</span>
+                                <span class="summary-item-value" th:text="${registration.studentGeboortedatum != null ? #temporals.format(registration.studentGeboortedatum, 'dd/MM/yyyy') : '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Geboorteplaats:</span>
+                                <span class="summary-item-value" th:text="${registration.studentGeboorteplaats ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Geslacht:</span>
+                                <span class="summary-item-value" th:text="${genderService.getGenderText(registration.studentGeslacht) ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Rijksregisternummer:</span>
+                                <span class="summary-item-value" th:text="${registration.studentRijksregisternummer ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Nationaliteit:</span>
+                                <span class="summary-item-value" th:text="${nationalityFullName ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Domicilieadres:</span>
+                                <span class="summary-item-value summary-address">
+                                    <span th:if="${registration.studentAddress}">
+                                        <span th:text="${registration.studentAddress.street}"></span>
+                                        <span th:text="${registration.studentAddress.houseNumber}"></span>
+                                        <span th:if="${registration.studentAddress.box}" th:text="'bus ' + ${registration.studentAddress.box}"></span><br/>
+                                        <span th:text="${registration.studentAddress.postalCode}"></span>
+                                        <span th:text="${registration.studentAddress.city}"></span>
+                                    </span>
+                                    <span th:unless="${registration.studentAddress}" class="summary-item-value--empty">Niet opgegeven</span>
                                 </span>
-                                <span th:unless="${registration.studentAddress}">-</span>
-                            </span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">E-mailadres ouder/voogd:</span>
+                                <span class="summary-item-value" th:text="${registration.email ?: '-'}"></span>
+                            </div>
+
                         </div>
                     </div>
                     
                     <!-- Study Program Summary -->
-                    <div class="summary-section">
-                        <h3>2. Studierichting</h3>
-                        <div class="summary-row">
-                            <span class="summary-label">Leerjaar:</span>
-                            <span class="summary-value" th:text="${registration.selectedStudyYear ?: '-'}"></span>
+                    <div class="summary-card">
+                        <div class="summary-card__header">
+                            <div class="summary-card__number">2</div>
+                            <h3 class="summary-card__title">Studierichting</h3>
                         </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Studierichting ID:</span>
-                            <span class="summary-value" th:text="${registration.selectedStudyProgramId ?: '-'}"></span>
-                        </div>
-                        <div class="summary-row" th:if="${registration.studyProgramExtraInfo}">
-                            <span class="summary-label">Extra info:</span>
-                            <span class="summary-value" th:text="${registration.studyProgramExtraInfo}"></span>
+                        <div class="summary-card__body">
+                            <div class="summary-item">
+                                <span class="summary-item-label">Leerjaar:</span>
+                                <span class="summary-item-value" th:text="${registration.selectedStudyYear != null ? registration.selectedStudyYear + 'e jaar' : '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Studierichting:</span>
+                                <span class="summary-item-value" th:text="${selectedProgram != null ? selectedProgram.name : '-'}"></span>
+                            </div>
+                            <div class="summary-item" th:if="${registration.studyProgramExtraInfo}">
+                                <span class="summary-item-label">Extra informatie:</span>
+                                <span class="summary-item-value" th:text="${registration.studyProgramExtraInfo}"></span>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Previous School Summary -->
-                    <div class="summary-section">
-                        <h3>3. Vorige school</h3>
-                        <div class="summary-row">
-                            <span class="summary-label">School:</span>
-                            <span class="summary-value" th:text="${registration.vorigeSchool ?: '-'}"></span>
+                    <div class="summary-card">
+                        <div class="summary-card__header">
+                            <div class="summary-card__number">3</div>
+                            <h3 class="summary-card__title">Vorige school</h3>
                         </div>
-                        <div class="summary-row" th:if="${registration.vorigeSchoolAnders}">
-                            <span class="summary-label">Andere school:</span>
-                            <span class="summary-value" th:text="${registration.vorigeSchoolAnders}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Leerjaar:</span>
-                            <span class="summary-value" th:text="${registration.vorigeSchoolJaar ?: '-'}"></span>
-                        </div>
-                        <div class="summary-row" th:if="${registration.richtingVorigeSchool}">
-                            <span class="summary-label">Richting:</span>
-                            <span class="summary-value" th:text="${registration.richtingVorigeSchool}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Toestemming contact:</span>
-                            <span class="summary-value" th:text="${registration.toestemmingVorigeSchool == 'J' ? 'Ja' : 'Nee'}"></span>
+                        <div class="summary-card__body">
+                            <div class="summary-item">
+                                <span class="summary-item-label">School:</span>
+                                <span class="summary-item-value" th:text="${previousSchoolName ?: (registration.vorigeSchoolAnders ?: '-')}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Leerjaar:</span>
+                                <span class="summary-item-value" th:text="${previousSchoolYearText ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item" th:if="${registration.richtingVorigeSchool}">
+                                <span class="summary-item-label">Richting:</span>
+                                <span class="summary-item-value" th:text="${registration.richtingVorigeSchool}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Toestemming contact:</span>
+                                <span class="summary-item-value" 
+                                      th:classappend="${registration.toestemmingVorigeSchool == 'J' ? 'summary-item-value--success' : ''}"
+                                      th:text="${registration.toestemmingVorigeSchool == 'J' ? 'Ja' : 'Nee'}"></span>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Relations Summary -->
-                    <div class="summary-section">
-                        <h3>4. Relaties</h3>
-                        <p><em>Relatie gegevens worden getoond indien beschikbaar</em></p>
+                    <div class="summary-card">
+                        <div class="summary-card__header">
+                            <div class="summary-card__number">4</div>
+                            <h3 class="summary-card__title">Relaties</h3>
+                        </div>
+                        <div class="summary-card__body">
+                            <div th:if="${registration.relations != null and !registration.relations.isEmpty()}">
+                                <div th:each="relation, iterStat : ${registration.relations}">
+                                    <h4 class="summary-subsection__title" th:text="${relationService.getRelationTypeName(relation.relationType) ?: 'Relatie ' + iterStat.count}"></h4>
+                                    <div class="summary-item">
+                                        <span class="summary-item-label">Naam:</span>
+                                        <span class="summary-item-value" th:text="${relation.firstName != null and relation.lastName != null ? relation.firstName + ' ' + relation.lastName : '-'}"></span>
+                                    </div>
+                                    <div class="summary-item" th:if="${relation.email}">
+                                        <span class="summary-item-label">E-mail:</span>
+                                        <span class="summary-item-value" th:text="${relation.email}"></span>
+                                    </div>
+                                    <div class="summary-item" th:if="${relation.phone}">
+                                        <span class="summary-item-label">Telefoon/GSM:</span>
+                                        <span class="summary-item-value" th:text="${relation.phone}"></span>
+                                    </div>
+                                    <div class="summary-item" th:if="${relation.address != null}">
+                                        <span class="summary-item-label">Adres:</span>
+                                        <span class="summary-item-value summary-address">
+                                            <span th:if="${relation.address.street != null and relation.address.houseNumber != null}" th:text="${relation.address.street + ' ' + relation.address.houseNumber}"></span>
+                                            <span th:if="${relation.address.box != null}" th:text="' bus ' + ${relation.address.box}"></span>
+                                            <span th:if="${relation.address.street != null and relation.address.houseNumber != null}"><br/></span>
+                                            <span th:if="${relation.address.postalCode != null and relation.address.city != null}" th:text="${relation.address.postalCode + ' ' + relation.address.city}"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${registration.relations == null or registration.relations.isEmpty()}">
+                                <p class="text-muted">Geen relaties toegevoegd</p>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Doctor Summary -->
-                    <div class="summary-section" th:if="${registration.doctorName}">
-                        <h3>5. Huisarts</h3>
-                        <div class="summary-row">
-                            <span class="summary-label">Naam:</span>
-                            <span class="summary-value" th:text="${registration.doctorName}"></span>
+                    <div class="summary-card">
+                        <div class="summary-card__header">
+                            <div class="summary-card__number">5</div>
+                            <h3 class="summary-card__title">Huisarts</h3>
                         </div>
-                        <div class="summary-row" th:if="${registration.doctorPhone}">
-                            <span class="summary-label">Telefoon:</span>
-                            <span class="summary-value" th:text="${registration.doctorPhone}"></span>
+                        <div class="summary-card__body">
+                            <div class="summary-item">
+                                <span class="summary-item-label">Naam huisarts:</span>
+                                <span class="summary-item-value" th:text="${registration.doctorName ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item" th:if="${registration.doctorPhone}">
+                                <span class="summary-item-label">Telefoon:</span>
+                                <span class="summary-item-value" th:text="${registration.doctorPhone}"></span>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Care Needs Summary -->
-                    <div class="summary-section">
-                        <h3>6. Zorgvraag</h3>
-                        <div class="summary-row">
-                            <span class="summary-label">Bijzondere zorgvraag:</span>
-                            <span class="summary-value" th:text="${registration.hasCareNeeds == 'J' ? 'Ja' : 'Nee'}"></span>
+                    <div class="summary-card">
+                        <div class="summary-card__header">
+                            <div class="summary-card__number">6</div>
+                            <h3 class="summary-card__title">Zorgvraag</h3>
                         </div>
-                        <div class="summary-row" th:if="${registration.classCompositionWishes}">
-                            <span class="summary-label">Wensen klassamenstelling:</span>
-                            <span class="summary-value" th:text="${registration.classCompositionWishes}"></span>
+                        <div class="summary-card__body">
+                            <div class="summary-item" th:if="${registration.classCompositionWishes}">
+                                <span class="summary-item-label">Wensen klassamenstelling:</span>
+                                <span class="summary-item-value" th:text="${registration.classCompositionWishes}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Bijzondere zorgvraag:</span>
+                                <span class="summary-item-value" 
+                                      th:classappend="${registration.hasCareNeeds == 'J' ? 'summary-item-value--success' : ''}"
+                                      th:text="${registration.hasCareNeeds == 'J' ? 'Ja' : 'Nee'}"></span>
+                            </div>
+                            
+                            <!-- Show care needs details only if hasCareNeeds is 'J' -->
+                            <div th:if="${registration.hasCareNeeds == 'J'}">
+                                <h4 class="summary-subsection__title">Medische zorg</h4>
+                                <div class="summary-item" th:if="${registration.medicalCareDetails}">
+                                    <span class="summary-item-label">Gezondheidsgegevens:</span>
+                                    <span class="summary-item-value summary-item-value--multiline" th:text="${registration.medicalCareDetails}"></span>
+                                </div>
+                                <div class="summary-item" th:if="${registration.receivingTreatment}">
+                                    <span class="summary-item-label">Wordt behandeld:</span>
+                                    <span class="summary-item-value" th:text="${registration.receivingTreatment == 'J' ? 'Ja' : 'Nee'}"></span>
+                                </div>
+                                <div class="summary-item" th:if="${registration.doctorContactInfo}">
+                                    <span class="summary-item-label">Behandelende arts contactgegevens:</span>
+                                    <span class="summary-item-value summary-item-value--multiline" th:text="${registration.doctorContactInfo}"></span>
+                                </div>
+                                <div class="summary-item" th:if="${registration.takesMedication}">
+                                    <span class="summary-item-label">Neemt medicatie:</span>
+                                    <span class="summary-item-value" th:text="${registration.takesMedication == 'J' ? 'Ja' : 'Nee'}"></span>
+                                </div>
+                                <div class="summary-item" th:if="${registration.schoolExpectations}">
+                                    <span class="summary-item-label">Verwachtingen van school:</span>
+                                    <span class="summary-item-value summary-item-value--multiline" th:text="${registration.schoolExpectations}"></span>
+                                </div>
+                                <div class="summary-item" th:if="${registration.lessonInfluence}">
+                                    <span class="summary-item-label">Invloed op lessen:</span>
+                                    <span class="summary-item-value summary-item-value--multiline" th:text="${registration.lessonInfluence}"></span>
+                                </div>
+                                <div class="summary-item" th:if="${registration.clbConsultPermission}">
+                                    <span class="summary-item-label">CLB mag verslagen opvragen:</span>
+                                    <span class="summary-item-value" th:text="${registration.clbConsultPermission == 'J' ? 'Ja' : 'Nee'}"></span>
+                                </div>
+                                
+                                <h4 class="summary-subsection__title">Sociaal-emotioneel functioneren</h4>
+                                <div class="summary-item" th:if="${registration.socialEmotionalInfo}">
+                                    <span class="summary-item-label">Informatie:</span>
+                                    <span class="summary-item-value summary-item-value--multiline" th:text="${registration.socialEmotionalInfo}"></span>
+                                </div>
+                                
+                                <h4 class="summary-subsection__title">Leren en studeren</h4>
+                                <div class="summary-item" th:if="${registration.learningDifficulties}">
+                                    <span class="summary-item-label">Leermoeilijkheden:</span>
+                                    <span class="summary-item-value summary-item-value--multiline" th:text="${registration.learningDifficulties}"></span>
+                                </div>
+                                
+                                <h4 class="summary-subsection__title">Externe ondersteuning</h4>
+                                <div class="summary-item" th:if="${registration.externalSupport}">
+                                    <span class="summary-item-label">Externe hulpverlening:</span>
+                                    <span class="summary-item-value summary-item-value--multiline" th:text="${registration.externalSupport}"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Privacy Summary -->
-                    <div class="summary-section">
-                        <h3>7. Privacy toestemmingen</h3>
-                        <div class="summary-row">
-                            <span class="summary-label">Foto's/video's:</span>
-                            <span class="summary-value" th:text="${registration.photoVideoConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                    <div class="summary-card">
+                        <div class="summary-card__header">
+                            <div class="summary-card__number">7</div>
+                            <h3 class="summary-card__title">Privacy toestemmingen</h3>
                         </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Studieresultaten delen:</span>
-                            <span class="summary-value" th:text="${registration.studyResultsConsent == 'J' ? 'Ja' : 'Nee'}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Oud-leerling data:</span>
-                            <span class="summary-value" th:text="${registration.alumniDataConsent == 'J' ? 'Ja' : 'Nee'}"></span>
-                        </div>
-                        <div class="summary-row">
-                            <span class="summary-label">Hoger onderwijs:</span>
-                            <span class="summary-value" th:text="${registration.higherEducationConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                        <div class="summary-card__body">
+                            <div class="summary-item">
+                                <span class="summary-item-label">Foto's/video's:</span>
+                                <span class="summary-item-value"
+                                      th:classappend="${registration.photoVideoConsent == 'J' ? 'summary-item-value--success' : 'summary-item-value--danger'}"
+                                      th:text="${registration.photoVideoConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Studieresultaten delen:</span>
+                                <span class="summary-item-value"
+                                      th:classappend="${registration.studyResultsConsent == 'J' ? 'summary-item-value--success' : 'summary-item-value--danger'}"
+                                      th:text="${registration.studyResultsConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Oud-leerling data bewaren:</span>
+                                <span class="summary-item-value"
+                                      th:classappend="${registration.alumniDataConsent == 'J' ? 'summary-item-value--success' : 'summary-item-value--danger'}"
+                                      th:text="${registration.alumniDataConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Gegevens hoger onderwijs:</span>
+                                <span class="summary-item-value"
+                                      th:classappend="${registration.higherEducationConsent == 'J' ? 'summary-item-value--success' : 'summary-item-value--danger'}"
+                                      th:text="${registration.higherEducationConsent == 'J' ? 'Ja' : 'Nee'}"></span>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Laptop Summary -->
-                    <div class="summary-section" th:if="${registration.laptopBrand}">
-                        <h3>8. Laptop</h3>
-                        <div class="summary-row">
-                            <span class="summary-label">Laptop merk:</span>
-                            <span class="summary-value" th:text="${registration.laptopBrand}"></span>
+                    <div class="summary-card">
+                        <div class="summary-card__header">
+                            <div class="summary-card__number">8</div>
+                            <h3 class="summary-card__title">Laptop</h3>
+                        </div>
+                        <div class="summary-card__body">
+                            <div class="summary-item">
+                                <span class="summary-item-label">Laptop merk (Signpost):</span>
+                                <span class="summary-item-value" 
+                                      th:classappend="${registration.laptopBrand == null or #strings.isEmpty(registration.laptopBrand) ? 'summary-item-value--empty' : ''}"
+                                      th:text="${registration.laptopBrand ?: 'Niet opgegeven'}"></span>
+                            </div>
                         </div>
                     </div>
-                    
+
                     <!-- School Account Summary -->
-                    <div class="summary-section">
-                        <h3>9. Schoolrekening</h3>
-                        <div class="summary-row">
-                            <span class="summary-label">Financieel gesprek gewenst:</span>
-                            <span class="summary-value" th:text="${registration.financialSupportRequest == 'J' ? 'Ja' : 'Nee'}"></span>
+                    <div class="summary-card">
+                        <div class="summary-card__header">
+                            <div class="summary-card__number">9</div>
+                            <h3 class="summary-card__title">Financieel</h3>
+                        </div>
+                        <div class="summary-card__body">
+                            <div class="summary-item">
+                                <span class="summary-item-label">IBAN rekeningnummer:</span>
+                                <span class="summary-item-value" th:text="${registration.bankAccountIban ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Naam rekeninghouder(s):</span>
+                                <span class="summary-item-value" th:text="${registration.bankAccountHolder ?: '-'}"></span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-item-label">Financieel gesprek gewenst:</span>
+                                <span class="summary-item-value" th:text="${registration.financialSupportRequest == 'J' ? 'Ja' : 'Nee'}"></span>
+                            </div>
                         </div>
                     </div>
+
                     
-                    <!-- Signature Section -->
                     <div class="form-section">
                         <h2 class="form-section-title">Ondertekening</h2>
                         
-                        <div class="email-verification-notice mb-4">
-                            <p>
+                        <div class="info-box info-box--warning mb-4">
+                            <p class="info-box__text">
                                 De inschrijving wordt definitief na schriftelijke akkoordverklaring met het schoolreglement; het indienen van het attest van basisonderwijs (niet in 1B) en het voldoen aan de toelatingsvoorwaarden.
                                 De school controleert ook eerst of er geen volzetverklaring bestaat voor de gekozen richting en jaar.
                             </p>
-                            <p>
+                            <p class="info-box__text">
                                 De inschrijvende ouder verklaart t.o.v. de school in toepassing van de artikels 374 B.W. en 375 B.W. te handelen met instemming van de andere ouder.
                                 Bent u geen ouder/voogd, maar tekent u in naam van de ouder/voogd, dan is uw handtekening niet rechtsgeldig voor de inschrijving.
                             </p>

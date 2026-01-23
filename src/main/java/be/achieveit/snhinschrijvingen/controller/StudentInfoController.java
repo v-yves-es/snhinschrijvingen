@@ -3,10 +3,8 @@ package be.achieveit.snhinschrijvingen.controller;
 import be.achieveit.snhinschrijvingen.dto.StudentForm;
 import be.achieveit.snhinschrijvingen.model.Address;
 import be.achieveit.snhinschrijvingen.model.Registration;
-import be.achieveit.snhinschrijvingen.model.SchoolYear;
 import be.achieveit.snhinschrijvingen.service.NationalityService;
 import be.achieveit.snhinschrijvingen.service.RegistrationService;
-import be.achieveit.snhinschrijvingen.service.SchoolYearService;
 import be.achieveit.snhinschrijvingen.service.WizardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +25,14 @@ public class StudentInfoController {
     private final WizardService wizardService;
     private final RegistrationService registrationService;
     private final NationalityService nationalityService;
-    private final SchoolYearService schoolYearService;
 
     public StudentInfoController(
             final WizardService wizardService,
             final RegistrationService registrationService,
-            final NationalityService nationalityService,
-            final SchoolYearService schoolYearService) {
+            final NationalityService nationalityService) {
         this.wizardService = wizardService;
         this.registrationService = registrationService;
         this.nationalityService = nationalityService;
-        this.schoolYearService = schoolYearService;
     }
 
     @GetMapping("/leerling-info/{id}")
@@ -62,10 +57,6 @@ public class StudentInfoController {
         // Add registration to model
         model.addAttribute("registration", registration);
         model.addAttribute("registrationId", id);
-
-        // Add school year for header
-        SchoolYear registrationSchoolYear = schoolYearService.getRegistrationSchoolYear();
-        model.addAttribute("schoolYearDescription", registrationSchoolYear.getDescription());
 
         // Form data - pre-fill from database or use test data
         StudentForm studentForm = new StudentForm();

@@ -164,6 +164,12 @@ public class Registration {
     private String laptopBrand;
     
     // School account / financial support
+    @Column(name = "bank_account_iban", length = 34)
+    private String bankAccountIban;
+    
+    @Column(name = "bank_account_holder", length = 200)
+    private String bankAccountHolder;
+    
     @Column(name = "financial_support_request")
     private String financialSupportRequest;
     
@@ -575,6 +581,22 @@ public class Registration {
     
     public void setLaptopBrand(String laptopBrand) {
         this.laptopBrand = laptopBrand;
+    }
+    
+    public String getBankAccountIban() {
+        return bankAccountIban;
+    }
+    
+    public void setBankAccountIban(String bankAccountIban) {
+        this.bankAccountIban = bankAccountIban;
+    }
+    
+    public String getBankAccountHolder() {
+        return bankAccountHolder;
+    }
+    
+    public void setBankAccountHolder(String bankAccountHolder) {
+        this.bankAccountHolder = bankAccountHolder;
     }
     
     public String getFinancialSupportRequest() {

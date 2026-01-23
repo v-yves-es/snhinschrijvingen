@@ -24,9 +24,9 @@
                 </div>
                 
                 <!-- Instructions -->
-                <div class="email-sent-instructions">
-                    <h2 class="email-sent-subtitle">Volgende stappen</h2>
-                    <ol class="email-sent-list">
+                <div class="info-box info-box--info mb-4">
+                    <h2 class="info-box__title">Volgende stappen</h2>
+                    <ol class="info-box__list">
                         <li>Open uw mailbox</li>
                         <li>Zoek naar een email van <strong>SNH Inschrijvingen</strong></li>
                         <li>Controleer ook uw <strong>spam/ongewenste e-mail</strong> map</li>
@@ -36,18 +36,18 @@
                 </div>
                 
                 <!-- Help Section -->
-                <div class="email-sent-help">
-                    <h3 class="email-sent-help-title">Email niet ontvangen?</h3>
-                    <ul class="email-sent-help-list">
+                <div class="info-box info-box--warning">
+                    <h2 class="info-box__title">Email niet ontvangen?</h2>
+                    <ul class="info-box__list">
                         <li>Wacht enkele minuten en controleer opnieuw</li>
                         <li>Controleer uw spam/junk mail folder</li>
-                        <li>Verifieer dat het emailadres correct is</li>
+                        <li>Verifieer dat het opgegeven emailadres correct is</li>
                         <li>Neem contact op met de school als het probleem aanhoudt</li>
                     </ul>
                 </div>
 
                 <!-- Back button -->
-                <div th:replace="~{fragments/navigation :: backButton(@{/inschrijving/start}, 'Terug naar emailadres wijzigen')}"></div>
+                <div th:replace="~{fragments/navigation :: backButton(@{/inschrijving/start}, 'Terug')}"></div>
             </div>
         </div>
     </section>

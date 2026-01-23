@@ -29,6 +29,12 @@ public class SchoolAccountController {
         
         // Create form and pre-fill if data exists
         SchoolAccountForm form = new SchoolAccountForm();
+        if (registration.getBankAccountIban() != null) {
+            form.setBankAccountIban(registration.getBankAccountIban());
+        }
+        if (registration.getBankAccountHolder() != null) {
+            form.setBankAccountHolder(registration.getBankAccountHolder());
+        }
         if (registration.getFinancialSupportRequest() != null) {
             form.setFinancialSupportRequest(registration.getFinancialSupportRequest());
         }
@@ -49,7 +55,9 @@ public class SchoolAccountController {
         Registration registration = registrationService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Registration not found"));
         
-        // Update registration with financial support request
+        // Update registration with bank account and financial support data
+        registration.setBankAccountIban(schoolAccountForm.getBankAccountIban());
+        registration.setBankAccountHolder(schoolAccountForm.getBankAccountHolder());
         registration.setFinancialSupportRequest(schoolAccountForm.getFinancialSupportRequest());
         registration.setCurrentStep("SCHOOL_ACCOUNT");
         

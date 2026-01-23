@@ -1,14 +1,18 @@
 package be.achieveit.snhinschrijvingen.controller;
 
 import be.achieveit.snhinschrijvingen.dto.SubmissionForm;
+import be.achieveit.snhinschrijvingen.model.Nationality;
 import be.achieveit.snhinschrijvingen.model.Registration;
-import be.achieveit.snhinschrijvingen.service.RegistrationService;
-import be.achieveit.snhinschrijvingen.service.WizardService;
+import be.achieveit.snhinschrijvingen.model.StudyProgram;
+import be.achieveit.snhinschrijvingen.repository.NationalityRepository;
+import be.achieveit.snhinschrijvingen.repository.StudyProgramRepository;
+import be.achieveit.snhinschrijvingen.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -17,10 +21,27 @@ public class SubmissionController {
     
     private final RegistrationService registrationService;
     private final WizardService wizardService;
+    private final StudyProgramRepository studyProgramRepository;
+    private final NationalityRepository nationalityRepository;
+    private final PreviousSchoolService previousSchoolService;
+    private final RelationService relationService;
+    private final GenderService genderService;
     
-    public SubmissionController(RegistrationService registrationService, WizardService wizardService) {
+    public SubmissionController(
+            RegistrationService registrationService, 
+            WizardService wizardService,
+            StudyProgramRepository studyProgramRepository,
+            NationalityRepository nationalityRepository,
+            PreviousSchoolService previousSchoolService,
+            RelationService relationService,
+            GenderService genderService) {
         this.registrationService = registrationService;
         this.wizardService = wizardService;
+        this.studyProgramRepository = studyProgramRepository;
+        this.nationalityRepository = nationalityRepository;
+        this.previousSchoolService = previousSchoolService;
+        this.relationService = relationService;
+        this.genderService = genderService;
     }
     
     @GetMapping("/verzenden/{id}")
@@ -36,9 +57,34 @@ public class SubmissionController {
             form.setAdditionalInfoRequest(registration.getAdditionalInfoRequest());
         }
         
+        // Get full study program details if selected
+        StudyProgram selectedProgram = null;
+        if (registration.getSelectedStudyProgramId() != null) {
+            selectedProgram = studyProgramRepository.findById(registration.getSelectedStudyProgramId()).orElse(null);
+        }
+        
+        // Get nationality full name
+        String nationalityFullName = null;
+        if (registration.getStudentNationaliteit() != null) {
+            Optional<Nationality> nationality = nationalityRepository.findByCode(registration.getStudentNationaliteit());
+            nationalityFullName = nationality.map(Nationality::getNameNl).orElse(registration.getStudentNationaliteit());
+        }
+        
+        // Map previous school ID to name using service
+        String previousSchoolName = previousSchoolService.getSchoolName(registration.getVorigeSchool());
+        
+        // Map previous school year code to readable text using service
+        String previousSchoolYearText = previousSchoolService.getSchoolYearText(registration.getVorigeSchoolJaar());
+        
         model.addAttribute("submissionForm", form);
         model.addAttribute("registration", registration);
         model.addAttribute("registrationId", id);
+        model.addAttribute("selectedProgram", selectedProgram);
+        model.addAttribute("nationalityFullName", nationalityFullName);
+        model.addAttribute("previousSchoolName", previousSchoolName);
+        model.addAttribute("previousSchoolYearText", previousSchoolYearText);
+        model.addAttribute("relationService", relationService);
+        model.addAttribute("genderService", genderService);
         model.addAttribute("wizardSteps", wizardService.getWizardSteps(10));
         
         return "submission";

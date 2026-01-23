@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: layout(~{::title}, ~{::section})}">
 <head>
-    <title>Schoolrekening - SPES Nostra Heule</title>
+    <title>Financieel - SPES Nostra Heule</title>
 </head>
 <body>
     <section class="wizard-container">
         <div class="container">
             <div class="form-card">
-                <h1 class="form-title">Schoolrekening</h1>
+                <h1 class="form-title">Financieel</h1>
                 
                 <form class="form" 
                       th:action="@{/inschrijving/schoolrekening/__${registrationId}__}" 
@@ -22,6 +22,51 @@
                     
                     <!-- Wizard Progress -->
                     <div th:replace="~{fragments/wizard :: wizard}"></div>
+                    
+                    <!-- Bank Account Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">Schoolrekening</h2>
+                        
+                        <div class="info-box info-box--info mb-4">
+                            <p class="info-box__text">
+                                De schoolrekening wordt gebruikt voor het automatisch incasseren van de schoolfacturen.
+                            </p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label for="bankAccountIban" class="form-label">
+                                        IBAN rekeningnummer
+                                    </label>
+                                    <input type="text" 
+                                           id="bankAccountIban" 
+                                           th:field="*{bankAccountIban}" 
+                                           class="form-control" 
+                                           placeholder="BEXX XXXX XXXX XXXX"
+                                           required
+                                           data-validate="iban"
+                                           maxlength="34">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="position-relative mb-3">
+                                    <label for="bankAccountHolder" class="form-label">
+                                        Naam rekeninghouder(s)
+                                    </label>
+                                    <input type="text" 
+                                           id="bankAccountHolder" 
+                                           th:field="*{bankAccountHolder}" 
+                                           class="form-control" 
+                                           placeholder="Naam van de rekeninghouder(s)"
+                                           required
+                                           data-min-length="2">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- Financial Support Section -->
                     <div class="form-section">

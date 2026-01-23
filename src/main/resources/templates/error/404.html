@@ -11,27 +11,28 @@
             <div class="form-card">
                 <h1 class="form-title">Pagina niet gevonden</h1>
                 
-                <!-- 404 Alert -->
-                <div class="alert alert-warning fade show" role="alert">
-                    <div>
-                        <strong>Foutcode: 404</strong><br>
+                <!-- 404 Error Info -->
+                <div class="info-box info-box--error mb-4">
+                    <h2 class="info-box__title">Foutcode: 404</h2>
+                    <p class="info-box__text">
                         De pagina die u zoekt bestaat niet of is verplaatst.
-                    </div>
+                    </p>
                 </div>
 
-                <div class="alert alert-info fade show" role="alert" style="margin-top: 1.5rem;">
-                    <div>
-                        <strong>Wat kunt u doen?</strong>
-                        <ul style="margin: 0.5rem 0 0 1.5rem;">
-                            <li>Controleer of de URL correct is</li>
-                            <li>Ga terug naar de startpagina om opnieuw te beginnen</li>
-                            <li>Indien u via een link hier terecht bent gekomen, contacteer de schooladministratie</li>
-                        </ul>
-                    </div>
+                <div class="info-box info-box--error">
+                    <h2 class="info-box__title">Wat kunt u doen?</h2>
+                    <ul class="info-box__list">
+                        <li>Controleer of de URL correct is</li>
+                        <li>Ga terug naar de startpagina om opnieuw te beginnen</li>
+                        <li>Indien u via een link hier terecht bent gekomen, contacteer de schooladministratie</li>
+                    </ul>
                 </div>
 
                 <div class="form-actions" style="margin-top: 2rem;">
                     <a th:href="@{/inschrijving/start}" class="btn btn--primary">
+                        <svg class="btn__icon btn__icon--left" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M2 8l4-4M2 8l4 4M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                         Terug naar startpagina
                     </a>
                 </div>

@@ -1,86 +1,47 @@
-# Alert Componenten - Documentatie
+# Alert & Info Box Componenten - Documentatie
 
 ## Overzicht
 
-Het alert systeem biedt visuele feedback berichten voor gebruikers, gebaseerd op Bootstrap alert componenten zoals te zien op https://demo.dashboardpack.com/architectui-html-pro/components-notifications.html
+Het systeem biedt twee manieren om visuele feedback berichten aan gebruikers te tonen:
+1. **Info Boxes** - Moderne, op maat gemaakte componenten (primair gebruikt)
+2. **Bootstrap Alerts** - Legacy componenten (worden uitgefaseerd)
 
-## Alert Types
+**⚠️ Belangrijk:** Gebruik bij voorkeur **Info Boxes** voor nieuwe implementaties. Bootstrap alerts worden momenteel uitgefaseerd.
 
-### Beschikbare Kleuren
+## Info Box Componenten (Nieuw & Aanbevolen)
 
-| Type | Class | Gebruik | Voorbeeld |
-|------|-------|---------|-----------|
-| **Primary** | `alert-primary` | Algemene informatie | Standaard mededelingen |
-| **Success** | `alert-success` | Succesvolle acties | ✅ Email verzonden |
-| **Danger** | `alert-danger` | Fouten en errors | ❌ Actie mislukt |
-| **Warning** | `alert-warning` | Waarschuwingen | ⚠️ Let op! |
-| **Info** | `alert-info` | Informatieve berichten | ℹ️ Belangrijk te weten |
-| **Secondary** | `alert-secondary` | Minder belangrijke info | Algemeen |
-| **Light** | `alert-light` | Subtiele berichten | Lichte achtergrond |
-| **Dark** | `alert-dark` | Donkere alerts | Contrast |
+### Beschikbare Types
 
-## Basis Gebruik
+| Type | Class | Gebruik | Kleur |
+|------|-------|---------|-------|
+| **Primary** | `info-box--primary` | Algemene belangrijke informatie | Blauw |
+| **Info** | `info-box--info` | Informatieve berichten | Lichtblauw |
+| **Success** | `info-box--success` | Succesvolle acties | Groen |
+| **Warning** | `info-box--warning` | Waarschuwingen | Oranje/Geel |
+| **Error** | `info-box--error` | Fouten en errors | Rood |
 
-### Eenvoudige Alert
+### Basis Gebruik
+
+#### Eenvoudige Info Box
 
 ```html
-<div class="alert alert-info fade show" role="alert">
-    Dit is een informatief bericht.
+<div class="info-box info-box--info">
+    <h2 class="info-box__title">Belangrijk</h2>
+    <p class="info-box__text">
+        Dit is een informatief bericht.
+    </p>
 </div>
 ```
 
-### Alert met Sterke Tekst
+#### Info Box met Lijst
 
 ```html
-<div class="alert alert-success fade show" role="alert">
-    <strong>✅ Gelukt!</strong> Uw actie is succesvol uitgevoerd.
-</div>
-```
-
-### Alert met Link
-
-```html
-<div class="alert alert-info fade show" role="alert">
-    Meer informatie? Bekijk onze <a href="#" class="alert-link">FAQ pagina</a>.
-</div>
-```
-
-## Geavanceerd Gebruik
-
-### Sluitbare Alert
-
-```html
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>⚠️ Let op!</strong> Dit is een waarschuwing.
-    <button type="button" class="close" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-```
-
-### Alert met Icoon
-
-```html
-<div class="alert alert-info fade show" role="alert">
-    <div class="alert-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2"/>
-        </svg>
-        <div class="alert-icon-content">
-            <strong>Belangrijk bericht</strong><br>
-            Dit is een alert met een icoon aan de linkerkant.
-        </div>
-    </div>
-</div>
-```
-
-### Alert met Lijst
-
-```html
-<div class="alert alert-warning fade show" role="alert">
-    <strong>⚠️ Let op:</strong>
-    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+<div class="info-box info-box--warning">
+    <h2 class="info-box__title">Let op</h2>
+    <p class="info-box__text">
+        Controleer de volgende punten:
+    </p>
+    <ul class="info-box__list">
         <li>Eerste punt</li>
         <li>Tweede punt</li>
         <li>Derde punt</li>
@@ -88,192 +49,242 @@ Het alert systeem biedt visuele feedback berichten voor gebruikers, gebaseerd op
 </div>
 ```
 
-## Gebruik in Thymeleaf
-
-### Statische Alert
+#### Info Box met Meerdere Paragrafen
 
 ```html
-<div class="alert alert-info fade show" role="alert">
-    <strong>ℹ️ Belangrijk:</strong><br>
-    Geef het <strong>emailadres van de ouder of voogd</strong> op.
+<div class="info-box info-box--primary">
+    <h2 class="info-box__title">Belangrijk voor het 2de jaar</h2>
+    <p class="info-box__text">
+        Ook in het 2de jaar maken we de opsplitsing in plus- en accentklassen.
+    </p>
+    <p class="info-box__text">
+        Mocht u het niet eens zijn met dat advies, neem dan gerust contact op 
+        met de school: <a href="mailto:school@example.com">school@example.com</a>.
+    </p>
 </div>
 ```
 
-### Dynamische Alert met Data
+### Info Box in Error Pagina's
+
+#### 404 Fout Pagina
 
 ```html
-<div class="alert alert-success fade show" role="alert" th:if="${email}">
-    <strong>✅ Email verzonden!</strong><br>
-    We hebben een email gestuurd naar: <strong th:text="${email}">email@voorbeeld.be</strong>
-</div>
-```
-
-### Conditionele Alert
-
-```html
-<!-- Toon alleen als er een fout is -->
-<div class="alert alert-danger fade show" role="alert" th:if="${error}">
-    <strong>❌ Fout:</strong> <span th:text="${error}">Er is iets misgegaan</span>
+<div class="info-box info-box--warning mb-4">
+    <h2 class="info-box__title">Foutcode: 404</h2>
+    <p class="info-box__text">
+        De pagina die u zoekt bestaat niet of is verplaatst.
+    </p>
 </div>
 
-<!-- Toon alleen als actie succesvol was -->
-<div class="alert alert-success fade show" role="alert" th:if="${success}">
-    <strong>✅ Gelukt!</strong> <span th:text="${success}">Actie uitgevoerd</span>
-</div>
-```
-
-## Email Verificatie Flow
-
-### Stap 1: Email Input Pagina (`/inschrijving/start`)
-
-```html
-<!-- Info alert -->
-<div class="alert alert-info fade show" role="alert">
-    <strong>ℹ️ Belangrijk:</strong><br>
-    Geef het <strong>emailadres van de ouder of voogd</strong> op, 
-    niet dit van de leerling die u wenst in te schrijven.<br><br>
-    Na het opgeven van het emailadres zal een <strong>verificatie-email</strong> 
-    verstuurd worden. <strong>Controleer uw mailbox</strong> 
-    (inclusief spam/ongewenste e-mail map).
-</div>
-
-<form>
-    <!-- form fields -->
-    <button type="submit">Verifiëren</button>
-</form>
-```
-
-### Stap 2: Email Verzonden Pagina (`/inschrijving/email-sent`)
-
-```html
-<!-- Success alert -->
-<div class="alert alert-success fade show" role="alert">
-    <strong>✅ Email succesvol verzonden!</strong><br>
-    We hebben een verificatie-email gestuurd naar: 
-    <strong th:text="${email}">email@voorbeeld.be</strong>
-</div>
-
-<!-- Info alert met checklist -->
-<div class="alert alert-info fade show" role="alert">
-    <div class="alert-icon">
-        <svg>...</svg>
-        <div class="alert-icon-content">
-            <strong>Volgende stappen:</strong>
-            <ol>
-                <li>Open uw mailbox</li>
-                <li>Zoek naar email van SNH</li>
-                <li>Controleer spam folder</li>
-                <li>Klik op verificatielink</li>
-                <li>Word doorgestuurd naar volgende stap</li>
-            </ol>
-        </div>
-    </div>
-</div>
-
-<!-- Warning alert met troubleshooting -->
-<div class="alert alert-warning fade show" role="alert">
-    <strong>⚠️ Email niet ontvangen?</strong><br>
-    <ul>
-        <li>Wacht enkele minuten</li>
-        <li>Controleer spam/junk folder</li>
-        <li>Controleer emailadres</li>
-        <li>Neem contact op met school</li>
+<div class="info-box info-box--info">
+    <h2 class="info-box__title">Wat kunt u doen?</h2>
+    <ul class="info-box__list">
+        <li>Controleer of de URL correct is</li>
+        <li>Ga terug naar de startpagina</li>
+        <li>Contacteer de schooladministratie indien nodig</li>
     </ul>
 </div>
 ```
 
-## JavaScript Functionaliteit
+#### 500 Server Fout Pagina
 
-Het `alerts.js` script zorgt voor het sluiten van dismissible alerts:
+```html
+<div class="info-box info-box--error mb-4">
+    <h2 class="info-box__title">Foutcode: 500</h2>
+    <p class="info-box__text">
+        Er is een interne fout opgetreden op de server. 
+        Onze excuses voor het ongemak.
+    </p>
+</div>
 
-```javascript
-// Automatisch geladen
-// Alerts met class "alert-dismissible" kunnen gesloten worden
-// Klik op de × button om de alert te sluiten
+<div class="info-box info-box--info">
+    <h2 class="info-box__title">Wat kunt u doen?</h2>
+    <ul class="info-box__list">
+        <li>Probeer het over enkele ogenblikken opnieuw</li>
+        <li>Contacteer de schooladministratie indien probleem aanhoudt</li>
+        <li>Vermeld datum en tijdstip van deze fout</li>
+    </ul>
+</div>
 ```
 
-### Events
+### Gebruik in Thymeleaf
 
-```javascript
-// Alert wordt gesloten
-document.addEventListener('DOMContentLoaded', function() {
-    // Close buttons worden automatisch gedetecteerd
-    // Fade out animatie wordt toegepast
-    // Alert wordt na 150ms verwijderd uit DOM
-});
+#### Conditionele Info Box
+
+```html
+<div class="info-box info-box--success" th:if="${success}">
+    <h2 class="info-box__title">Gelukt!</h2>
+    <p class="info-box__text" th:text="${success}">
+        Actie succesvol uitgevoerd.
+    </p>
+</div>
 ```
 
-## CSS Classes Overzicht
+#### Met Dynamische Data
+
+```html
+<div class="info-box info-box--info">
+    <h2 class="info-box__title">Controleer uw gegevens</h2>
+    <p class="info-box__text">
+        Gelieve alle onderstaande gegevens zorgvuldig na te kijken voordat u de inschrijving definitief maakt.
+        Na bevestiging zal dit overzicht u bezorgd worden op het e-mailadres: 
+        <strong th:text="${registration.email}"></strong>
+    </p>
+</div>
+```
+
+### CSS Classes Overzicht
 
 | Class | Doel |
 |-------|------|
-| `.alert` | Basis alert styling |
-| `.alert-{type}` | Kleur variant (primary, success, etc.) |
-| `.alert-dismissible` | Maakt alert sluitbaar |
-| `.alert-link` | Styling voor links in alerts |
-| `.alert-icon` | Container voor alert met icoon |
-| `.alert-icon-content` | Content naast icoon |
-| `.fade` | Fade animatie |
-| `.show` | Toont de alert (opacity 1) |
-| `.close` | Sluit button styling |
+| `.info-box` | Basis info box styling |
+| `.info-box--{type}` | Kleur variant (primary, info, success, warning, error) |
+| `.info-box__title` | Titel van de info box |
+| `.info-box__text` | Tekst paragraaf in de info box |
+| `.info-box__list` | Lijst binnen de info box |
+| `.mb-4` | Margin bottom spacing |
+
+## Bootstrap Alerts (Legacy - Wordt Uitgefaseerd)
+
+⚠️ **Let op:** Bootstrap alerts worden nog ondersteund maar zijn legacy. Gebruik bij voorkeur Info Boxes voor nieuwe implementaties.
+
+### Beschikbare Kleuren (Legacy)
+
+| Type | Class | Gebruik |
+|------|-------|---------|
+| **Primary** | `alert-primary` | Algemene informatie |
+| **Success** | `alert-success` | Succesvolle acties |
+| **Danger** | `alert-danger` | Fouten en errors |
+| **Warning** | `alert-warning` | Waarschuwingen |
+| **Info** | `alert-info` | Informatieve berichten |
+
+### Basis Gebruik (Legacy)
+
+```html
+<div class="alert alert-info fade show" role="alert">
+    Dit is een informatief bericht.
+</div>
+```
+
+## Migratie van Alerts naar Info Boxes
+
+### Voorbeelden
+
+**Oud (Alert):**
+```html
+<div class="alert alert-warning fade show" role="alert">
+    <strong>⚠️ Let op!</strong><br>
+    Dit is een waarschuwing.
+</div>
+```
+
+**Nieuw (Info Box):**
+```html
+<div class="info-box info-box--warning">
+    <h2 class="info-box__title">Let op!</h2>
+    <p class="info-box__text">
+        Dit is een waarschuwing.
+    </p>
+</div>
+```
 
 ## Best Practices
 
 ### Do's ✅
 
-1. **Gebruik emoji's** voor visuele impact (✅ ❌ ⚠️ ℹ️)
-2. **Gebruik `<strong>`** voor belangrijke tekst
-3. **Voeg altijd `role="alert"`** toe voor toegankelijkheid
-4. **Gebruik `fade show`** voor smooth animaties
-5. **Gebruik juiste kleuren** voor het type bericht
+1. **Gebruik Info Boxes** voor alle nieuwe implementaties
+2. **Gebruik duidelijke titels** met de `info-box__title` class
+3. **Gebruik `info-box__text`** voor paragrafen
+4. **Gebruik `info-box__list`** voor lijsten
+5. **Gebruik juiste kleuren** voor het type bericht:
+   - `--error` voor fouten (500 errors, validatie errors)
+   - `--warning` voor waarschuwingen (404 errors, let op berichten)
+   - `--info` voor informatieve berichten
+   - `--success` voor succesberichten
+   - `--primary` voor belangrijke informatie
 6. **Houd berichten kort** en to-the-point
 7. **Gebruik lijsten** voor meerdere punten
+8. **Voeg links toe** waar relevant (email, telefoon, URLs)
 
 ### Don'ts ❌
 
-1. Niet te veel alerts op één pagina
-2. Geen extreem lange teksten in alerts
-3. Geen kritieke informatie alleen in alerts
+1. Gebruik geen nieuwe Bootstrap alerts (migreer naar info boxes)
+2. Niet te veel info boxes op één pagina
+3. Geen extreem lange teksten in info boxes
 4. Niet te veel kleuren door elkaar gebruiken
-5. Geen alerts voor normale content
+5. Geen info boxes voor normale content
 
 ## Voorbeelden uit Applicatie
 
-### Email Verificatie Info
+### Email Verificatie
 
 ```html
-<div class="alert alert-info fade show" role="alert">
-    <strong>ℹ️ Belangrijk:</strong><br>
-    Geef het <strong>emailadres van de ouder of voogd</strong> op.
+<div class="info-box info-box--primary">
+    <h2 class="info-box__title">Belangrijk</h2>
+    <p class="info-box__text">
+        Geef het <strong>emailadres van de ouder of voogd</strong> op, 
+        niet dit van de leerling die u wenst in te schrijven.
+    </p>
+    <p class="info-box__text">
+        Na het opgeven van het emailadres zal een 
+        <strong>verificatie-email</strong> verstuurd worden met een 
+        persoonlijke link, waarna het inschrijvingsproces kan aangevat worden.
+    </p>
 </div>
 ```
 
-### Success Melding
+### Submission Page
 
 ```html
-<div class="alert alert-success fade show" role="alert">
-    <strong>✅ Email succesvol verzonden!</strong><br>
-    We hebben een email gestuurd naar: <strong>user@email.be</strong>
+<div class="info-box info-box--info mb-4">
+    <h2 class="info-box__title">Controleer uw gegevens</h2>
+    <p class="info-box__text">
+        Gelieve alle onderstaande gegevens zorgvuldig na te kijken 
+        voordat u de inschrijving definitief maakt.
+        Na bevestiging van de inschrijving zal dit overzicht u bezorgd 
+        worden op het e-mailadres: 
+        <strong th:text="${registration.email}"></strong>
+    </p>
 </div>
 ```
 
-### Waarschuwing met Tips
+### Ondertekening Waarschuwing
 
 ```html
-<div class="alert alert-warning fade show" role="alert">
-    <strong>⚠️ Email niet ontvangen?</strong><br>
-    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
-        <li>Wacht enkele minuten</li>
-        <li>Controleer spam folder</li>
-    </ul>
+<div class="info-box info-box--warning mb-4">
+    <p class="info-box__text">
+        De inschrijving wordt definitief na schriftelijke akkoordverklaring 
+        met het schoolreglement; het indienen van het attest van 
+        basisonderwijs (niet in 1B) en het voldoen aan de 
+        toelatingsvoorwaarden.
+    </p>
+    <p class="info-box__text">
+        De inschrijvende ouder verklaart t.o.v. de school in toepassing 
+        van de artikels 374 B.W. en 375 B.W. te handelen met instemming 
+        van de andere ouder.
+    </p>
 </div>
 ```
 
-## Demo Pagina
+### Error Pagina's
 
-Bezoek de demo pagina voor alle alert types en voorbeelden:
-```
-http://localhost:8080/alerts-demo.html
+```html
+<!-- 404 Error -->
+<div class="info-box info-box--warning mb-4">
+    <h2 class="info-box__title">Foutcode: 404</h2>
+    <p class="info-box__text">
+        De pagina die u zoekt bestaat niet of is verplaatst.
+    </p>
+</div>
+
+<!-- 500 Error -->
+<div class="info-box info-box--error mb-4">
+    <h2 class="info-box__title">Foutcode: 500</h2>
+    <p class="info-box__text">
+        Er is een interne fout opgetreden op de server. 
+        Onze excuses voor het ongemak.
+    </p>
+</div>
 ```
 
 ## Browser Compatibiliteit
@@ -285,7 +296,8 @@ http://localhost:8080/alerts-demo.html
 
 ## Toegankelijkheid
 
-- `role="alert"` voor screen readers
-- `aria-label` op close buttons
-- Keyboard navigatie support
+- Semantische HTML structuur
+- Duidelijke heading hierarchy
 - Kleurcontrast volgens WCAG richtlijnen
+- Leesbare font sizes
+- Goede spacing en witruimte

@@ -117,10 +117,10 @@
                             <div class="form-section-header">
                                 <h3 class="form-section-subtitle">Adres</h3>
                                 <button type="button" class="btn btn--outline btn--small copy-address-btn" onclick="copyDomicileAddress('relation1')">
-                                    Kopieer domicilieadres
+                                    Domicilieadres overnemen
                                 </button>
                             </div>
-                            <div th:replace="~{fragments/address-fields :: addressFields('relation1.address', ${relationsForm.relation1.address})}"></div>
+                            <div th:replace="~{fragments/address-fields :: addressFields('relation1.address', ${relationsForm.relation1.address}, true)}"></div>
                         </div>
                         
                         <!-- Add Second Relation Button -->
@@ -228,10 +228,10 @@
                             <div class="form-section-header">
                                 <h3 class="form-section-subtitle">Adres</h3>
                                 <button type="button" class="btn btn--outline btn--small copy-address-btn" onclick="copyDomicileAddress('relation2')">
-                                    Kopieer domicilieadres
+                                    Domicilieadres overnemen
                                 </button>
                             </div>
-                            <div th:replace="~{fragments/address-fields :: addressFields('relation2.address', ${relationsForm.relation2.address})}"></div>
+                            <div th:replace="~{fragments/address-fields :: addressFields('relation2.address', ${relationsForm.relation2.address}, false)}"></div>
                         </div>
                         
                         <!-- Form Actions -->
@@ -248,7 +248,8 @@
                             huisnr: /*[[${registration.studentAddress?.houseNumber}]]*/ '',
                             bus: /*[[${registration.studentAddress?.box}]]*/ '',
                             postcode: /*[[${registration.studentAddress?.postalCode}]]*/ '',
-                            gemeente: /*[[${registration.studentAddress?.city}]]*/ ''
+                            gemeente: /*[[${registration.studentAddress?.city}]]*/ '',
+                            land: /*[[${registration.studentAddress?.country}]]*/ 'België'
                         };
                         
                         console.log('Domicile address loaded:', window.domicileAddress);
@@ -264,7 +265,8 @@
                                 huisnr: relationPrefix + '.address.houseNumber',
                                 bus: relationPrefix + '.address.box',
                                 postcode: relationPrefix + '.address.postalCode',
-                                gemeente: relationPrefix + '.address.city'
+                                gemeente: relationPrefix + '.address.city',
+                                land: relationPrefix + '.address.country'
                             };
                             
                             // Copy values to relation address fields
@@ -274,11 +276,24 @@
                                 console.log(`Field: ${fieldName}, Input:`, input, `Value: ${window.domicileAddress[key]}`);
                                 if (input) {
                                     input.value = window.domicileAddress[key] || '';
-                                    // Trigger validation
-                                    if (window.FormValidator) {
-                                        const event = new Event('blur', { bubbles: true });
-                                        input.dispatchEvent(event);
+                                    
+                                    // Mark field as touched and remove invalid state
+                                    input.dataset.touched = 'true';
+                                    input.classList.remove('is-invalid');
+                                    
+                                    // If field has value, mark as valid
+                                    if (input.value && input.value.trim() !== '') {
+                                        input.classList.add('is-valid');
+                                        // Hide error message
+                                        const feedback = input.parentElement.querySelector('.invalid-feedback');
+                                        if (feedback) {
+                                            feedback.style.display = 'none';
+                                        }
                                     }
+                                    
+                                    // Trigger validation to update state
+                                    const event = new Event('input', { bubbles: true });
+                                    input.dispatchEvent(event);
                                 }
                             });
                             
@@ -296,10 +311,65 @@
                             
                             console.log('addBtn:', addBtn ? 'FOUND' : 'NOT FOUND');
                             console.log('relation2Section:', relation2Section ? 'FOUND' : 'NOT FOUND');
+                            console.log('showRelation2Field value:', showRelation2Field ? showRelation2Field.value : 'NOT FOUND');
                             
                             if (!addBtn || !relation2Section || !addSection) {
                                 console.error('Required elements not found!');
                                 return;
+                            }
+                            
+                            // Check if relation2 should be shown (existing data from server)
+                            const shouldShowRelation2 = showRelation2Field && (showRelation2Field.value === 'true' || showRelation2Field.value === 'True');
+                            
+                            if (shouldShowRelation2) {
+                                console.log('Showing relation2 section - has existing data');
+                                relation2Section.style.display = 'block';
+                                addSection.style.display = 'none';
+                                
+                                // Make fields required
+                                document.getElementById('relation2Type').required = true;
+                                document.getElementById('relation2FirstName').required = true;
+                                document.getElementById('relation2LastName').required = true;
+                                document.getElementById('relation2Phone').required = true;
+                                document.getElementById('relation2Email').required = true;
+                                
+                                // Make address fields required (except box)
+                                relation2Section.querySelectorAll('input[name^="relation2.address"]').forEach(function(field) {
+                                    if (!field.name.includes('.box')) {
+                                        field.required = true;
+                                    }
+                                });
+                                
+                                // Initialize Select2 for relation2
+                                setTimeout(function() {
+                                    if (window.jQuery && window.jQuery.fn.select2) {
+                                        jQuery('#relation2Type').select2({
+                                            theme: 'classic',
+                                            width: '100%',
+                                            placeholder: 'Selecteer een type relatie',
+                                            minimumResultsForSearch: -1,
+                                            allowClear: false,
+                                            dropdownCssClass: 'select2-dropdown-no-scroll'
+                                        });
+                                    }
+                                }, 100);
+                            } else {
+                                console.log('Disabling validation for hidden relation2 section');
+                                // Remove required from all relation2 fields
+                                ['relation2Type', 'relation2FirstName', 'relation2LastName', 'relation2Phone', 'relation2Email'].forEach(function(id) {
+                                    const el = document.getElementById(id);
+                                    if (el) {
+                                        el.required = false;
+                                        // Clear any validation states
+                                        el.classList.remove('is-valid', 'is-invalid');
+                                    }
+                                });
+                                // Remove required from all relation2 address fields (except box which is never required)
+                                relation2Section.querySelectorAll('input[name^="relation2.address"]').forEach(function(field) {
+                                    field.required = false;
+                                    // Clear any validation states
+                                    field.classList.remove('is-valid', 'is-invalid');
+                                });
                             }
                             
                             addBtn.onclick = function(e) {
@@ -310,15 +380,18 @@
                                 addSection.style.display = 'none';
                                 if (showRelation2Field) showRelation2Field.value = 'true';
                                 
-                                // Make relation2 fields required when visible
+                                // Make relation2 fields required when visible (except box)
+                                document.getElementById('relation2Type').required = true;
                                 document.getElementById('relation2FirstName').required = true;
                                 document.getElementById('relation2LastName').required = true;
                                 document.getElementById('relation2Phone').required = true;
                                 document.getElementById('relation2Email').required = true;
                                 
-                                // Make relation2 address fields required
+                                // Make relation2 address fields required (except box which is never required)
                                 relation2Section.querySelectorAll('input[name^="relation2.address"]').forEach(function(field) {
-                                    field.required = true;
+                                    if (!field.name.includes('.box')) {
+                                        field.required = true;
+                                    }
                                 });
                                 
                                 // Initialize Select2 for relation2 after it becomes visible

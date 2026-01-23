@@ -5,7 +5,7 @@
 </head>
 <body>
     <!-- Reusable address fields fragment -->
-    <th:block th:fragment="addressFields(prefix, address)">
+    <th:block th:fragment="addressFields(prefix, address, isRequired)">
         <div class="row">
             <div class="col-md-6">
                 <div class="position-relative mb-3">
@@ -16,7 +16,7 @@
                            th:value="${address?.street}"
                            class="form-control" 
                            placeholder="Straatnaam"
-                           required>
+                           th:required="${isRequired != null ? isRequired : true}">
                     <div class="invalid-feedback"></div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                            th:value="${address?.houseNumber}"
                            class="form-control" 
                            placeholder="Nr."
-                           required>
+                           th:required="${isRequired != null ? isRequired : true}">
                     <div class="invalid-feedback"></div>
                 </div>
             </div>
@@ -42,6 +42,7 @@
                            th:value="${address?.box}"
                            class="form-control" 
                            placeholder="Bus">
+                    <!-- Bus is never required -->
                     <div class="invalid-feedback"></div>
                 </div>
             </div>
@@ -59,7 +60,7 @@
                            placeholder="0000"
                            data-validate="postalCode"
                            maxlength="4"
-                           required>
+                           th:required="${isRequired != null ? isRequired : true}">
                     <div class="invalid-feedback"></div>
                 </div>
             </div>
@@ -72,7 +73,7 @@
                            th:value="${address?.city}"
                            class="form-control" 
                            placeholder="Gemeente"
-                           required>
+                           th:required="${isRequired != null ? isRequired : true}">
                     <div class="invalid-feedback"></div>
                 </div>
             </div>
@@ -86,7 +87,7 @@
                    th:value="${address?.country ?: 'België'}"
                    class="form-control" 
                    placeholder="Land"
-                   required>
+                   th:required="${isRequired != null ? isRequired : true}">
             <div class="invalid-feedback"></div>
         </div>
     </th:block>

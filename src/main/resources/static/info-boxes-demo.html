@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info Boxes Demo - SNH Inschrijvingen</title>
+    <link rel="stylesheet" href="/css/snh-style.css">
+    <style>
+        body {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .demo-section {
+            margin-bottom: 3rem;
+        }
+        .demo-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        .demo-section h3 {
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="font-size: 2rem; margin-bottom: 2rem; color: #c92617;">Info Boxes Demo</h1>
+    
+    <div class="demo-section">
+        <h2>1. Info Box (Default / Blauw)</h2>
+        <p>Gebruik voor algemene informatie, instructies, tips</p>
+        
+        <div class="info-box">
+            <h3 class="info-box__title">Algemene informatie</h3>
+            <p class="info-box__text">
+                Dit is een standaard info box met blauwe accent lijn. Perfect voor algemene informatie 
+                die de gebruiker moet weten maar die niet urgent of gevaarlijk is.
+            </p>
+            <p class="info-box__text">
+                Je kan meerdere paragrafen toevoegen en de spacing wordt automatisch correct.
+            </p>
+        </div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>2. Info Box - Info (Lichtblauw)</h2>
+        <p>Gebruik voor neutrale informatie, uitleg, procedures</p>
+        
+        <div class="info-box info-box--info">
+            <h3 class="info-box__title">Laptopproject informatie</h3>
+            <p class="info-box__text">
+                Ook in schooljaar 2025-2026 gaan we verder met ons laptopproject.
+            </p>
+            
+            <h4 class="info-box__subtitle">Belangrijke details</h4>
+            <p class="info-box__text">De laptops die we via school aanbieden:</p>
+            <ul>
+                <li>zijn zeer betaalbaar, niet noodzakelijk nieuw maar wel gecontroleerd,</li>
+                <li>zijn stevig van constructie,</li>
+                <li>worden bij problemen binnen de paar dagen hersteld.</li>
+            </ul>
+            
+            <div class="info-box__actions">
+                <a href="#" class="btn btn--outline btn--small">Download PDF</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>3. Info Box - Success (Groen)</h2>
+        <p>Gebruik voor bevestigingen, succesmeldingen, positieve acties</p>
+        
+        <div class="info-box info-box--success">
+            <h3 class="info-box__title">✓ Inschrijving succesvol</h3>
+            <p class="info-box__text">
+                Uw inschrijving is succesvol verstuurd. U ontvangt een bevestigingsmail op het opgegeven emailadres.
+            </p>
+            <p class="info-box__text">
+                <strong>Wat gebeurt er nu?</strong> De school zal uw aanvraag beoordelen en u binnen 5 werkdagen contacteren.
+            </p>
+        </div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>4. Info Box - Warning (Geel/Oranje)</h2>
+        <p>Gebruik voor waarschuwingen, juridische teksten, belangrijke disclaimers</p>
+        
+        <div class="info-box info-box--warning">
+            <h3 class="info-box__title">⚠ Privacyverklaring</h3>
+            <p class="info-box__text">
+                De privacywet verbiedt de verwerking van persoonsgegevens die de gezondheid betreffen, 
+                tenzij u de school hiervoor schriftelijk toestemming geeft.
+            </p>
+            <p class="info-box__text">
+                <strong>De school zal deze gegevens enkel verwerken met de bedoeling:</strong>
+            </p>
+            <ul>
+                <li>adequaat te kunnen reageren bij risicosituaties,</li>
+                <li>uw zoon/dochter te begeleiden bij zijn/haar studie.</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>5. Info Box - Danger (Rood)</h2>
+        <p>Gebruik voor errors, kritieke waarschuwingen, verplichte acties</p>
+        
+        <div class="info-box info-box--danger">
+            <h3 class="info-box__title">⚠ Belangrijke informatie</h3>
+            <p class="info-box__text">
+                U moet eerst uw emailadres verifiëren voordat u verder kan gaan met de inschrijving.
+                Check uw inbox en klik op de verificatielink.
+            </p>
+            <p class="info-box__text">
+                <strong>Let op:</strong> De link is slechts 24 uur geldig.
+            </p>
+        </div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>6. Info Box - Primary (SNH Rood)</h2>
+        <p>Gebruik voor belangrijke school-specifieke info, huisstijl communicatie</p>
+        
+        <div class="info-box info-box--primary">
+            <h3 class="info-box__title">SPES Nostra Heule</h3>
+            <p class="info-box__text">
+                Welkom bij onze school! Wij bieden kwalitatief onderwijs in een warme en professionele omgeving.
+            </p>
+            <p class="info-box__text">
+                <strong>Onze waarden:</strong> Respect, Verantwoordelijkheid, en Excellentie.
+            </p>
+        </div>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Gebruik in Templates</h2>
+        
+        <h3>Basis syntax:</h3>
+        <pre style="background: #f8f9fa; padding: 1rem; border-radius: 4px; overflow-x: auto;"><code>&lt;div class="info-box"&gt;
+    &lt;h3 class="info-box__title"&gt;Titel&lt;/h3&gt;
+    &lt;p class="info-box__text"&gt;Tekst&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        
+        <h3>Met variant:</h3>
+        <pre style="background: #f8f9fa; padding: 1rem; border-radius: 4px; overflow-x: auto;"><code>&lt;div class="info-box info-box--info"&gt;
+    &lt;h3 class="info-box__title"&gt;Titel&lt;/h3&gt;
+    &lt;p class="info-box__text"&gt;Tekst&lt;/p&gt;
+    &lt;ul&gt;
+        &lt;li&gt;Punt 1&lt;/li&gt;
+        &lt;li&gt;Punt 2&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+        
+        <h3>Met subtitle en actions:</h3>
+        <pre style="background: #f8f9fa; padding: 1rem; border-radius: 4px; overflow-x: auto;"><code>&lt;div class="info-box info-box--info"&gt;
+    &lt;h3 class="info-box__title"&gt;Hoofdtitel&lt;/h3&gt;
+    &lt;p class="info-box__text"&gt;Intro tekst&lt;/p&gt;
+    
+    &lt;h4 class="info-box__subtitle"&gt;Subtitel&lt;/h4&gt;
+    &lt;p class="info-box__text"&gt;Meer tekst&lt;/p&gt;
+    
+    &lt;div class="info-box__actions"&gt;
+        &lt;a href="#" class="btn btn--outline"&gt;Actie&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    </div>
+    
+    <div class="demo-section">
+        <h2>Beschikbare Varianten</h2>
+        <ul style="line-height: 2;">
+            <li><code>info-box</code> - Default (blauw)</li>
+            <li><code>info-box--info</code> - Info (lichtblauw) 🔵</li>
+            <li><code>info-box--success</code> - Success (groen) 🟢</li>
+            <li><code>info-box--warning</code> - Warning (geel) 🟡</li>
+            <li><code>info-box--danger</code> - Danger (rood) 🔴</li>
+            <li><code>info-box--primary</code> - Primary (SNH rood) ⭐</li>
+        </ul>
+    </div>
+</body>
+</html>
