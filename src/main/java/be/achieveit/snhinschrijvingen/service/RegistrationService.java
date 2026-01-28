@@ -37,7 +37,7 @@ public class RegistrationService {
         String normalizedEmail = email.toLowerCase().trim();
         String emailHash = hashEmail(normalizedEmail);
         
-        // Check if there's already an unverified registration for this email
+        // Check if there's already a registration (any status) with UNVERIFIED email for this email hash
         Optional<Registration> existingUnverified = registrationRepository
                 .findFirstByEmailHashAndEmailStatusOrderByCreatedAtDesc(emailHash, EmailStatus.UNVERIFIED);
         
@@ -46,6 +46,29 @@ public class RegistrationService {
             logger.info("Found existing unverified registration with ID: {} for email: {}", 
                     registration.getId(), normalizedEmail);
             return registration;
+        }
+        
+        // Check if there are ANY registrations (verified or completed) for this email hash
+        // If yes, we should NOT create a new one, but find a pending one OR create without unique email_hash
+        List<Registration> existingRegistrations = registrationRepository.findByEmail(normalizedEmail);
+        
+        if (!existingRegistrations.isEmpty()) {
+            // Email was used before, find if there's a pending registration
+            Optional<Registration> pendingReg = existingRegistrations.stream()
+                    .filter(r -> r.getStatus() == RegistrationStatus.PENDING)
+                    .findFirst();
+            
+            if (pendingReg.isPresent()) {
+                logger.info("Found existing pending registration with ID: {} for email: {}", 
+                        pendingReg.get().getId(), normalizedEmail);
+                return pendingReg.get();
+            }
+            
+            // All registrations are completed, create new one
+            // But we need to handle the unique email_hash constraint
+            // Solution: Delete the email_hash from old COMPLETED registrations first
+            // OR: Change database schema to allow multiple registrations per email
+            // For now: we'll create a new registration (email_hash will need to be nullable or removed from unique constraint)
         }
         
         // Create new registration
@@ -146,6 +169,27 @@ public class RegistrationService {
         } catch (NoSuchAlgorithmException e) {
             logger.error("Error hashing email", e);
             throw new RuntimeException("Error hashing email", e);
+        }
+    }
+    
+    /**
+     * Delete a registration (only PENDING registrations can be deleted)
+     */
+    @Transactional
+    public void deleteRegistration(UUID registrationId) {
+        Optional<Registration> registrationOpt = registrationRepository.findById(registrationId);
+        if (registrationOpt.isPresent()) {
+            Registration registration = registrationOpt.get();
+            if (registration.getStatus() == RegistrationStatus.PENDING) {
+                registrationRepository.delete(registration);
+                logger.info("Deleted pending registration ID: {}", registrationId);
+            } else {
+                logger.warn("Attempted to delete non-pending registration ID: {}, status: {}", 
+                        registrationId, registration.getStatus());
+                throw new IllegalStateException("Only pending registrations can be deleted");
+            }
+        } else {
+            logger.warn("Attempted to delete non-existent registration ID: {}", registrationId);
         }
     }
 }

@@ -106,9 +106,11 @@
                                 <span class="summary-item-label">Studierichting:</span>
                                 <span class="summary-item-value" th:text="${selectedProgram != null ? selectedProgram.name : '-'}"></span>
                             </div>
-                            <div class="summary-item" th:if="${registration.studyProgramExtraInfo}">
+                            <div class="summary-item">
                                 <span class="summary-item-label">Extra informatie:</span>
-                                <span class="summary-item-value" th:text="${registration.studyProgramExtraInfo}"></span>
+                                <span class="summary-item-value" 
+                                      th:classappend="${registration.studyProgramExtraInfo == null or #strings.isEmpty(registration.studyProgramExtraInfo) ? 'summary-item-value--empty' : ''}"
+                                      th:text="${registration.studyProgramExtraInfo ?: 'Niet opgegeven'}"></span>
                             </div>
                         </div>
                     </div>
@@ -135,7 +137,6 @@
                             <div class="summary-item">
                                 <span class="summary-item-label">Toestemming contact:</span>
                                 <span class="summary-item-value" 
-                                      th:classappend="${registration.toestemmingVorigeSchool == 'J' ? 'summary-item-value--success' : ''}"
                                       th:text="${registration.toestemmingVorigeSchool == 'J' ? 'Ja' : 'Nee'}"></span>
                             </div>
                         </div>
@@ -191,9 +192,11 @@
                                 <span class="summary-item-label">Naam huisarts:</span>
                                 <span class="summary-item-value" th:text="${registration.doctorName ?: '-'}"></span>
                             </div>
-                            <div class="summary-item" th:if="${registration.doctorPhone}">
+                            <div class="summary-item">
                                 <span class="summary-item-label">Telefoon:</span>
-                                <span class="summary-item-value" th:text="${registration.doctorPhone}"></span>
+                                <span class="summary-item-value" 
+                                      th:classappend="${registration.doctorPhone == null or #strings.isEmpty(registration.doctorPhone) ? 'summary-item-value--empty' : ''}"
+                                      th:text="${registration.doctorPhone ?: 'Niet opgegeven'}"></span>
                             </div>
                         </div>
                     </div>
@@ -205,14 +208,15 @@
                             <h3 class="summary-card__title">Zorgvraag</h3>
                         </div>
                         <div class="summary-card__body">
-                            <div class="summary-item" th:if="${registration.classCompositionWishes}">
+                            <div class="summary-item">
                                 <span class="summary-item-label">Wensen klassamenstelling:</span>
-                                <span class="summary-item-value" th:text="${registration.classCompositionWishes}"></span>
+                                <span class="summary-item-value" 
+                                      th:classappend="${registration.classCompositionWishes == null or #strings.isEmpty(registration.classCompositionWishes) ? 'summary-item-value--empty' : ''}"
+                                      th:text="${registration.classCompositionWishes ?: 'Niet opgegeven'}"></span>
                             </div>
                             <div class="summary-item">
                                 <span class="summary-item-label">Bijzondere zorgvraag:</span>
                                 <span class="summary-item-value" 
-                                      th:classappend="${registration.hasCareNeeds == 'J' ? 'summary-item-value--success' : ''}"
                                       th:text="${registration.hasCareNeeds == 'J' ? 'Ja' : 'Nee'}"></span>
                             </div>
                             
@@ -279,25 +283,21 @@
                             <div class="summary-item">
                                 <span class="summary-item-label">Foto's/video's:</span>
                                 <span class="summary-item-value"
-                                      th:classappend="${registration.photoVideoConsent == 'J' ? 'summary-item-value--success' : 'summary-item-value--danger'}"
                                       th:text="${registration.photoVideoConsent == 'J' ? 'Ja' : 'Nee'}"></span>
                             </div>
                             <div class="summary-item">
                                 <span class="summary-item-label">Studieresultaten delen:</span>
                                 <span class="summary-item-value"
-                                      th:classappend="${registration.studyResultsConsent == 'J' ? 'summary-item-value--success' : 'summary-item-value--danger'}"
                                       th:text="${registration.studyResultsConsent == 'J' ? 'Ja' : 'Nee'}"></span>
                             </div>
                             <div class="summary-item">
                                 <span class="summary-item-label">Oud-leerling data bewaren:</span>
                                 <span class="summary-item-value"
-                                      th:classappend="${registration.alumniDataConsent == 'J' ? 'summary-item-value--success' : 'summary-item-value--danger'}"
                                       th:text="${registration.alumniDataConsent == 'J' ? 'Ja' : 'Nee'}"></span>
                             </div>
                             <div class="summary-item">
                                 <span class="summary-item-label">Gegevens hoger onderwijs:</span>
                                 <span class="summary-item-value"
-                                      th:classappend="${registration.higherEducationConsent == 'J' ? 'summary-item-value--success' : 'summary-item-value--danger'}"
                                       th:text="${registration.higherEducationConsent == 'J' ? 'Ja' : 'Nee'}"></span>
                             </div>
                         </div>
@@ -399,19 +399,22 @@
                     </div>
                     
                     <!-- Form Actions -->
-                    <div class="form-nav-buttons">
-                        <a th:href="@{/inschrijving/schoolrekening/__${registrationId}__}" class="btn btn--secondary">
-                            <svg class="btn__icon btn__icon--left" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            Vorige
-                        </a>
-                        <button type="submit" class="btn btn--primary">
-                            Inschrijving voltooien
-                            <svg class="btn__icon btn__icon--right" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                <path d="M12 8l-4 4-4-4M8 12V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
+                    <div class="form-actions">
+                        <div class="btn-group">
+                            <a th:href="@{/inschrijving/schoolrekening/__${registrationId}__}" class="btn btn--outline">
+                                <svg class="btn__icon btn__icon--left" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Vorige
+                            </a>
+                            <button type="submit" class="btn btn--primary">
+                                Inschrijving voltooien
+                                <svg class="btn__icon btn__icon--right" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M2 8l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

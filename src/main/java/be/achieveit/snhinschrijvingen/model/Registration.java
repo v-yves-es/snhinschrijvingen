@@ -16,7 +16,7 @@ public class Registration {
     @Column(nullable = false)
     private String email;
 
-    @Column(name = "email_hash", nullable = false, unique = true)
+    @Column(name = "email_hash", nullable = false)
     private String emailHash;
 
     @Column(name = "school_year", nullable = false)

@@ -24,4 +24,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
     boolean existsByEmailHash(String emailHash);
     
     Optional<Registration> findFirstByEmailHashAndEmailStatusOrderByCreatedAtDesc(String emailHash, EmailStatus emailStatus);
+    
+    List<Registration> findByEmail(String email);
 }

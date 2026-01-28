@@ -106,6 +106,7 @@ public class SubmissionController {
         registration.setAdditionalInfoRequest(submissionForm.getAdditionalInfoRequest());
         registration.setSubmissionDate(LocalDateTime.now());
         registration.setCurrentStep("SUBMITTED");
+        registration.setStatus(be.achieveit.snhinschrijvingen.model.RegistrationStatus.COMPLETED);
         
         registrationService.updateRegistration(registration);
         
@@ -119,6 +120,12 @@ public class SubmissionController {
                 .orElseThrow(() -> new RuntimeException("Registration not found"));
         
         model.addAttribute("registration", registration);
+        
+        // Add study program name
+        if (registration.getSelectedStudyProgramId() != null) {
+            Optional<StudyProgram> studyProgram = studyProgramRepository.findById(registration.getSelectedStudyProgramId());
+            studyProgram.ifPresent(program -> model.addAttribute("studyProgramName", program.getName()));
+        }
         
         return "confirmation";
     }

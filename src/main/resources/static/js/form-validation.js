@@ -57,6 +57,19 @@
         let isValid = true;
         let errorMessage = '';
 
+        // Special handling for checkboxes
+        if (field.type === 'checkbox') {
+            if (field.hasAttribute('required')) {
+                if (!field.checked) {
+                    isValid = false;
+                    errorMessage = 'Dit veld is verplicht';
+                }
+            }
+            // Apply visual feedback
+            updateFieldValidation(field, isValid, errorMessage, showValidState);
+            return isValid;
+        }
+
         // Special handling for radio buttons
         if (field.type === 'radio') {
             if (field.hasAttribute('required')) {
@@ -187,6 +200,15 @@
                     }
                 }
                 return; // Skip further checks for radio (handled above)
+            }
+
+            // For checkboxes, check if required ones are checked
+            if (field.type === 'checkbox') {
+                if (field.hasAttribute('required') && !field.checked) {
+                    allValid = false;
+                    return;
+                }
+                return; // Skip further checks for checkbox
             }
 
             // Check if field is required and empty
