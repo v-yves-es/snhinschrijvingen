@@ -46,7 +46,7 @@ public class StudyProgramController {
         
         model.addAttribute("registrationId", id.toString());
         model.addAttribute("availableYears", studyProgramService.getAvailableYears());
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(2, List.of(1)));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(2, List.of(1), id.toString()));
         
         // Pre-fill selected year and program if exists
         if (registration.getSelectedStudyYear() != null) {
@@ -134,6 +134,9 @@ public class StudyProgramController {
         registration.setSelectedStudyProgramId(studyProgramId);
         registration.setSelectedStudyYear(studyYear);
         registration.setStudyProgramExtraInfo(extraInfo);
+        
+        // Update current step
+        registration.setCurrentStep("PREVIOUS_SCHOOL");
         
         registrationService.updateRegistration(registration);
         

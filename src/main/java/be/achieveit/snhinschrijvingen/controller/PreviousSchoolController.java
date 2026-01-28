@@ -54,7 +54,7 @@ public class PreviousSchoolController {
         
         model.addAttribute("previousSchoolForm", form);
         model.addAttribute("registrationId", id);
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(3, List.of(1, 2)));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(3, List.of(1, 2), id.toString()));
         
         // Add school options grouped by category
         model.addAttribute("schoolsByCategory", previousSchoolService.getSchoolsByCategory());
@@ -83,6 +83,9 @@ public class PreviousSchoolController {
         registration.setVorigeSchoolJaar(form.getVorigeSchoolJaar());
         registration.setRichtingVorigeSchool(form.getRichtingVorigeSchool());
         registration.setToestemmingVorigeSchool(form.getToestemmingVorigeSchool());
+        
+        // Update current step
+        registration.setCurrentStep("RELATIONS");
         
         registrationService.updateRegistration(registration);
         

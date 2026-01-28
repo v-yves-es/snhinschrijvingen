@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -85,7 +86,7 @@ public class SubmissionController {
         model.addAttribute("previousSchoolYearText", previousSchoolYearText);
         model.addAttribute("relationService", relationService);
         model.addAttribute("genderService", genderService);
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(10));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(10, List.of(1, 2, 3, 4, 5, 6, 7, 8, 9), id.toString()));
         
         return "submission";
     }

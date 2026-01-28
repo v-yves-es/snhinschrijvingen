@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -38,7 +39,7 @@ public class PrivacyController {
         
         model.addAttribute("privacyForm", form);
         model.addAttribute("registrationId", id);
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(7));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(7, List.of(1, 2, 3, 4, 5, 6), id.toString()));
         
         return "privacy";
     }
@@ -57,7 +58,9 @@ public class PrivacyController {
         registration.setStudyResultsConsent(privacyForm.getStudyResultsConsent());
         registration.setAlumniDataConsent(privacyForm.getAlumniDataConsent());
         registration.setHigherEducationConsent(privacyForm.getHigherEducationConsent());
-        registration.setCurrentStep("PRIVACY");
+        
+        // Update current step to next step
+        registration.setCurrentStep("LAPTOP");
         
         registrationService.updateRegistration(registration);
         

@@ -34,9 +34,24 @@ public class RegistrationService {
 
     @Transactional
     public Registration createRegistration(String email) {
+        String normalizedEmail = email.toLowerCase().trim();
+        String emailHash = hashEmail(normalizedEmail);
+        
+        // Check if there's already an unverified registration for this email
+        Optional<Registration> existingUnverified = registrationRepository
+                .findFirstByEmailHashAndEmailStatusOrderByCreatedAtDesc(emailHash, EmailStatus.UNVERIFIED);
+        
+        if (existingUnverified.isPresent()) {
+            Registration registration = existingUnverified.get();
+            logger.info("Found existing unverified registration with ID: {} for email: {}", 
+                    registration.getId(), normalizedEmail);
+            return registration;
+        }
+        
+        // Create new registration
         Registration registration = new Registration();
-        registration.setEmail(email.toLowerCase().trim());
-        registration.setEmailHash(hashEmail(email));
+        registration.setEmail(normalizedEmail);
+        registration.setEmailHash(emailHash);
         
         // Get registration school year (next year after current)
         SchoolYear registrationSchoolYear = schoolYearService.getRegistrationSchoolYear();
@@ -48,7 +63,7 @@ public class RegistrationService {
 
         Registration saved = registrationRepository.save(registration);
         logger.info("Created new registration with ID: {} for email: {} for school year: {}", 
-                saved.getId(), email, registrationSchoolYear.getId());
+                saved.getId(), normalizedEmail, registrationSchoolYear.getId());
 
         return saved;
     }
@@ -88,6 +103,17 @@ public class RegistrationService {
     @Transactional
     public Registration updateRegistration(Registration registration) {
         return registrationRepository.save(registration);
+    }
+    
+    @Transactional
+    public void updateCurrentStep(UUID registrationId, String stepName) {
+        Optional<Registration> registrationOpt = registrationRepository.findById(registrationId);
+        if (registrationOpt.isPresent()) {
+            Registration registration = registrationOpt.get();
+            registration.setCurrentStep(stepName);
+            registrationRepository.save(registration);
+            logger.info("Updated current step for registration ID: {} to {}", registrationId, stepName);
+        }
     }
 
     @Transactional

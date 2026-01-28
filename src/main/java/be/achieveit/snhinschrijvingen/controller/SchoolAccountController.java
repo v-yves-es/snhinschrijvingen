@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -41,7 +42,7 @@ public class SchoolAccountController {
         
         model.addAttribute("schoolAccountForm", form);
         model.addAttribute("registrationId", id);
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(9));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(9, List.of(1, 2, 3, 4, 5, 6, 7, 8), id.toString()));
         
         return "school-account";
     }
@@ -59,7 +60,9 @@ public class SchoolAccountController {
         registration.setBankAccountIban(schoolAccountForm.getBankAccountIban());
         registration.setBankAccountHolder(schoolAccountForm.getBankAccountHolder());
         registration.setFinancialSupportRequest(schoolAccountForm.getFinancialSupportRequest());
-        registration.setCurrentStep("SCHOOL_ACCOUNT");
+        
+        // Update current step to next step
+        registration.setCurrentStep("SUBMISSION");
         
         registrationService.updateRegistration(registration);
         

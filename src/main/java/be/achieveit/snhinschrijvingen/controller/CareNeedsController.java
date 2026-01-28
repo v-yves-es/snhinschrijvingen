@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -46,7 +47,7 @@ public class CareNeedsController {
         
         model.addAttribute("careNeedsForm", form);
         model.addAttribute("registrationId", id);
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(6));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(6, List.of(1, 2, 3, 4, 5), id.toString()));
         
         return "care-needs";
     }
@@ -73,7 +74,9 @@ public class CareNeedsController {
         registration.setSocialEmotionalInfo(careNeedsForm.getSocialEmotionalInfo());
         registration.setLearningDifficulties(careNeedsForm.getLearningDifficulties());
         registration.setExternalSupport(careNeedsForm.getExternalSupport());
-        registration.setCurrentStep("CARE_NEEDS");
+        
+        // Update current step to next step
+        registration.setCurrentStep("PRIVACY");
         
         registrationService.updateRegistration(registration);
         

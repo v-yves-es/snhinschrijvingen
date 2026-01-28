@@ -1,5 +1,6 @@
 package be.achieveit.snhinschrijvingen.repository;
 
+import be.achieveit.snhinschrijvingen.model.EmailStatus;
 import be.achieveit.snhinschrijvingen.model.Registration;
 import be.achieveit.snhinschrijvingen.model.RegistrationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,6 @@ public interface RegistrationRepository extends JpaRepository<Registration, UUID
     Optional<Registration> findFirstByEmailAndStatusOrderByCreatedAtDesc(String email, RegistrationStatus status);
 
     boolean existsByEmailHash(String emailHash);
+    
+    Optional<Registration> findFirstByEmailHashAndEmailStatusOrderByCreatedAtDesc(String emailHash, EmailStatus emailStatus);
 }

@@ -46,13 +46,8 @@ public class SchoolYearService {
             String nextSchoolYearId = (startYear + 1) + "-" + (startYear + 2);
             
             Optional<SchoolYear> nextOpt = schoolYearRepository.findById(nextSchoolYearId);
-            if (nextOpt.isPresent()) {
-                logger.info("Registration school year: {}", nextSchoolYearId);
-                return nextOpt.get();
-            } else {
-                // If next year doesn't exist, create it
-                return createNextSchoolYear(current);
-            }
+            // If next year doesn't exist, create it
+            return nextOpt.orElseGet(() -> createNextSchoolYear(current));
         } else {
             // If no current school year, create default based on current date
             logger.warn("No current school year found, creating default");

@@ -88,7 +88,7 @@ public class RelationsController {
         model.addAttribute("relationsForm", form);
         model.addAttribute("registrationId", registrationId);
         model.addAttribute("registration", registration);
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(4));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(4, List.of(1, 2, 3), registrationId.toString()));
         
         // Add relation type options
         model.addAttribute("relationTypes", relationService.getAllRelationTypeOptions());
@@ -111,7 +111,7 @@ public class RelationsController {
             model.addAttribute("relationsForm", relationsForm);
             model.addAttribute("registrationId", registrationId);
             model.addAttribute("registration", registration);
-            model.addAttribute("wizardSteps", wizardService.getWizardSteps(4));
+            model.addAttribute("wizardSteps", wizardService.getWizardSteps(4, List.of(1, 2, 3), registrationId.toString()));
             model.addAttribute("relationTypes", relationService.getAllRelationTypeOptions());
             return "relations";
         }
@@ -172,7 +172,7 @@ public class RelationsController {
         }
         
         // Update current step
-        registration.setCurrentStep("RELATIONS");
+        registration.setCurrentStep("DOCTOR");
         registrationService.updateRegistration(registration);
         
         // Redirect to next step (Doctor)

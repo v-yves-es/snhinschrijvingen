@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -36,7 +37,7 @@ public class DoctorController {
         
         model.addAttribute("doctorForm", form);
         model.addAttribute("registrationId", registrationId);
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(5)); // Step 5 = Doctor
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(5, List.of(1, 2, 3, 4), registrationId.toString()));
         
         return "doctor";
     }
@@ -53,7 +54,9 @@ public class DoctorController {
         // Update registration with doctor information
         registration.setDoctorName(doctorForm.getDoctorName());
         registration.setDoctorPhone(doctorForm.getDoctorPhone());
-        registration.setCurrentStep("DOCTOR");
+        
+        // Update current step to next step
+        registration.setCurrentStep("CARE_NEEDS");
         
         registrationService.updateRegistration(registration);
         

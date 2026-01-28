@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -35,7 +36,7 @@ public class LaptopController {
         
         model.addAttribute("laptopForm", form);
         model.addAttribute("registrationId", id);
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(8));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(8, List.of(1, 2, 3, 4, 5, 6, 7), id.toString()));
         
         return "laptop";
     }
@@ -51,7 +52,9 @@ public class LaptopController {
         
         // Update registration with laptop information
         registration.setLaptopBrand(laptopForm.getLaptopBrand());
-        registration.setCurrentStep("LAPTOP");
+        
+        // Update current step to next step
+        registration.setCurrentStep("SCHOOL_ACCOUNT");
         
         registrationService.updateRegistration(registration);
         

@@ -56,7 +56,7 @@ public class StudentInfoController {
         Registration registration = registrationOpt.get();
 
         // Wizard steps (1 active, none completed yet)
-        model.addAttribute("wizardSteps", wizardService.getWizardSteps(1, List.of()));
+        model.addAttribute("wizardSteps", wizardService.getWizardSteps(1, List.of(), id.toString()));
 
         // Add registration to model
         model.addAttribute("registration", registration);
@@ -149,6 +149,9 @@ public class StudentInfoController {
         registration.setStudentGeboortedatum(studentForm.getGeboortedatum());
         registration.setStudentGeboorteplaats(studentForm.getGeboorteplaats());
         registration.setStudentNationaliteit(studentForm.getNationaliteit());
+        
+        // Update current step
+        registration.setCurrentStep("STUDY_PROGRAM");
 
         registrationService.updateRegistration(registration);
 
