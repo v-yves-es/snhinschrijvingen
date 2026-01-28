@@ -7,6 +7,9 @@ import be.achieveit.snhinschrijvingen.model.StudyProgram;
 import be.achieveit.snhinschrijvingen.repository.NationalityRepository;
 import be.achieveit.snhinschrijvingen.repository.StudyProgramRepository;
 import be.achieveit.snhinschrijvingen.service.*;
+import jakarta.mail.MessagingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,8 @@ import java.util.UUID;
 @RequestMapping("/inschrijving")
 public class SubmissionController {
     
+    private static final Logger logger = LoggerFactory.getLogger(SubmissionController.class);
+    
     private final RegistrationService registrationService;
     private final WizardService wizardService;
     private final StudyProgramRepository studyProgramRepository;
@@ -27,6 +32,7 @@ public class SubmissionController {
     private final PreviousSchoolService previousSchoolService;
     private final RelationService relationService;
     private final GenderService genderService;
+    private final EmailService emailService;
     
     public SubmissionController(
             RegistrationService registrationService, 
@@ -35,7 +41,8 @@ public class SubmissionController {
             NationalityRepository nationalityRepository,
             PreviousSchoolService previousSchoolService,
             RelationService relationService,
-            GenderService genderService) {
+            GenderService genderService,
+            EmailService emailService) {
         this.registrationService = registrationService;
         this.wizardService = wizardService;
         this.studyProgramRepository = studyProgramRepository;
@@ -43,6 +50,7 @@ public class SubmissionController {
         this.previousSchoolService = previousSchoolService;
         this.relationService = relationService;
         this.genderService = genderService;
+        this.emailService = emailService;
     }
     
     @GetMapping("/verzenden/{id}")
@@ -109,6 +117,23 @@ public class SubmissionController {
         registration.setStatus(be.achieveit.snhinschrijvingen.model.RegistrationStatus.COMPLETED);
         
         registrationService.updateRegistration(registration);
+        
+        // Send confirmation email
+        String studentName = registration.getStudentFirstname() + " " + registration.getStudentLastname();
+        String registrationNumber = "SNH-" + registration.getSchoolYear() + "-" + 
+                                    String.format("%06d", registration.getId().toString().hashCode() & 0xFFFFFF);
+        
+        try {
+            emailService.sendRegistrationConfirmationEmail(
+                registration.getEmail(),
+                studentName,
+                registrationNumber
+            );
+            logger.info("Bevestigingsmail verstuurd naar {} voor inschrijving {}", registration.getEmail(), registrationNumber);
+        } catch (MessagingException e) {
+            logger.error("Kon bevestigingsmail niet versturen naar {}: {}", registration.getEmail(), e.getMessage());
+            // Continue anyway - registration is saved, email is not critical at this point
+        }
         
         // Redirect to confirmation page
         return "redirect:/inschrijving/bevestiging/" + id;

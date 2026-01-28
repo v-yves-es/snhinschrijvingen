@@ -1,6 +1,7 @@
 package be.achieveit.snhinschrijvingen.service;
 
 import be.achieveit.snhinschrijvingen.model.Registration;
+import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,74 +16,46 @@ public class EmailVerificationService {
     private String baseUrl;
 
     private final RegistrationService registrationService;
+    private final EmailService emailService;
 
-    public EmailVerificationService(final RegistrationService registrationService) {
+    public EmailVerificationService(final RegistrationService registrationService, final EmailService emailService) {
         this.registrationService = registrationService;
+        this.emailService = emailService;
     }
 
     /**
-     * Send verification email (currently prints to console)
+     * Send verification email via EmailService
      * @param registration The registration to send verification email for
      */
     public void sendVerificationEmail(Registration registration) {
         String verificationLink = buildVerificationLink(registration);
 
-        logger.info("=".repeat(80));
-        logger.info("EMAIL VERIFICATION LINK FOR: {}", registration.getEmail());
-        logger.info("Registration ID: {}", registration.getId());
-        logger.info("Link: {}", verificationLink);
-        logger.info("=".repeat(80));
-
-        // TODO: Implement actual email sending
-        // For now, we just log the link to console
-        logEmailTemplate(registration.getEmail(), verificationLink);
+        try {
+            emailService.sendVerificationEmail(
+                registration.getEmail(), 
+                verificationLink
+            );
+            
+            logger.info("Verificatie email succesvol verstuurd naar: {}", registration.getEmail());
+        } catch (MessagingException e) {
+            logger.error("Fout bij versturen verificatie email naar {}: {}", registration.getEmail(), e.getMessage());
+            
+            // Fallback: Log naar console voor development/debugging
+            logger.warn("=".repeat(80));
+            logger.warn("EMAIL NIET VERSTUURD - VERIFICATION LINK (Fallback):");
+            logger.warn("Email: {}", registration.getEmail());
+            logger.warn("Link: {}", verificationLink);
+            logger.warn("=".repeat(80));
+        }
     }
 
     /**
-     * Build verification link with registration ID and email hash
+     * Build verification link in format: {baseUrl}/inschrijving/verify/{id}/{emailHash}
      */
     private String buildVerificationLink(Registration registration) {
         return String.format("%s/inschrijving/verify/%s/%s",
                 baseUrl,
                 registration.getId(),
                 registration.getEmailHash());
-    }
-
-    /**
-     * Log email template to console
-     */
-    private void logEmailTemplate(String email, String verificationLink) {
-        String emailBody = String.format("""
-                
-                ╔════════════════════════════════════════════════════════════════╗
-                ║                    EMAIL VERIFICATION                          ║
-                ╚════════════════════════════════════════════════════════════════╝
-                
-                To: %s
-                Subject: Verifieer uw emailadres - SPES Nostra Heule
-                
-                Beste ouder/voogd,
-                
-                Bedankt voor uw interesse om uw kind in te schrijven bij 
-                SPES Nostra Heule.
-                
-                Klik op onderstaande link om uw emailadres te verifiëren en 
-                verder te gaan met de inschrijving:
-                
-                %s
-                
-                Deze link is uniek en wordt gebruikt om:
-                • Uw emailadres te verifiëren
-                • Verder te gaan met een bestaande inschrijving
-                • Nieuwe inschrijvingen te starten
-                
-                Met vriendelijke groeten,
-                SPES Nostra Heule
-                
-                ════════════════════════════════════════════════════════════════
-                
-                """, email, verificationLink);
-
-        logger.info(emailBody);
     }
 }

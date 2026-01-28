@@ -21,6 +21,7 @@ Deze folder bevat alle technische documentatie voor het SNH Inschrijvingen proje
 - **[THYMELEAF_STRUCTURE.md](THYMELEAF_STRUCTURE.md)** - Template structuur en patterns
 - **[VALIDATION.md](VALIDATION.md)** - Complete validatie systeem documentatie
 - **[FONT_AWESOME.md](FONT_AWESOME.md)** - Icon library usage guide
+- **[MAILTRAP_SETUP.md](MAILTRAP_SETUP.md)** - Email testing setup voor demo's
 
 ---
 
@@ -154,6 +155,23 @@ Beschikbare studierichtingen data
 
 #### [ALERTS.md](ALERTS.md)
 Alert systeem documentatie
+
+#### [MAILTRAP_SETUP.md](MAILTRAP_SETUP.md) ⭐ NIEUW
+**Email testing voor demo's en development:**
+- Mailtrap account setup (5 minuten)
+- SMTP configuratie met Spring Mail
+- Email templates (HTML + responsive)
+- Demo scenario's en scripts
+- Troubleshooting guide
+- Quick reference card voor demo dag
+- Van development naar productie
+
+**Geïmplementeerd:** 28 januari 2026  
+**Ready for demo:** ✅ Ja!
+
+**Email Types:**
+1. Email verificatie (bij start inschrijving)
+2. Inschrijving bevestiging (na voltooien)
 
 ---
 
