@@ -1,10 +1,10 @@
 # SNH Inschrijvingen - Applicatie Status
 
 **Versie:** 0.0.1-SNAPSHOT  
-**Laatst bijgewerkt:** 23 januari 2026 14:54  
+**Laatst bijgewerkt:** 28 januari 2026 19:24  
 **Spring Boot:** 3.5.9  
 **Java:** 25  
-**Status:** ✅ Fase 2 VOLTOOID - Alle 10 wizard stappen + UI/UX verbeteringen + Bugfixes + Data Centralisatie  
+**Status:** ✅ Fase 2 VOLTOOID - Alle 10 wizard stappen + UI/UX verbeteringen + Bugfixes + Data Centralisatie + Security & Email Fixes  
 
 ---
 
@@ -35,9 +35,18 @@ Online inschrijvingssysteem voor SPES Nostra Heule, waarmee ouders/voogden hun k
 ### Status
 ✅ **Fase 1 voltooid**: Email verificatie systeem en basis wizard structuur  
 ✅ **Fase 2 voltooid**: Volledige wizard implementatie (10 stappen) + Critical bugfixes + UI/UX verbeteringen + Data Centralisatie  
+✅ **Security & Email Updates**: Session-based security, registration management, Font Awesome integratie  
 🚧 **Fase 3 voorbereid**: Email integratie & server-side validatie
 
-### Recente Updates (23 januari 2026)
+### Recente Updates (28 januari 2026)
+- ✅ **Security Fix**: Email niet meer in URL (session-based)
+- ✅ **Registration Management**: Verwijderen van lopende inschrijvingen met confirmation
+- ✅ **Registrations Overview**: Professionele tabel met status badges en acties
+- ✅ **PDF Placeholder**: Font Awesome PDF icoon voor voltooide inschrijvingen
+- ✅ **Font Awesome 6.5.1**: Geïntegreerd via Cloudflare CDN
+- ✅ **Email Flow**: Verified emails opgeslagen in sessie voor veilige navigatie
+- ✅ **Delete Functionality**: Service method met PENDING status check en logging
+- ✅ **Confirmation Page**: Professioneel met summary cards en "Schrijf nog een leerling in" button
 - ✅ Multi-line tekstgebieden met newline behoud in submission
 - ✅ Care needs details volledig zichtbaar in submission overzicht
 - ✅ Error pagina's (404, 500) gemoderniseerd met info-box systeem
@@ -71,11 +80,12 @@ Online inschrijvingssysteem voor SPES Nostra Heule, waarmee ouders/voogden hun k
 ### Frontend
 - **Template Engine:** Thymeleaf
 - **CSS:** Custom (SNH branding)
-- **JavaScript:** Vanilla JS (form validation, alerts)
+- **JavaScript:** Vanilla JS (form validation, alerts, event listeners)
 - **Select2:** 4.1.0-rc.0 (advanced dropdowns)
 - **Flatpickr:** Datepicker library (Nederlands)
+- **Font Awesome:** 6.5.1 (icon library via Cloudflare CDN)
 - **Fonts:** Montserrat, Cervo (custom)
-- **Icons:** SVG inline
+- **Icons:** Font Awesome + SVG inline
 
 ### Dependencies (Key)
 ```xml
@@ -2051,12 +2061,13 @@ th:replace="~{fragments/navigation :: navigation(@{/inschrijving/vorige/__${regi
 - Consistent in student-info.html én submission.html
 
 ### 🚧 In Progress
-- Geen - Fase 2 is volledig afgerond inclusief bugfixes en data centralisatie!
+- Geen - Fase 2 is volledig afgerond inclusief bugfixes, data centralisatie en security updates!
 
 ### 📋 To Do (Fase 3)
+- PDF generatie implementatie (placeholder icoon is al aanwezig)
 - Email integratie (echte verzending)
 - Server-side validatie
-- Error handling & logging
+- Error handling & logging uitbreiden
 - Testing (unit, integration)
 - Production database (PostgreSQL/MySQL)
 - Deployment configuratie
@@ -2113,6 +2124,70 @@ th:replace="~{fragments/navigation :: navigation(@{/inschrijving/vorige/__${regi
 - Label verduidelijkt: "E-mailadres ouder/voogd", "GSM leerling"
 
 **Impact:** Volledige wizard flow werkt nu van start tot bevestiging zonder errors!
+
+---
+
+## 🔒 Security Updates (28 januari 2026)
+
+### Email in URL Security Fix
+**Probleem:** Email adres zichtbaar in URL `/inschrijving/nieuw/{email}` kon gemanipuleerd worden  
+**Risico:** Gebruikers konden inschrijvingen maken voor andere email adressen  
+**Oplossing:**
+- Email opgeslagen in HTTP Session bij verificatie
+- Nieuwe endpoint `/inschrijving/nieuw` zonder email parameter
+- Backend haalt email uit sessie (secure)
+- Session validatie op alle kritieke endpoints
+- **Impact:** URL manipulatie niet meer mogelijk, email privacy gewaarborgd
+
+### Registration Management
+**Functionaliteit:**
+- Registrations overview pagina met alle inschrijvingen per email
+- Verwijderen van LOPENDE inschrijvingen (niet VOLTOOIDE)
+- JavaScript confirmation dialog: "Bent u zeker dat u de inschrijving van [Naam] wilt verwijderen?"
+- Delete endpoint met multiple security checks:
+  - Session validatie
+  - Email matching (registration.email == session.email)
+  - Status check (alleen PENDING kan verwijderd worden)
+  - Logging van alle delete acties
+- Automatic redirect naar overview of start na deletion
+
+**Tabel Features:**
+- Status badges: ✅ Voltooid (groen), ⏳ Lopend (geel)
+- Acties voor PENDING: 📝 Afwerken + 🗑️ Verwijderen
+- Actie voor COMPLETED: PDF icoon (Font Awesome)
+- Studierichting kolom: Jaar + Richting naam
+- Hover effects en professional styling
+
+### Font Awesome Integratie
+**Versie:** 6.5.1  
+**CDN:** Cloudflare (fast & reliable)  
+**Locatie:** `fragments/layout.html` (global beschikbaar)  
+**Gebruik:**
+```html
+<!-- PDF icon -->
+<i class="fa-solid fa-file-pdf"></i>
+
+<!-- Andere beschikbare icons -->
+<i class="fa-solid fa-trash"></i>        <!-- Delete -->
+<i class="fa-solid fa-check"></i>        <!-- Check -->
+<i class="fa-solid fa-download"></i>     <!-- Download -->
+<i class="fa-solid fa-envelope"></i>     <!-- Email -->
+<i class="fa-solid fa-user"></i>         <!-- User -->
+```
+
+**Voordelen:**
+- 6000+ professional icons beschikbaar
+- Consistent design door hele applicatie
+- Schaalbaar (vector-based)
+- Easy to use met class names
+- PDF placeholder ready voor toekomstige implementatie
+
+### Session Security Features
+- Session-based email verification tracking
+- Secure data attributes voor JavaScript events (geen XSS)
+- Thymeleaf security compliance (geen string concatenatie in onclick handlers)
+- Event delegation pattern voor delete buttons
+- CSRF protection (Spring Security default)
 
 ---
 

@@ -1,7 +1,7 @@
 # SNH Inschrijvingen - TODO List
 
-**Laatst bijgewerkt:** 23 januari 2026 14:54  
-**Status:** Fase 2 - VOLTOOID! Alle 10 wizard stappen + UI/UX verbeteringen + Bugfixes + Data Centralisatie
+**Laatst bijgewerkt:** 28 januari 2026 19:24  
+**Status:** Fase 2 - VOLTOOID! Alle 10 wizard stappen + UI/UX verbeteringen + Bugfixes + Data Centralisatie + Security & Email Fixes
 
 ---
 
@@ -29,17 +29,22 @@
 - [x] Field name consistency - **VOLTOOID!**
 - [x] UI/UX verbeteringen (info boxes, error pages, multi-line) - **VOLTOOID!**
 - [x] Data centralisatie (Single Source of Truth) - **VOLTOOID!**
+- [x] Security fix: Email niet meer in URL - **VOLTOOID!**
+- [x] Registration management: Delete functionality - **VOLTOOID!**
+- [x] Font Awesome integratie - **VOLTOOID!**
+- [ ] PDF generatie implementatie
 - [ ] Email integratie (echte verzending)
 - [ ] Server-side validatie
-- [ ] Error handling & logging
+- [ ] Error handling & logging uitbreiden
 - [ ] Production database setup
 
 ### 🟡 Gemiddelde Prioriteit (Should Have)
 - [ ] Unit tests
 - [ ] Integration tests
-- [ ] Admin dashboard
+- [ ] Admin dashboard (registraties beheren)
 - [ ] Email templates (HTML)
-- [ ] PDF generatie (bevestiging)
+- [x] Font Awesome icons - **VOLTOOID!**
+- [ ] PDF generatie (bevestiging + download functionaliteit)
 
 ### 🟢 Lage Prioriteit (Nice to Have)
 - [ ] Multi-language support
@@ -47,6 +52,101 @@
 - [ ] File upload (documenten)
 - [ ] Email notificaties naar school
 - [ ] Analytics dashboard
+
+---
+
+## Fase 2.5: Security & Registration Management - 28 januari 2026
+
+### ✅ Security Improvements
+
+#### 1. Email in URL Security Fix
+- [x] **Session-based email storage:** Verified email opgeslagen in HTTP Session
+  - `HttpSession.setAttribute("verifiedEmail", email)`
+  - Opgeslagen bij email verificatie
+  - Opgeslagen bij overview navigatie
+- [x] **URL parameter verwijderd:** `/inschrijving/nieuw/{email}` → `/inschrijving/nieuw`
+- [x] **Backend security checks:**
+  - Session validatie (session moet bestaan)
+  - Email aanwezig check (email in sessie vereist)
+  - Security logging bij failures
+- [x] **Template updates:** `registrations-overview.html` gebruikt veilige URL
+- [x] **Impact:** Email privacy gewaarborgd, URL manipulatie niet mogelijk
+
+#### 2. Registration Management System
+- [x] **Delete functionality geïmplementeerd:**
+  - Service method: `RegistrationService.deleteRegistration(UUID)`
+  - Controller endpoint: `GET /inschrijving/verwijderen/{registrationId}`
+  - Alleen PENDING registrations kunnen verwijderd worden
+  - COMPLETED registrations zijn protected
+- [x] **Security layers voor delete:**
+  - Session validatie
+  - Email matching (registration.email == session email)
+  - Status check (PENDING only)
+  - Logging van alle delete actions
+  - IllegalStateException voor non-PENDING deletes
+- [x] **User confirmation:**
+  - JavaScript confirmation dialog
+  - Data attributes voor veilige event handling (geen XSS)
+  - Clear warning: "Deze actie kan niet ongedaan gemaakt worden"
+- [x] **Post-delete redirect:**
+  - Check of er nog registrations zijn
+  - Zo ja → Redirect naar overview
+  - Zo nee → Redirect naar start
+
+#### 3. Registrations Overview Table
+- [x] **Professional table design:**
+  - Leerling naam (bold of "Nog in te vullen")
+  - Studierichting: Jaar + Richting naam (2 regels)
+  - Schooljaar
+  - Status badges met emoji's en kleuren
+  - Acties (context-aware)
+- [x] **Status indicators:**
+  - ✅ Voltooid (groen badge)
+  - ⏳ Lopend (geel badge)
+- [x] **Actions per status:**
+  - PENDING: 📝 Afwerken + 🗑️ Verwijderen buttons
+  - COMPLETED: PDF icon button (Font Awesome)
+- [x] **StudyProgram integration:**
+  - Map van registration IDs naar program namen
+  - Opgehaald via `StudyProgramRepository`
+  - Passed naar template via model
+
+#### 4. Font Awesome Integratie
+- [x] **CDN toegevoegd:** Cloudflare CDN in `layout.html`
+  - Versie: 6.5.1 (latest)
+  - Integrity hash voor security
+  - Crossorigin anonymous
+- [x] **PDF icon geïmplementeerd:**
+  - `<i class="fa-solid fa-file-pdf"></i>`
+  - Rood gekleurd (#dc3545)
+  - 1.25rem font-size
+  - Border en padding voor button look
+- [x] **Beschikbaar project-wide:**
+  - 6000+ icons beschikbaar
+  - Solid, Regular en Brands variants
+  - Easy to use: class-based
+
+#### 5. Thymeleaf Security Compliance
+- [x] **Event handler fix:**
+  - th:onclick niet gebruikt (security issue)
+  - Data attributes pattern: `th:data-registration-id="${reg.id}"`
+  - JavaScript event listeners via querySelector
+  - DOMContentLoaded voor safe initialization
+- [x] **XSS prevention:**
+  - Geen string concatenatie in event handlers
+  - Data opgeslagen in HTML5 data attributes
+  - JavaScript leest data via getAttribute()
+  - Thymeleaf escaping gerespecteerd
+
+### 🔒 Security Features Summary
+- ✅ Session-based authentication tracking
+- ✅ Email privacy (niet in URL)
+- ✅ Multi-layer delete security
+- ✅ XSS prevention (data attributes)
+- ✅ CSRF protection (Spring default)
+- ✅ Status-based access control (PENDING vs COMPLETED)
+- ✅ Audit logging (alle deletes gelogd)
+- ✅ User confirmation voor destructive actions
 
 ---
 

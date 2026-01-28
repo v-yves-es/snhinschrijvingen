@@ -62,7 +62,7 @@ public class StudentInfoController {
         model.addAttribute("registration", registration);
         model.addAttribute("registrationId", id);
 
-        // Form data - pre-fill from database or use test data
+        // Form data - pre-fill from database
         StudentForm studentForm = new StudentForm();
         
         if (registration.getStudentFirstname() != null) {
@@ -89,7 +89,7 @@ public class StudentInfoController {
             studentForm.setNationaliteit(registration.getStudentNationaliteit());
         } else {
             // TEMPORARY: Pre-fill with test data
-            studentForm.setVoornaamLeerling("Jan");
+           /* studentForm.setVoornaamLeerling("Jan");
             studentForm.setNaamLeerling("Janssens");
             studentForm.getAddress().setStreet("Teststraat");
             studentForm.getAddress().setHouseNumber("123");
@@ -101,7 +101,7 @@ public class StudentInfoController {
             studentForm.setRijksregisternummer("050101-123-45");
             studentForm.setGeboortedatum(java.time.LocalDate.of(2005, 1, 1));
             studentForm.setGeboorteplaats("Kortrijk");
-            studentForm.setNationaliteit("BE");
+            studentForm.setNationaliteit("BE");*/
         }
 
         model.addAttribute("studentForm", studentForm);
